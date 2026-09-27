@@ -1,0 +1,65 @@
+[
+ {
+  "device": "cpu",
+  "trials": 1,
+  "seconds": 8.72,
+  "s_per_trial_s": 8.718,
+  "mn9_hz": 86.0,
+  "spikes_per_s": 84587,
+  "gpu_gb": NaN
+ },
+ {
+  "device": "cpu",
+  "trials": 8,
+  "seconds": 25.93,
+  "s_per_trial_s": 3.241,
+  "mn9_hz": 87.9,
+  "spikes_per_s": 84309,
+  "gpu_gb": NaN
+ },
+ {
+  "device": "cpu",
+  "trials": 32,
+  "seconds": 77.4,
+  "s_per_trial_s": 2.419,
+  "mn9_hz": 85.3,
+  "spikes_per_s": 84392,
+  "gpu_gb": NaN
+ },
+ {
+  "device": "cuda",
+  "trials": 1,
+  "seconds": 8.42,
+  "s_per_trial_s": 8.422,
+  "mn9_hz": 80.0,
+  "spikes_per_s": 84900,
+  "gpu_gb": 0.32
+ },
+ {
+  "device": "cuda",
+  "trials": 8,
+  "seconds": 8.8,
+  "s_per_trial_s": 1.099,
+  "mn9_hz": 84.2,
+  "spikes_per_s": 84291,
+  "gpu_gb": 0.36
+ },
+ {
+  "device": "cuda",
+  "trials": 32,
+  "seconds": 13.93,
+  "s_per_trial_s": 0.435,
+  "mn9_hz": 86.0,
+  "spikes_per_s": 84404,
+  "gpu_gb": 0.5
+ },
+ {
+  "device": "cuda",
+  "trials": 128,
+  "seconds": 34.63,
+  "s_per_trial_s": 0.271,
+  "mn9_hz": 85.9,
+  "spikes_per_s": 84495,
+  "gpu_gb": 1.07
+ }
+]

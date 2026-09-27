@@ -1,0 +1,11 @@
+[
+ {
+  "device": "cuda",
+  "trials": 512,
+  "seconds": 119.67,
+  "s_per_trial_s": 0.234,
+  "mn9_hz": 85.4,
+  "spikes_per_s": 84460,
+  "gpu_gb": 3.32
+ }
+]

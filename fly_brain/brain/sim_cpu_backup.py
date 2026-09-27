@@ -53,14 +53,6 @@ class Brain:
         self.weight = torch.from_numpy(z["weight"].astype(np.float32))  # signed synapse counts
         self.n = len(self.body_ids)
         self.index = {int(b): i for i, b in enumerate(self.body_ids)}
-        self._dev = {}
-
-    def on(self, device):
-        """(col_ptr, post, weight) on the given device, cached."""
-        key = str(device)
-        if key not in self._dev:
-            self._dev[key] = (self.col_ptr.to(device), self.post.to(device), self.weight.to(device))
-        return self._dev[key]
 
     def idx(self, body_ids):
         return np.array([self.index[int(b)] for b in body_ids if int(b) in self.index], dtype=np.int64)
@@ -68,8 +60,8 @@ class Brain:
 
 @torch.no_grad()
 def simulate(brain, stim_idx, stim_hz, readout_idx=(), params=None, n_run=None, t_run=None,
-             bin_ms=10.0, seed=0, silence_idx=(), progress=True, stim_seg_ms=None, device=None):
-    """Run n_run trials in one batch on `device` ("cpu" default, or "cuda").
+             bin_ms=10.0, seed=0, silence_idx=(), progress=True, stim_seg_ms=None):
+    """Run n_run trials in one batch.
 
     stim_idx/stim_hz: neurons driven by Poisson input and their rates (Hz). stim_hz may be 2-D
     (n_stim, n_segments) with stim_seg_ms set: the rates then change every stim_seg_ms.
@@ -85,9 +77,7 @@ def simulate(brain, stim_idx, stim_hz, readout_idx=(), params=None, n_run=None, 
     steps = int(round(T / dt))
     delay = int(round(p["t_dly"] / dt))
     refr_steps = int(round(p["t_rfc"] / dt))
-    dev = torch.device(device or "cpu")
-    gen = torch.Generator(device=dev).manual_seed(seed)
-    col_ptr, post_d, weight_d = brain.on(dev)
+    gen = torch.Generator().manual_seed(seed)
 
     # exact update of u = v - v_0 and g over one step
     eg = math.exp(-dt / p["tau"])
@@ -97,44 +87,40 @@ def simulate(brain, stim_idx, stim_hz, readout_idx=(), params=None, n_run=None, 
     u_rst = p["v_rst"] - p["v_0"]
     kick = p["w_syn"] * p["f_poi"]
 
-    u = torch.zeros(B * N, device=dev)
-    g = torch.zeros(B * N, device=dev)
-    refr_until = torch.zeros(B * N, dtype=torch.int32, device=dev)
-    counts = torch.zeros(B * N, dtype=torch.int32, device=dev)
+    u = torch.zeros(B * N)
+    g = torch.zeros(B * N)
+    refr_until = torch.zeros(B * N, dtype=torch.int32)
+    counts = torch.zeros(B * N, dtype=torch.int32)
 
-    silent = torch.zeros(N, dtype=torch.bool, device=dev)
+    silent = torch.zeros(N, dtype=torch.bool)
     if len(silence_idx):
-        silent[torch.as_tensor(silence_idx, device=dev)] = True
+        silent[torch.as_tensor(silence_idx)] = True
     silent = silent.repeat(B)
 
-    stim_idx = torch.as_tensor(np.asarray(stim_idx, dtype=np.int64), device=dev)
+    stim_idx = torch.as_tensor(np.asarray(stim_idx, dtype=np.int64))
     rates = np.asarray(stim_hz, dtype=np.float32)
     segmented = rates.ndim == 2
     if segmented:
-        seg_rates = torch.as_tensor(rates, device=dev) * (dt / 1000.0)  # (n_stim, n_segments)
+        seg_rates = torch.as_tensor(rates) * (dt / 1000.0)  # (n_stim, n_segments)
         steps_per_seg = int(round(stim_seg_ms / dt))
         stim_p = seg_rates[:, 0].repeat(B)
     else:
-        stim_p = torch.as_tensor(rates * (dt / 1000.0), device=dev).repeat(B)
-    ar_B = torch.arange(B, device=dev)
-    stim_flat = (ar_B[:, None] * N + stim_idx[None, :]).reshape(-1)
-    is_stim = torch.zeros(B * N, dtype=torch.bool, device=dev)
+        stim_p = torch.as_tensor(rates * (dt / 1000.0)).repeat(B)
+    stim_flat = (torch.arange(B)[:, None] * N + stim_idx[None, :]).reshape(-1)
+    is_stim = torch.zeros(B * N, dtype=torch.bool)
     is_stim[stim_flat] = True
-    ar_stim = torch.arange(stim_flat.numel(), device=dev)
 
     readout_idx = np.asarray(readout_idx, dtype=np.int64)
     R, n_bins = len(readout_idx), int(math.ceil(T / bin_ms))
-    readout_pos = torch.full((N,), -1, dtype=torch.int64, device=dev)
-    readout_idx_d = torch.as_tensor(readout_idx, device=dev)
-    readout_pos[readout_idx_d] = torch.arange(R, device=dev)
-    readout = torch.zeros(B * R * n_bins, dtype=torch.int32, device=dev)
-    readout_flat = (ar_B[:, None] * N + readout_idx_d[None, :]).reshape(-1)
-    readout_u = torch.zeros(B * R, n_bins, dtype=torch.float64, device=dev)  # summed membrane potential per bin
-    pop = torch.zeros(n_bins, dtype=torch.int64, device=dev)  # spikes of non-stimulated neurons per bin, all trials
+    readout_pos = torch.full((N,), -1, dtype=torch.int64)
+    readout_pos[torch.as_tensor(readout_idx)] = torch.arange(R)
+    readout = torch.zeros(B * R * n_bins, dtype=torch.int32)
+    readout_flat = (torch.arange(B)[:, None] * N + torch.as_tensor(readout_idx)[None, :]).reshape(-1)
+    readout_u = torch.zeros(B * R, n_bins, dtype=torch.float64)  # summed membrane potential per bin
+    pop = np.zeros(n_bins, dtype=np.int64)  # spikes of non-stimulated neurons per bin, all trials
     steps_per_bin = int(round(bin_ms / dt))
-    kick_t = torch.tensor(kick, device=dev)
 
-    queue = [torch.empty(0, dtype=torch.int64, device=dev)] * delay  # ring buffer of spike indices
+    queue = [torch.empty(0, dtype=torch.int64)] * delay  # ring buffer of spike indices
     w_syn = p["w_syn"]
     t0 = time.time()
 
@@ -152,19 +138,20 @@ def simulate(brain, stim_idx, stim_hz, readout_idx=(), params=None, n_run=None, 
         arriving = queue[t % delay]
         if arriving.numel():
             trial, pre = arriving // N, arriving % N
-            starts = col_ptr[pre]
-            lens = col_ptr[pre + 1] - starts
+            starts = brain.col_ptr[pre]
+            lens = brain.col_ptr[pre + 1] - starts
             total = int(lens.sum())
             if total:
                 rep = torch.repeat_interleave
-                pos = rep(starts - (torch.cumsum(lens, 0) - lens), lens) + torch.arange(total, device=dev)
-                g.index_add_(0, rep(trial, lens) * N + post_d[pos], weight_d[pos] * w_syn)
+                pos = rep(starts - (torch.cumsum(lens, 0) - lens), lens) + torch.arange(total)
+                g.index_add_(0, rep(trial, lens) * N + brain.post[pos], brain.weight[pos] * w_syn)
 
         # Poisson stimulus
         if segmented and t % steps_per_seg == 0:
             stim_p = seg_rates[:, min(t // steps_per_seg, seg_rates.shape[1] - 1)].repeat(B)
-        fire = torch.rand(stim_flat.numel(), generator=gen, device=dev) < stim_p
-        u.index_add_(0, stim_flat, fire.to(u.dtype) * kick_t)
+        fire = torch.rand(stim_flat.numel(), generator=gen) < stim_p
+        if fire.any():
+            u.index_add_(0, stim_flat[fire], torch.full((int(fire.sum()),), kick))
 
         # reset + bookkeeping
         if spk.numel():
@@ -172,7 +159,7 @@ def simulate(brain, stim_idx, stim_hz, readout_idx=(), params=None, n_run=None, 
             g[spk] = 0.0
             refr_until[spk] = t + refr_steps
             counts[spk] += 1
-            pop[t // steps_per_bin] += (~is_stim[spk]).sum()
+            pop[t // steps_per_bin] += int((~is_stim[spk]).sum())
             if R:
                 rp = readout_pos[spk % N]
                 keep = rp >= 0
@@ -184,11 +171,8 @@ def simulate(brain, stim_idx, stim_hz, readout_idx=(), params=None, n_run=None, 
         if progress and (t + 1) % (steps // 10) == 0:
             print(f"  {100 * (t + 1) // steps:3d}%  {time.time() - t0:6.1f}s  spikes/step={spk.numel()}", flush=True)
 
-    if dev.type == "cuda":
-        torch.cuda.synchronize(dev)
-    seconds = time.time() - t0
     rate = counts.view(B, N).float().mean(0) / (T / 1000.0)
-    return {"rate": rate.cpu().numpy(), "readout": readout.view(B, R, n_bins).cpu().numpy(), "bin_ms": bin_ms,
-            "pop_hz": pop.cpu().numpy() / (B * bin_ms / 1000.0),
-            "readout_v": (readout_u / steps_per_bin + p["v_0"]).view(B, R, n_bins).float().cpu().numpy(),
-            "n_run": B, "t_run": T, "seconds": seconds, "device": str(dev)}
+    return {"rate": rate.numpy(), "readout": readout.view(B, R, n_bins).numpy(), "bin_ms": bin_ms,
+            "pop_hz": pop / (B * bin_ms / 1000.0),
+            "readout_v": (readout_u / steps_per_bin + p["v_0"]).view(B, R, n_bins).float().numpy(),
+            "n_run": B, "t_run": T, "seconds": time.time() - t0}

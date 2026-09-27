@@ -1,0 +1,3 @@
+torch 2.5.1+cu121 cuda build 12.1 available True
+NVIDIA RTX A6000
+matmul ok 0.037 s

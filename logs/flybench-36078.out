@@ -1,0 +1,8 @@
+torch 2.5.1+cu121  cpu threads 32  gpu NVIDIA RTX A6000
+cpu   trials    1       8.7 s     8.72 s per simulated second  MN9  86.0 Hz  gpu nan GB
+cpu   trials    8      25.9 s     3.24 s per simulated second  MN9  87.9 Hz  gpu nan GB
+cpu   trials   32      77.4 s     2.42 s per simulated second  MN9  85.3 Hz  gpu nan GB
+cuda  trials    1       8.4 s     8.42 s per simulated second  MN9  80.0 Hz  gpu 0.32 GB
+cuda  trials    8       8.8 s     1.10 s per simulated second  MN9  84.2 Hz  gpu 0.36 GB
+cuda  trials   32      13.9 s     0.43 s per simulated second  MN9  86.0 Hz  gpu 0.5 GB
+cuda  trials  128      34.6 s     0.27 s per simulated second  MN9  85.9 Hz  gpu 1.07 GB
