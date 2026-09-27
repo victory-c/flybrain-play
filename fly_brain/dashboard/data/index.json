@@ -1,0 +1,180 @@
+{
+ "binMs": 50.0,
+ "bins": 20,
+ "trials": 8,
+ "cloudHz": 40.0,
+ "points": 140638,
+ "neurons": 166700,
+ "regions": [
+  {
+   "id": "taste",
+   "label": "味觉神经元",
+   "n": 1428
+  },
+  {
+   "id": "feeding",
+   "label": "摄食中枢 SEZ",
+   "n": 1901
+  },
+  {
+   "id": "smell",
+   "label": "嗅觉",
+   "n": 3783
+  },
+  {
+   "id": "memory",
+   "label": "记忆与奖赏 (蘑菇体)",
+   "n": 4501
+  },
+  {
+   "id": "nav",
+   "label": "导航 (中央复合体)",
+   "n": 2950
+  },
+  {
+   "id": "vision",
+   "label": "视觉",
+   "n": 105267
+  },
+  {
+   "id": "touch",
+   "label": "触觉与本体感觉",
+   "n": 5756
+  },
+  {
+   "id": "descending",
+   "label": "下行指令",
+   "n": 1314
+  },
+  {
+   "id": "cord",
+   "label": "腹神经索 (腿/翅)",
+   "n": 16846
+  },
+  {
+   "id": "motor",
+   "label": "运动神经元",
+   "n": 925
+  },
+  {
+   "id": "other",
+   "label": "中央脑其他",
+   "n": 22029
+  }
+ ],
+ "pointRegion": "point_region.bin",
+ "drinks": [
+  {
+   "id": "water",
+   "name": "💧 清水",
+   "hunger": 0.0,
+   "mn9Hz": 0.0,
+   "lit": 62,
+   "file": "water.bin",
+   "png": "water.png"
+  },
+  {
+   "id": "orange",
+   "name": "🍊 橙汁",
+   "hunger": 0.0,
+   "mn9Hz": 87.875,
+   "lit": 967,
+   "file": "orange.bin",
+   "png": "orange.png"
+  },
+  {
+   "id": "watermelon",
+   "name": "🍉 西瓜汁",
+   "hunger": 0.0,
+   "mn9Hz": 90.625,
+   "lit": 971,
+   "file": "watermelon.bin",
+   "png": "watermelon.png"
+  },
+  {
+   "id": "milktea",
+   "name": "🧋 珍珠奶茶",
+   "hunger": 0.0,
+   "mn9Hz": 13.0,
+   "lit": 1044,
+   "file": "milktea.bin",
+   "png": "milktea.png"
+  },
+  {
+   "id": "lemonade",
+   "name": "🍋 柠檬水",
+   "hunger": 0.0,
+   "mn9Hz": 0.0,
+   "lit": 891,
+   "file": "lemonade.bin",
+   "png": "lemonade.png"
+  },
+  {
+   "id": "cola",
+   "name": "🥤 可乐",
+   "hunger": 0.0,
+   "mn9Hz": 0.0,
+   "lit": 970,
+   "file": "cola.bin",
+   "png": "cola.png"
+  },
+  {
+   "id": "espresso",
+   "name": "☕ 浓缩咖啡",
+   "hunger": 0.0,
+   "mn9Hz": 0.0,
+   "lit": 830,
+   "file": "espresso.bin",
+   "png": "espresso.png"
+  },
+  {
+   "id": "lager",
+   "name": "🍺 拉格啤酒",
+   "hunger": 0.0,
+   "mn9Hz": 0.0,
+   "lit": 546,
+   "file": "lager.bin",
+   "png": "lager.png"
+  },
+  {
+   "id": "tsipouro",
+   "name": "🥃 茨普罗烈酒",
+   "hunger": 0.0,
+   "mn9Hz": 0.0,
+   "lit": 824,
+   "file": "tsipouro.bin",
+   "png": "tsipouro.png"
+  },
+  {
+   "id": "pinacolada",
+   "name": "🍍 Piña Colada",
+   "hunger": 0.0,
+   "mn9Hz": 0.0,
+   "lit": 936,
+   "file": "pinacolada.bin",
+   "png": "pinacolada.png"
+  },
+  {
+   "id": "pinacolada_hungry",
+   "name": "🍍 Piña Colada（饿）",
+   "hunger": 0.5,
+   "mn9Hz": 55.875,
+   "lit": 896,
+   "file": "pinacolada_hungry.bin",
+   "png": "pinacolada_hungry.png"
+  },
+  {
+   "id": "negroni_hungry",
+   "name": "🥃 Negroni（很饿）",
+   "hunger": 0.9,
+   "mn9Hz": 57.625,
+   "lit": 748,
+   "file": "negroni_hungry.bin",
+   "png": "negroni_hungry.png"
+  }
+ ],
+ "png": {
+  "width": 376,
+  "rowsPerBin": 375
+ }
+}

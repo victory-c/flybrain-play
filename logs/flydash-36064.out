@@ -1,0 +1,24 @@
+== 💧 清水  hunger 0.0  taste sweet 0.00 water 1.00 bitter 0.00 ir94e 0.01 low_salt 0.02 high_salt 0.00 fizz 0.00
+   MN9_L 0.0 Hz   lit 62   37.5s
+== 🍊 橙汁  hunger 0.0  taste sweet 0.84 water 0.36 bitter 0.07 ir94e 0.01 low_salt 0.02 high_salt 0.00 fizz 0.00
+   MN9_L 87.9 Hz   lit 967   41.0s
+== 🍉 西瓜汁  hunger 0.0  taste sweet 0.85 water 0.46 bitter 0.00 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00
+   MN9_L 90.6 Hz   lit 971   43.4s
+== 🧋 珍珠奶茶  hunger 0.0  taste sweet 0.89 water 0.39 bitter 0.28 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00
+   MN9_L 13.0 Hz   lit 1,044   43.7s
+== 🍋 柠檬水  hunger 0.0  taste sweet 0.65 water 0.34 bitter 0.35 ir94e 0.02 low_salt 0.04 high_salt 0.00 fizz 0.62
+   MN9_L 0.0 Hz   lit 891   42.9s
+== 🥤 可乐  hunger 0.0  taste sweet 0.64 water 0.32 bitter 0.50 ir94e 0.03 low_salt 0.08 high_salt 0.00 fizz 0.67
+   MN9_L 0.0 Hz   lit 970   41.2s
+== ☕ 浓缩咖啡  hunger 0.0  taste sweet 0.00 water 1.00 bitter 0.84 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00
+   MN9_L 0.0 Hz   lit 830   42.0s
+== 🍺 拉格啤酒  hunger 0.0  taste sweet 0.22 water 0.15 bitter 0.38 ir94e 0.02 low_salt 0.04 high_salt 0.00 fizz 0.62
+   MN9_L 0.0 Hz   lit 546   39.9s
+== 🥃 茨普罗烈酒  hunger 0.0  taste sweet 0.00 water 0.02 bitter 0.88 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00
+   MN9_L 0.0 Hz   lit 824   41.9s
+== 🍍 Piña Colada  hunger 0.0  taste sweet 0.80 water 0.07 bitter 0.33 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00
+   MN9_L 0.0 Hz   lit 936   40.4s
+== 🍍 Piña Colada（饿）  hunger 0.5  taste sweet 0.80 water 0.07 bitter 0.16 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00
+   MN9_L 55.9 Hz   lit 896   44.1s
+== 🥃 Negroni（很饿）  hunger 0.9  taste sweet 0.64 water 0.04 bitter 0.09 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00
+   MN9_L 57.6 Hz   lit 748   42.4s
