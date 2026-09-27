@@ -1,0 +1,26 @@
+== Sun Sep 27 05:23:18 AM PDT 2026 on corruption: python -m runs.ride --init results/screen_samples.npz --riders 48 --generations 15 --seconds 10 --out results/ride.json
+Tarmac SL9 + 70 kg: 78.2 kg, self-stable 4.70..7.74 m/s; start at 4.0 m/s, gusts 15 Nm, 48 riders on cuda
+senses : VS_L 16, HS_L 5, HALT_L 104, JO_L 228, LEG1_L 45, VS_R 18, HS_R 5, HALT_R 101, JO_R 247, LEG1_R 20  (789 neurons)
+readout: DNp20_L 1, DNp20_R 1, DNp22_L 1, DNp22_R 1, DNg46_L 1, DNg46_R 1, DNge043_L 1, DNge043_R 1, DNb06_L 1, DNb06_R 1, DNp17_L 6, DNp17_R 6, DNpe013_L 1, DNpe013_R 1, DNge097_L 1, DNge097_R 1, DNg94_L 1, DNg94_R 1, DNg90_L 1, DNg90_R 1, DNge088_L 1, DNge088_R 1, DNp33_L 1, DNp33_R 1, DNge091_L 7, DNge091_R 7, DNg29_L 1, DNg29_R 1, DNg41_L 1, DNg41_R 1, DNp18_L 1, DNp18_R 1, DNp73_L 1, DNp73_R 1, DNb04_L 1, DNb04_R 1, b1 MN_L 1, b1 MN_R 1, b2 MN_L 1, b2 MN_R 1, b3 MN_L 1, b3 MN_R 1, hg1 MN_L 1, hg1 MN_R 1, hi2 MN_L 2, hi2 MN_R 2, i2 MN_L 1, i2 MN_R 1, DNa01_L 1, DNa01_R 1, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 1, DNb01_L 1, DNb01_R 1, DNp09_L 1, DNp09_R 1, DNg100_L 1, DNg100_R 1, DNg97_L 1, DNg97_R 1, MDN_L 2, MDN_R 2, DNp01_L 1, DNp01_R 1
+brain: 166,700 neurons, 789 driven, 92 read out, w_syn 0.1238 mV
+  largest steering weights: DNp17_R +1.26, DNp17_L -1.03, DNb04_L +0.51, DNge091_L +0.50, DNa01_L -0.28, DNg94_L -0.26, DNp33_R -0.22, DNg94_R +0.21
+teacher fit: R^2 0.75 on the screen's samples; CEM starts from it
+  after warm-up, DN rates (Hz): DNp20_L 31, DNp20_R 20, DNp22_R 2, DNg46_R 2, DNge043_L 8, DNge043_R 13, DNb06_L 29, DNpe013_L 5, DNpe013_R 6, DNg90_L 1, DNg90_R 2, DNp33_L 20, DNp33_R 4, DNge091_L 1, DNg29_L 36, DNg29_R 26, DNg41_L 22, DNg41_R 23, DNp18_L 28, DNp18_R 42, DNp73_L 53, DNp73_R 8, b2 MN_L 6, b2 MN_R 2, hg1 MN_L 15, hg1 MN_R 10, DNa01_L 1, DNa02_L 2, DNa03_L 1, DNa03_R 4, DNg100_L 1, DNg100_R 1, MDN_L 1
+  population 14,813 spikes/s per brain
+gen  0  fit best   5.78 mean   0.35  upright  1.68 s (max 10.00,   4% finish)  dist   6.3 m  |y| 1.70 m  v 4.16  bailed 0  pop 91,233 sp/s  204s
+gen  1  fit best   3.75 mean  -4.83  upright  2.66 s (max 10.00,  10% finish)  dist   7.5 m  |y| 4.22 m  v 4.22  bailed 0  pop 85,136 sp/s  203s
+gen  2  fit best   4.75 mean  -8.20  upright  2.75 s (max 10.00,   8% finish)  dist   6.1 m  |y| 4.09 m  v 4.11  bailed 0  pop 86,388 sp/s  202s
+gen  3  fit best   7.96 mean  -5.69  upright  3.24 s (max 10.00,   8% finish)  dist   8.6 m  |y| 3.96 m  v 4.15  bailed 0  pop 79,564 sp/s  202s
+gen  4  fit best   8.47 mean  -3.98  upright  4.07 s (max 10.00,  15% finish)  dist   9.6 m  |y| 4.98 m  v 4.24  bailed 0  pop 77,891 sp/s  202s
+gen  5  fit best   6.43 mean  -8.29  upright  4.48 s (max 10.00,  19% finish)  dist  12.6 m  |y| 5.72 m  v 4.22  bailed 0  pop 78,759 sp/s  202s
+gen  6  fit best   6.38 mean -23.25  upright  5.72 s (max 10.00,  25% finish)  dist  12.2 m  |y| 9.04 m  v 4.29  bailed 0  pop 76,744 sp/s  202s
+gen  7  fit best   5.11 mean  -8.31  upright  5.79 s (max 10.00,  25% finish)  dist  15.2 m  |y| 6.98 m  v 4.19  bailed 0  pop 77,714 sp/s  202s
+gen  8  fit best   7.74 mean  -4.11  upright  5.84 s (max 10.00,  21% finish)  dist  15.8 m  |y| 6.48 m  v 4.16  bailed 0  pop 76,433 sp/s  202s
+gen  9  fit best   8.78 mean -10.86  upright  5.58 s (max 10.00,  21% finish)  dist  14.3 m  |y| 6.88 m  v 4.09  bailed 0  pop 78,387 sp/s  202s
+gen 10  fit best   8.45 mean  -7.23  upright  5.77 s (max 10.00,  15% finish)  dist  15.7 m  |y| 7.29 m  v 4.00  bailed 0  pop 77,133 sp/s  201s
+gen 11  fit best   5.78 mean  -3.31  upright  4.99 s (max 10.00,  10% finish)  dist  14.9 m  |y| 5.33 m  v 4.08  bailed 0  pop 78,360 sp/s  202s
+gen 12  fit best   7.70 mean  -6.37  upright  6.00 s (max 10.00,  17% finish)  dist  17.2 m  |y| 6.87 m  v 4.18  bailed 0  pop 74,138 sp/s  202s
+gen 13  fit best   7.76 mean  -3.25  upright  5.92 s (max 10.00,  15% finish)  dist  18.2 m  |y| 6.56 m  v 4.11  bailed 0  pop 76,878 sp/s  201s
+gen 14  fit best   6.91 mean   2.09  upright  4.98 s (max 10.00,   6% finish)  dist  17.7 m  |y| 4.17 m  v 4.19  bailed 0  pop 82,799 sp/s  201s
+done: best fitness 8.78, results -> results/ride.json  (50.5 min)
+== done Sun Sep 27 06:13:50 AM PDT 2026
