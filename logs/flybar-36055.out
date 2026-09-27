@@ -1,0 +1,25 @@
+== Sat Sep 26 09:20:02 PM PDT 2026 on corruption, 32 cpus
+torch 2.14.0+cpu threads 32
+
+===== python -m runs.bar --trials 5 --only Κόλα,Espresso,Τσίπουρο,Νερό (21:20:04)
+taste neurons touching the drink: 447 (labellum 193, legs 240, pharynx 14)   w_syn 0.1238 mV   5 trials x 1000 ms
+
+== 💧 Νερό  taste = [sweet 0.00 water 1.00 bitter 0.00 ir94e 0.01 low_salt 0.02 high_salt 0.00 fizz 0.00]
+   MN9    0.0 ± 0.0 Hz   >10Hz 45   >100Hz 0   spikes/s 1,987   growth x1.0   10s
+
+== 🥤 Κόλα  taste = [sweet 0.64 water 0.32 bitter 0.50 ir94e 0.03 low_salt 0.08 high_salt 0.00 fizz 0.67]
+   MN9    0.0 ± 0.0 Hz   >10Hz 740   >100Hz 52   spikes/s 35,707   growth x1.0   13s
+
+== ☕ Espresso  taste = [sweet 0.00 water 1.00 bitter 0.84 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00]
+   MN9    0.0 ± 0.0 Hz   >10Hz 665   >100Hz 63   spikes/s 34,022   growth x1.0   13s
+
+== 🥃 Τσίπουρο  taste = [sweet 0.00 water 0.02 bitter 0.88 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00]
+   MN9    0.0 ± 0.0 Hz   >10Hz 644   >100Hz 69   spikes/s 33,594   growth x1.0   13s
+
+🪰  THE FLY BAR — ranked by proboscis extension drive (MN9)
+
+ 1. 💧 Νερό                  0.0 ±  0.0 Hz  
+ 2. 🥤 Κόλα                  0.0 ±  0.0 Hz  
+ 3. ☕ Espresso              0.0 ±  0.0 Hz  
+ 4. 🥃 Τσίπουρο              0.0 ±  0.0 Hz  
+== done Sat Sep 26 09:20:56 PM PDT 2026

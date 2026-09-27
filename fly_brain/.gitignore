@@ -1,5 +1,6 @@
 # raw male-CNS v1.0 downloads (~1.1 GB, public at male-cns.janelia.org/download)
-data/
+# (anchored, so app/public/data and dashboard/data are still tracked)
+/data/
 
 # rebuilt by `python build_brain.py` (brain.npz is 198 MB, over GitHub's 100 MB limit)
 brain.npz
@@ -8,6 +9,9 @@ brain_meta.parquet
 # large simulation outputs; small JSON summaries are kept
 results/*.parquet
 results/bar_rates/
+
+# dashboard: raw activity from export_dashboard.py; pack_dashboard.py turns it into the PNG/JS the page loads
+dashboard/data/*.bin
 
 # web app: dependencies/build output; web_data/ is rebuilt by export_brain_cloud.py
 app/node_modules/

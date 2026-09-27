@@ -1,0 +1,17 @@
+# Python environments and caches (rebuilt by flybar.sbatch / cuda-venv.sbatch)
+venv/
+venv-cuda/
+.pip-cache/
+__pycache__/
+*.pyc
+
+# Other people's fly-brain projects cloned alongside, unmodified; see README
+/fly-brain/
+/flybrain/
+/eon-fly-brain/
+/.upstream/
+
+# demo site build output (site/build.sh)
+site/dist/
+node_modules/
+.vercel/

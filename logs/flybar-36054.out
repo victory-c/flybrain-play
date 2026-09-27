@@ -1,0 +1,30 @@
+== Sat Sep 26 09:18:15 PM PDT 2026 on corruption, 32 cpus
+torch 2.14.0+cpu threads 32
+
+===== python -m brain.build_brain (21:18:52)
+neurons: 166,700
+transmitter labels:
+consensus_nt
+acetylcholine    104042
+glutamate         29622
+gaba              22122
+histamine          7905
+unknown            2070
+serotonin           404
+dopamine            395
+octopamine          140
+  batch 0/2318  1s
+  batch 500/2318  7s
+  batch 1000/2318  11s
+  batch 1500/2318  14s
+  batch 2000/2318  17s
+weight rows read: 151,856,684   neuron->neuron edges kept: 25,582,938   synapses: 124,177,617
+inhibitory neurons: 35.8%   inhibitory synapses: 38.4%
+saved brain.npz + brain_meta.parquet in 23s
+
+===== python -m tests.test_sim (21:19:15)
+driven neuron at 100 Hz input  -> 98.8 Hz (expect ~100, a bit less from refractoriness)
+excitatory partner (100 syn)    -> 40.0 Hz (expect > 0)
+Poisson-driven neuron 2: alone 50.1 Hz, with inhibition 48.8 Hz (kicks are suprathreshold, so ~equal)
+silencing works; all checks passed
+== done Sat Sep 26 09:19:22 PM PDT 2026

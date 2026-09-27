@@ -1,0 +1,189 @@
+== Sat Sep 26 09:22:51 PM PDT 2026 on corruption, 32 cpus
+torch 2.14.0+cpu threads 32
+
+===== python -m runs.bar (21:22:52)
+taste neurons touching the drink: 447 (labellum 193, legs 240, pharynx 14)   w_syn 0.1238 mV   30 trials x 1000 ms
+
+== 💧 Νερό  taste = [sweet 0.00 water 1.00 bitter 0.00 ir94e 0.01 low_salt 0.02 high_salt 0.00 fizz 0.00]
+   MN9    0.0 ± 0.0 Hz   >10Hz 45   >100Hz 0   spikes/s 2,007   growth x1.0   54s
+
+== 🫧 Σόδα  taste = [sweet 0.00 water 0.98 bitter 0.00 ir94e 0.03 low_salt 0.08 high_salt 0.00 fizz 0.67]
+   MN9    0.0 ± 0.0 Hz   >10Hz 79   >100Hz 2   spikes/s 3,448   growth x1.0   63s
+
+== 🥤 Κόλα  taste = [sweet 0.64 water 0.32 bitter 0.50 ir94e 0.03 low_salt 0.08 high_salt 0.00 fizz 0.67]
+   MN9    0.0 ± 0.0 Hz   >10Hz 741   >100Hz 55   spikes/s 35,623   growth x1.0   66s
+
+== 🍊 Χυμός πορτοκάλι  taste = [sweet 0.84 water 0.36 bitter 0.07 ir94e 0.01 low_salt 0.02 high_salt 0.00 fizz 0.00]
+   MN9   86.1 ± 0.6 Hz   >10Hz 792   >100Hz 75   spikes/s 40,103   growth x1.0   67s
+
+== 🍋 Λεμονάδα  taste = [sweet 0.65 water 0.34 bitter 0.35 ir94e 0.02 low_salt 0.04 high_salt 0.00 fizz 0.62]
+   MN9    0.0 ± 0.0 Hz   >10Hz 698   >100Hz 45   spikes/s 32,320   growth x1.0   65s
+
+== ⚡ Ενεργειακό ποτό  taste = [sweet 0.79 water 0.31 bitter 0.55 ir94e 0.15 low_salt 0.30 high_salt 0.00 fizz 0.62]
+   MN9    0.0 ± 0.0 Hz   >10Hz 857   >100Hz 70   spikes/s 42,660   growth x1.0   71s
+
+== 🏃 Isotonic  taste = [sweet 0.68 water 0.41 bitter 0.25 ir94e 0.29 low_salt 0.50 high_salt 0.00 fizz 0.00]
+   MN9    0.9 ± 0.2 Hz   >10Hz 654   >100Hz 42   spikes/s 29,858   growth x1.0   61s
+
+== 🧋 Φραπές γλυκός  taste = [sweet 0.83 water 0.51 bitter 0.56 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00]
+   MN9    0.0 ± 0.0 Hz   >10Hz 856   >100Hz 70   spikes/s 42,604   growth x1.0   89s
+
+== ☕ Espresso  taste = [sweet 0.00 water 1.00 bitter 0.84 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00]
+   MN9    0.0 ± 0.0 Hz   >10Hz 662   >100Hz 63   spikes/s 33,981   growth x1.0   60s
+
+== 🍺 Μπίρα λάγκερ  taste = [sweet 0.22 water 0.15 bitter 0.38 ir94e 0.02 low_salt 0.04 high_salt 0.00 fizz 0.62]
+   MN9    0.0 ± 0.0 Hz   >10Hz 402   >100Hz 23   spikes/s 19,115   growth x1.0   54s
+
+== 🍻 Μπίρα IPA  taste = [sweet 0.31 water 0.12 bitter 0.66 ir94e 0.02 low_salt 0.04 high_salt 0.00 fizz 0.62]
+   MN9    0.0 ± 0.0 Hz   >10Hz 557   >100Hz 61   spikes/s 28,493   growth x1.0   65s
+
+== 🍷 Κόκκινο κρασί  taste = [sweet 0.12 water 0.06 bitter 0.52 ir94e 0.01 low_salt 0.02 high_salt 0.00 fizz 0.00]
+   MN9    0.0 ± 0.0 Hz   >10Hz 424   >100Hz 34   spikes/s 21,135   growth x1.0   60s
+
+== 🍯 Μοσχάτο Σάμου  taste = [sweet 0.70 water 0.05 bitter 0.55 ir94e 0.01 low_salt 0.02 high_salt 0.00 fizz 0.00]
+   MN9    0.0 ± 0.0 Hz   >10Hz 750   >100Hz 62   spikes/s 36,616   growth x1.0   77s
+
+== 🥂 Αφρώδες brut  taste = [sweet 0.32 water 0.07 bitter 0.51 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.79]
+   MN9    0.0 ± 0.0 Hz   >10Hz 521   >100Hz 43   spikes/s 25,876   growth x1.0   93s
+
+== 🥃 Τσίπουρο  taste = [sweet 0.00 water 0.02 bitter 0.88 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.00]
+   MN9    0.0 ± 0.0 Hz   >10Hz 647   >100Hz 71   spikes/s 33,729   growth x1.0   61s
+
+== 🫖 Kombucha  taste = [sweet 0.53 water 0.51 bitter 0.29 ir94e 0.00 low_salt 0.00 high_salt 0.00 fizz 0.50]
+   MN9    0.0 ± 0.0 Hz   >10Hz 586   >100Hz 36   spikes/s 25,198   growth x1.0   61s
+
+🪰  THE FLY BAR — ranked by proboscis extension drive (MN9)
+
+ 1. 🍊 Χυμός πορτοκάλι      86.1 ±  0.6 Hz  ██████████████████████████████
+ 2. 🏃 Isotonic              0.9 ±  0.2 Hz  
+ 3. 🫖 Kombucha              0.0 ±  0.0 Hz  
+ 4. 💧 Νερό                  0.0 ±  0.0 Hz  
+ 5. 🫧 Σόδα                  0.0 ±  0.0 Hz  
+ 6. 🥤 Κόλα                  0.0 ±  0.0 Hz  
+ 7. 🍋 Λεμονάδα              0.0 ±  0.0 Hz  
+ 8. ⚡ Ενεργειακό ποτό       0.0 ±  0.0 Hz  
+ 9. 🧋 Φραπές γλυκός         0.0 ±  0.0 Hz  
+10. ☕ Espresso              0.0 ±  0.0 Hz  
+11. 🍺 Μπίρα λάγκερ          0.0 ±  0.0 Hz  
+12. 🍻 Μπίρα IPA             0.0 ±  0.0 Hz  
+13. 🍷 Κόκκινο κρασί         0.0 ±  0.0 Hz  
+14. 🍯 Μοσχάτο Σάμου         0.0 ±  0.0 Hz  
+15. 🥂 Αφρώδες brut          0.0 ±  0.0 Hz  
+16. 🥃 Τσίπουρο              0.0 ±  0.0 Hz  
+
+===== python -m runs.hunger (21:40:42)
+== 🥃 Negroni  bitter 0.90  starving (h=1): 79.8 Hz
+   h=0.500  0.0 Hz
+   h=0.750  1.5 Hz
+   h=0.875  47.0 Hz
+   h=0.812  26.8 Hz
+   -> drinks it from hunger 0.812
+== 🌿 Mojito  bitter 0.61  starving (h=1): 87.0 Hz
+   h=0.500  0.0 Hz
+   h=0.750  45.0 Hz
+   h=0.625  3.0 Hz
+   h=0.688  21.2 Hz
+   -> drinks it from hunger 0.688
+== 🍹 Paloma  bitter 0.72  starving (h=1): 83.0 Hz
+   h=0.500  0.0 Hz
+   h=0.750  6.0 Hz
+   h=0.625  0.0 Hz
+   h=0.688  0.2 Hz
+   -> drinks it from hunger 0.750
+== 🥃 Old Fashioned  bitter 0.87  starving (h=1): 68.2 Hz
+   h=0.500  0.0 Hz
+   h=0.750  0.5 Hz
+   h=0.875  29.0 Hz
+   h=0.812  11.8 Hz
+   -> drinks it from hunger 0.812
+== 🍸 Pornstar Martini  bitter 0.58  starving (h=1): 79.8 Hz
+   h=0.500  0.0 Hz
+   h=0.750  41.5 Hz
+   h=0.625  4.5 Hz
+   h=0.688  23.0 Hz
+   -> drinks it from hunger 0.688
+== 🥂 Aperol Spritz  bitter 0.70  starving (h=1): 92.0 Hz
+   h=0.500  0.0 Hz
+   h=0.750  55.8 Hz
+   h=0.625  3.0 Hz
+   h=0.688  27.5 Hz
+   -> drinks it from hunger 0.688
+== 🍸 Cosmopolitan  bitter 0.70  starving (h=1): 60.2 Hz
+   h=0.500  0.0 Hz
+   h=0.750  4.8 Hz
+   h=0.875  33.5 Hz
+   h=0.812  16.0 Hz
+   -> drinks it from hunger 0.812
+== 🍍 Piña Colada  bitter 0.33  starving (h=1): 89.5 Hz
+   h=0.500  58.0 Hz
+   h=0.250  10.0 Hz
+   h=0.125  2.0 Hz
+   h=0.188  4.0 Hz
+   -> drinks it from hunger 0.250
+== 🧊 Gin & Tonic  bitter 0.79  starving (h=1): 84.0 Hz
+   h=0.500  0.0 Hz
+   h=0.750  16.0 Hz
+   h=0.625  0.0 Hz
+   h=0.688  1.5 Hz
+   -> drinks it from hunger 0.750
+
+choice order: 🍍 Piña Colada (0.25) > 🥂 Aperol Spritz (0.688) > 🍸 Pornstar Martini (0.688) > 🌿 Mojito (0.688) > 🧊 Gin & Tonic (0.75) > 🍹 Paloma (0.75) > 🥃 Negroni (0.812) > 🍸 Cosmopolitan (0.812) > 🥃 Old Fashioned (0.812)
+
+===== python -m export.export_ui (23:30:01)
+== 🥃 Negroni
+   MN9_L    0.0 Hz   mean V -54.75 mV   growth x1.0   15s
+== 🌿 Mojito
+   MN9_L    0.0 Hz   mean V -59.81 mV   growth x1.0   15s
+== 🍹 Paloma
+   MN9_L    0.0 Hz   mean V -57.14 mV   growth x1.0   15s
+== 🥃 Old Fashioned
+   MN9_L    0.0 Hz   mean V -53.25 mV   growth x1.0   14s
+== 🍸 Pornstar Martini
+   MN9_L    0.0 Hz   mean V -56.92 mV   growth x1.0   14s
+== 🥂 Aperol Spritz
+   MN9_L    0.0 Hz   mean V -59.12 mV   growth x1.0   16s
+== 🍸 Cosmopolitan
+   MN9_L    0.0 Hz   mean V -53.32 mV   growth x1.0   15s
+== 🍍 Piña Colada
+   MN9_L    0.0 Hz   mean V -56.97 mV   growth x1.0   15s
+== 🧊 Gin & Tonic
+   MN9_L    0.0 Hz   mean V -59.02 mV   growth x1.0   15s
+
+ranking: 🥃 Old Fashioned > 🍸 Cosmopolitan > 🥃 Negroni > 🍸 Pornstar Martini > 🍍 Piña Colada > 🍹 Paloma > 🧊 Gin & Tonic > 🥂 Aperol Spritz > 🌿 Mojito
+
+===== python -m export.export_brain_cloud (23:32:22)
+{
+  "count": 140638,
+  "neurons_total": 166700,
+  "groups": [
+    "central brain",
+    "optic lobes",
+    "nerve cord",
+    "sensory",
+    "motor & long-range"
+  ],
+  "group_counts": [
+    32075,
+    91429,
+    12953,
+    30,
+    4151
+  ],
+  "bbox_voxels": {
+    "min": [
+      2468.0,
+      4758.0,
+      10154.0
+    ],
+    "max": [
+      93668.0,
+      68996.0,
+      134559.0
+    ]
+  },
+  "voxel_nm": 8
+}
+
+===== python -m export.export_web (23:32:23)
+wrote /home/s/st/stevejobs/flybrain/fly_brain/app/public/data/drinks.json  provisional=False  winner=pi_a_colada  clouds=9/9
+== done Sat Sep 26 11:32:24 PM PDT 2026

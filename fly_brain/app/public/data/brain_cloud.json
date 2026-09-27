@@ -1,0 +1,31 @@
+{
+  "count": 140638,
+  "neurons_total": 166700,
+  "groups": [
+    "central brain",
+    "optic lobes",
+    "nerve cord",
+    "sensory",
+    "motor & long-range"
+  ],
+  "group_counts": [
+    32075,
+    91429,
+    12953,
+    30,
+    4151
+  ],
+  "bbox_voxels": {
+    "min": [
+      2468.0,
+      4758.0,
+      10154.0
+    ],
+    "max": [
+      93668.0,
+      68996.0,
+      134559.0
+    ]
+  },
+  "voxel_nm": 8
+}
