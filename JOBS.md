@@ -1,0 +1,93 @@
+# Jobs
+
+Every Slurm job run from this repo on the OCF cluster (node `corruption`), newest last. Generated
+by `python3 tools/jobs_ledger.py` from `sacct`; do not edit by hand, add context to `NOTES` there.
+Commands run from the job's working directory (`.` = repo root, `fly_brain/` for most `srun` jobs).
+
+| Job | Started | State | Time | Resources | What | Command | Logs / outputs |
+|---|---|---|---|---|---|---|---|
+| 36053 | 2026-09-26 21:16 | COMPLETED | 00:00:00 | 4 cpu, 8G, 1 gpu | probe: node, GPU, python and torch on the cluster | `srun -p ocf-hpc --gres=gpu:1 -c 4 --mem=8G -t 5 bash -c hostname; nvidia-smi --query-gpu=name,memory.used,memory.total,utilization.gpu --format=csv; which python3 conda; python3 --version; ls /opt/conda/bin 2>/dev/nul...` |  |
+| 36054 | 2026-09-26 21:18 | COMPLETED | 00:01:07 | 32 cpu, 64G | build brain.npz from the connectome + tests.test_sim | `sbatch flybar.sbatch build` | [flybar-36054.out](logs/flybar-36054.out) |
+| 36055 | 2026-09-26 21:20 | COMPLETED | 00:00:54 | 32 cpu, 64G | pilot bar: 4 drinks, 5 trials | `sbatch flybar.sbatch pilot` | [flybar-36055.out](logs/flybar-36055.out) |
+| 36056 | 2026-09-26 21:22 | COMPLETED | 02:09:33 | 32 cpu, 64G | full bar + hunger + UI/web export -> results/bar.json, hunger_cocktails.json, app/public/data | `sbatch flybar.sbatch full` | [flybar-36056.out](logs/flybar-36056.out) |
+| 36057 | 2026-09-26 21:27 | COMPLETED | 00:15:32 | 32 cpu, 32G | custom drink served with serve.sh | `srun -p ocf-hpc -w corruption -c 32 --mem=32G -t 20 --quiet env OMP_NUM_THREADS=32 /home/s/st/stevejobs/flybrain/venv/bin/python -m runs.serve 🧋 珍珠奶茶 --sugar 80 --caffeine 150 --ph 6.5 --trials 5` (in `./fly_brain`) |  |
+| 36059 | 2026-09-26 21:43 | COMPLETED | 00:00:01 | 32 cpu, 4G | probe: CPU affinity and torch threads | `srun -p ocf-hpc -w corruption -c 32 --mem=4G -t 3 --quiet env OMP_NUM_THREADS=32 venv/bin/python -c  ⏎ import os, torch; print('affinity', len(os.sched_getaffinity(0)), 'torch threads', torch.get_num_threads(), 'OMP',...` |  |
+| 36062 | 2026-09-26 23:32 | COMPLETED | 00:00:17 | 32 cpu, 32G | custom drink served with serve.sh | `srun -p ocf-hpc -w corruption -c 32 --mem=32G -t 20 --quiet env OMP_NUM_THREADS=32 /home/s/st/stevejobs/flybrain/venv/bin/python -m runs.serve 🍉 西瓜汁 --sugar 60 --ph 5.5 --trials 5` (in `./fly_brain`) |  |
+| 36064 | 2026-09-27 02:13 | COMPLETED | 00:08:25 | 32 cpu, 64G | Fly Brain Live dashboard data -> dashboard/data | `sbatch dashboard.sbatch --trials 8` | [flydash-36064.out](logs/flydash-36064.out) |
+| 36073 | 2026-09-27 04:54 | COMPLETED | 00:00:00 | 2 cpu, 2G, 1 gpu | probe: GPU name and driver | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 2 --mem=2G -t 3 --quiet nvidia-smi --query-gpu=name,driver_version --format=csv,noheader` |  |
+| 36074 | 2026-09-27 04:54 | FAILED | 00:00:00 | 2 cpu, 1G | probe: CUDA version | `srun -p ocf-hpc -w corruption -c 1 --mem=1G -t 2 --quiet bash -c ls /usr/local/cuda*/bin/nvcc 2>/dev/null; nvidia-smi ¦ grep -oE "CUDA Version: [0-9.]+"` |  |
+| 36075 | 2026-09-27 04:55 | COMPLETED | 00:03:23 | 4 cpu, 16G, 1 gpu | build venv-cuda (torch cu121) and check the GPU | `sbatch cuda-venv.sbatch` | [cudavenv-36075.out](logs/cudavenv-36075.out) |
+| 36076 | 2026-09-27 04:55 | FAILED | 00:00:00 | 8 cpu, 8G | failed: started in the repo root, where there is no brain package | `srun -p ocf-hpc -w corruption -c 8 --mem=8G -t 10 --quiet env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv/bin/python -m tests.test_sim` |  |
+| 36077 | 2026-09-27 04:55 | COMPLETED | 00:00:08 | 8 cpu, 8G | tests.test_sim on CPU after the GPU port | `srun -p ocf-hpc -w corruption -c 8 --mem=8G -t 10 --quiet --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv/bin/python -m tests.test_sim` (in `./fly_brain`) |  |
+| 36078 | 2026-09-27 04:58 | COMPLETED | 00:03:02 | 32 cpu, 64G, 1 gpu | CPU vs GPU benchmark -> results/bench_gpu.json | `sbatch bench.sbatch --devices cpu cuda --trials 1 8 32 128` | [flybench-36078.out](logs/flybench-36078.out) |
+| 36079 | 2026-09-27 05:00 | FAILED | 00:00:00 | 2 cpu, 1G | probe: GPU memory (failed) | `srun -p ocf-hpc -w corruption -c 1 --mem=1G -t 2 --quiet nvidia-smi --query-gpu=name,memory.used,memory.total,utilization.gpu --format=csv` |  |
+| 36080 | 2026-09-27 05:02 | FAILED | 00:00:00 | 8 cpu, 32G, 1 gpu | failed: relative venv path | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=32G -t 15 --quiet --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 venv-cuda/bin/python -m runs.bench_gpu --devices cuda --trials 512 --out re...` (in `./fly_brain`) | `results/bench_gpu_512.json` |
+| 36081 | 2026-09-27 05:02 | FAILED | 00:00:00 | 8 cpu, 32G, 1 gpu | failed: relative venv path | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=32G -t 15 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 venv-cuda/bin/python -m runs.bench_gpu --devices cuda --trials 512 --out results/be...` (in `./fly_brain`) | `results/bench_gpu_512.json` |
+| 36082 | 2026-09-27 05:02 | COMPLETED | 00:02:04 | 8 cpu, 32G, 1 gpu | 512-trial GPU batch -> results/bench_gpu_512.json | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=32G -t 15 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bench_gpu --devices cuda...` (in `./fly_brain`) | `results/bench_gpu_512.json` |
+| 36083 | 2026-09-27 05:11 | COMPLETED | 00:00:07 | 4 cpu, 8G | bike + closed-loop sanity tests | `srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 10 --quiet ../venv/bin/python -m tests.test_ride` (in `./fly_brain`) |  |
+| 36084 | 2026-09-27 05:11 | COMPLETED | 00:00:02 | 4 cpu, 8G | interface smoke test: senses, readout, decoder on a toy peloton | `srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 10 --quiet ../venv/bin/python -` (in `./fly_brain`) | [inline script](logs/inline/36084.py) |
+| 36085 | 2026-09-27 05:12 | COMPLETED | 00:00:37 | 8 cpu, 40G, 1 gpu | open loop: brain in the loop, prior decoder, no steering | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --riders 8 --seconds 3 --trace results/ride_pilot_trace.json` (in `./fly_brain`) | `results/ride_pilot_trace.json` |
+| 36086 | 2026-09-27 05:13 | COMPLETED | 00:00:06 | 4 cpu, 8G | PD rider without a brain (oracle) | `srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 10 --quiet ../venv/bin/python -m runs.ride --oracle --riders 32 --seconds 10 --trace results/ride_oracle_trace.json` (in `./fly_brain`) | `results/ride_oracle_trace.json` |
+| 36087 | 2026-09-27 05:15 | COMPLETED | 00:01:09 | 8 cpu, 40G, 1 gpu | passenger screen, pilot | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 20 --quiet ../venv-cuda/bin/python -m runs.screen --riders 8 --seconds 6` (in `./fly_brain`) |  |
+| 36088 | 2026-09-27 05:18 | COMPLETED | 00:01:05 | 8 cpu, 40G, 1 gpu | which sensory population saturates the brain (odour goal diagnosis) | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet ../venv-cuda/bin/python -` (in `./fly_brain`) | [inline script](logs/inline/36088.py) |
+| 36089 | 2026-09-27 05:19 | COMPLETED | 00:01:43 | 8 cpu, 40G, 1 gpu | passenger screen -> results/screen.json, screen_samples.npz | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 25 --quiet ../venv-cuda/bin/python -m runs.screen --riders 16 --seconds 8` (in `./fly_brain`) |  |
+| 36090 | 2026-09-27 05:22 | FAILED | 00:00:03 | 8 cpu, 48G, 1 gpu | failed: wrong path to screen_samples.npz | `sbatch ride.sbatch --init fly_brain/results/screen_samples.npz --riders 48 --generations 15 --seconds 10 --out results/ride.json` | `results/ride.json`, [flyride-36090.err](logs/flyride-36090.err), [flyride-36090.out](logs/flyride-36090.out) |
+| 36091 | 2026-09-27 05:23 | COMPLETED | 00:50:32 | 8 cpu, 48G, 1 gpu | CEM learning, sigma0 0.3 -> results/ride.json | `sbatch ride.sbatch --init results/screen_samples.npz --riders 48 --generations 15 --seconds 10 --out results/ride.json` | `results/ride.json`, [flyride-36091.out](logs/flyride-36091.out) |
+| 36092 | 2026-09-27 06:13 | COMPLETED | 00:51:17 | 8 cpu, 48G, 1 gpu | CEM learning, sigma0 0.1 -> results/ride_b.json (the best decoder) | `sbatch ride.sbatch --init results/screen_samples.npz --riders 48 --generations 15 --seconds 10 --sigma0 0.1 --seed 1 --out results/ride_b.json` | `results/ride_b.json`, [flyride-36092.out](logs/flyride-36092.out) |
+| 36093 | None | CANCELLED | 00:00:00 | 1 gpu | cancelled, rerun on CPU as 36094 | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 25 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --replay results/ride.json --riders 16 --seconds 12 --seed 7 --trace results/ride...` (in `./fly_brain`) | `results/ride_trace.json` |
+| 36094 | 2026-09-27 06:25 | COMPLETED | 00:08:26 | 32 cpu, 48G | replay of ride.json -> results/ride_trace.json | `srun -p ocf-hpc -w corruption -c 32 --mem=48G -t 40 --quiet env OMP_NUM_THREADS=32 /home/s/st/stevejobs/flybrain/venv/bin/python -m runs.ride --replay results/ride.json --riders 16 --seconds 12 --seed 7 --device cpu -...` (in `./fly_brain`) | `results/ride_trace.json` |
+| 36095 | 2026-09-27 07:05 | COMPLETED | 00:03:26 | 8 cpu, 40G, 1 gpu | replay of the best decoder -> results/ride_b_trace.json (the /ride/ demo) | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --replay results/ride_b.json --riders 16 --seconds 15 --seed 7 --trace results/ri...` (in `./fly_brain`) | `results/ride_b_trace.json` |
+| 36101 | None | CANCELLED | 00:00:00 | 1 gpu | cancelled: is a weak odour goal stable? | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -` (in `./fly_brain`) | [inline script](logs/inline/36101.py) |
+| 36102 | None | CANCELLED | 00:00:00 |  | cancelled: HS lane cue check | `srun -p ocf-hpc -w corruption -c 2 --mem=6G -t 5 --quiet /home/s/st/stevejobs/flybrain/venv/bin/python -` (in `./fly_brain`) | [inline script](logs/inline/36102.py) |
+| 36103 | Unknown | PENDING | 00:00:00 | 1 gpu | lane keeping: screen with HS lane cue -> CEM -> replay | `sbatch ride-lane.sbatch` |  |
+
+## Full command lines
+
+**36053** (bash)
+
+```bash
+srun -p ocf-hpc --gres=gpu:1 -c 4 --mem=8G -t 5 bash -c hostname; nvidia-smi --query-gpu=name,memory.used,memory.total,utilization.gpu --format=csv; which python3 conda; python3 --version; ls /opt/conda/bin 2>/dev/null | head -3; python3 -c "import torch;print(torch.__version__, torch.cuda.is_available())" 2>&1; df -h /scratch /tmp 2>/dev/null | tail -2
+```
+
+**36059** (env)
+
+```bash
+srun -p ocf-hpc -w corruption -c 32 --mem=4G -t 3 --quiet env OMP_NUM_THREADS=32 venv/bin/python -c 
+import os, torch; print('affinity', len(os.sched_getaffinity(0)), 'torch threads', torch.get_num_threads(), 'OMP', os.environ.get('OMP_NUM_THREADS'))
+```
+
+**36080** (env)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=32G -t 15 --quiet --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 venv-cuda/bin/python -m runs.bench_gpu --devices cuda --trials 512 --out results/bench_gpu_512.json
+```
+
+**36081** (env)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=32G -t 15 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 venv-cuda/bin/python -m runs.bench_gpu --devices cuda --trials 512 --out results/bench_gpu_512.json
+```
+
+**36082** (env)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=32G -t 15 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bench_gpu --devices cuda --trials 512 --out results/bench_gpu_512.json
+```
+
+**36093** (python)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 25 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --replay results/ride.json --riders 16 --seconds 12 --seed 7 --trace results/ride_trace.json
+```
+
+**36094** (env)
+
+```bash
+srun -p ocf-hpc -w corruption -c 32 --mem=48G -t 40 --quiet env OMP_NUM_THREADS=32 /home/s/st/stevejobs/flybrain/venv/bin/python -m runs.ride --replay results/ride.json --riders 16 --seconds 12 --seed 7 --device cpu --trace results/ride_trace.json
+```
+
+**36095** (python)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --replay results/ride_b.json --riders 16 --seconds 15 --seed 7 --trace results/ride_b_trace.json
+```
