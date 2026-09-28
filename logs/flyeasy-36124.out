@@ -1,0 +1,15 @@
+== Mon Sep 28 10:42:00 AM PDT 2026 cem easy from results/ride_lane.json -> results/ride_easy_seeded.json (sigma0 0.08, sigma-new 0.25)
+Tarmac SL9 + 70 kg: 78.2 kg, self-stable 4.70..7.74 m/s; start at 5.5 m/s, gusts 5 Nm, 48 riders on cuda
+sensory gain overrides: {'hs_heading': 150.0, 'hs_lane': 50.0}
+senses : VS_L 16, HS_L 5, HALT_L 104, JO_L 228, LEG1_L 45, VS_R 18, HS_R 5, HALT_R 101, JO_R 247, LEG1_R 20  (789 neurons)
+readout: DNp20_L 1, DNp20_R 1, DNp22_L 1, DNp22_R 1, DNg46_L 1, DNg46_R 1, DNge043_L 1, DNge043_R 1, DNb06_L 1, DNb06_R 1, DNp17_L 6, DNp17_R 6, DNpe013_L 1, DNpe013_R 1, DNge097_L 1, DNge097_R 1, DNg94_L 1, DNg94_R 1, DNg90_L 1, DNg90_R 1, DNge088_L 1, DNge088_R 1, DNp33_L 1, DNp33_R 1, DNge091_L 7, DNge091_R 7, DNg29_L 1, DNg29_R 1, DNg41_L 1, DNg41_R 1, DNp18_L 1, DNp18_R 1, DNp73_L 1, DNp73_R 1, DNb04_L 1, DNb04_R 1, b1 MN_L 1, b1 MN_R 1, b2 MN_L 1, b2 MN_R 1, b3 MN_L 1, b3 MN_R 1, hg1 MN_L 1, hg1 MN_R 1, hi2 MN_L 2, hi2 MN_R 2, i2 MN_L 1, i2 MN_R 1, DNa01_L 1, DNa01_R 1, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 1, DNb01_L 1, DNb01_R 1, DNp09_L 1, DNp09_R 1, DNg100_L 1, DNg100_R 1, DNg97_L 1, DNg97_R 1, MDN_L 2, MDN_R 2, DNp01_L 1, DNp01_R 1, DNa16_L 1, DNa16_R 1, DNb03_L 2, DNb03_R 2, DNa06_L 1, DNa06_R 1, DNp15_L 1, DNp15_R 1, DNge107_L 1, DNge107_R 1, DNge086_L 1, DNge086_R 1, DNge031_L 1, DNge031_R 1, DNge033_L 1, DNge033_R 1, GNG283_L 1, GNG283_R 1
+brain: 166,700 neurons, 789 driven, 112 read out, w_syn 0.1238 mV
+CEM starts from best_theta of results/ride_lane.json; 18 new decoder weights start at 0 with width 0.25
+  after warm-up, DN rates (Hz): DNp20_L 38, DNp20_R 23, DNp22_R 1, DNg46_R 2, DNge043_L 8, DNge043_R 14, DNb06_L 35, DNpe013_L 3, DNpe013_R 5, DNg94_R 1, DNg90_R 2, DNp33_L 27, DNp33_R 12, DNge091_L 3, DNg29_L 47, DNg29_R 30, DNg41_L 27, DNg41_R 31, DNp18_L 33, DNp18_R 48, DNp73_L 65, DNp73_R 9, b2 MN_L 12, b2 MN_R 5, hg1 MN_L 23, hg1 MN_R 14, DNa01_L 2, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 3, MDN_L 1, MDN_R 1, DNa16_L 4, DNa16_R 8, DNb03_L 6, DNb03_R 5, DNa06_L 10, DNa06_R 12, DNp15_L 6, DNp15_R 30, DNge107_L 1, DNge107_R 18, DNge086_R 3, DNge031_L 21, DNge031_R 24, DNge033_L 10, DNge033_R 16, GNG283_L 4, GNG283_R 16
+  population 20,371 spikes/s per brain
+gen  0  fit best   6.48 mean   2.50  upright  2.33 s (max  5.93,   0% finish)  dist  12.1 m  |y| 1.54 m  v 5.35  bailed 0  pop 74,675 sp/s  122s
+gen  1  fit best   7.53 mean   3.13  upright  2.95 s (max  7.21,   0% finish)  dist  14.7 m  |y| 2.37 m  v 5.06  bailed 0  pop 72,017 sp/s  146s
+gen  2  fit best   9.14 mean   3.78  upright  3.58 s (max  9.13,   0% finish)  dist  17.6 m  |y| 2.69 m  v 4.89  bailed 0  pop 70,481 sp/s  184s
+gen  3  fit best   9.45 mean   3.81  upright  3.64 s (max  9.11,   0% finish)  dist  17.7 m  |y| 2.52 m  v 4.84  bailed 0  pop 76,032 sp/s  186s
+gen  4  fit best   8.01 mean   3.75  upright  3.56 s (max  7.79,   0% finish)  dist  17.1 m  |y| 2.60 m  v 4.80  bailed 0  pop 69,794 sp/s  159s
+gen  5  fit best  13.16 mean   4.65  upright  4.42 s (max 12.55,   0% finish)  dist  21.8 m  |y| 3.08 m  v 4.73  bailed 0  pop 71,641 sp/s  254s

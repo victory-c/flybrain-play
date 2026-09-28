@@ -53,10 +53,17 @@ Commands run from the job's working directory (`.` = repo root, `fly_brain/` for
 | 36114 | 2026-09-28 10:13 | CANCELLED | 00:04:13 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch hs_heading=150,hs_lane=50 results/ride_lanedn_strong.json` | [flylanedn-36114.err](logs/flylanedn-36114.err), [flylanedn-36114.out](logs/flylanedn-36114.out) |
 | 36115 | 2026-09-28 10:18 | CANCELLED | 00:04:56 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch  results/ride_lanedn.json` | [flylanedn-36115.err](logs/flylanedn-36115.err), [flylanedn-36115.out](logs/flylanedn-36115.out) |
 | 36116 | 2026-09-28 10:18 | CANCELLED | 00:04:56 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch hs_heading=150,hs_lane=50 results/ride_lanedn_strong.json` | [flylanedn-36116.err](logs/flylanedn-36116.err), [flylanedn-36116.out](logs/flylanedn-36116.out) |
-| 36117 | 2026-09-28 10:22 | RUNNING | 00:07:20 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch  results/ride_lanedn_narrow.json 0.25 8` | [flylanedn-36117.out](logs/flylanedn-36117.out) |
-| 36118 | 2026-09-28 10:23 | RUNNING | 00:06:56 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch hs_heading=150,hs_lane=50 results/ride_lanedn_strong.json 0.25 9` | [flylanedn-36118.out](logs/flylanedn-36118.out) |
+| 36117 | 2026-09-28 10:22 | CANCELLED | 00:31:51 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch  results/ride_lanedn_narrow.json 0.25 8` | [flylanedn-36117.err](logs/flylanedn-36117.err), [flylanedn-36117.out](logs/flylanedn-36117.out) |
+| 36118 | 2026-09-28 10:23 | CANCELLED | 00:18:53 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch hs_heading=150,hs_lane=50 results/ride_lanedn_strong.json 0.25 9` | [flylanedn-36118.err](logs/flylanedn-36118.err), [flylanedn-36118.out](logs/flylanedn-36118.out) |
 | 36119 | 2026-09-28 10:23 | CANCELLED | 00:02:19 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch  results/ride_lanedn_tiny.json 0.1 10` | [flylanedn-36119.err](logs/flylanedn-36119.err), [flylanedn-36119.out](logs/flylanedn-36119.out) |
-| 36120 | 2026-09-28 10:25 | RUNNING | 00:04:34 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanefilter.sbatch` | [flyfilter-36120.out](logs/flyfilter-36120.out) |
+| 36120 | 2026-09-28 10:25 | CANCELLED | 00:08:06 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanefilter.sbatch` | [flyfilter-36120.err](logs/flyfilter-36120.err), [flyfilter-36120.out](logs/flyfilter-36120.out) |
+| 36121 | 2026-09-28 10:33 | CANCELLED | 00:08:22 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-fast.sbatch hs_heading=150,hs_lane=50 results/ride_fast.json 0.25 12` | [flyfast-36121.err](logs/flyfast-36121.err), [flyfast-36121.out](logs/flyfast-36121.out) |
+| 36122 | 2026-09-28 10:40 | COMPLETED | 00:00:15 | 4 cpu, 8G |  | `srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 5 --quiet /home/s/st/stevejobs/flybrain/venv/bin/python -` (in `./fly_brain`) |  |
+| 36123 | 2026-09-28 10:41 | COMPLETED | 00:00:19 | 4 cpu, 8G |  | `srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 5 --quiet /home/s/st/stevejobs/flybrain/venv/bin/python -` (in `./fly_brain`) |  |
+| 36124 | 2026-09-28 10:42 | RUNNING | 00:18:01 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy.sbatch results/ride_lane.json results/ride_easy_seeded.json 0.08 0.25 21` | [flyeasy-36124.out](logs/flyeasy-36124.out) |
+| 36125 | 2026-09-28 10:42 | CANCELLED | 00:02:55 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy.sbatch results/zero_theta.json results/ride_easy_zero.json 0.15 0.15 22` | [flyeasy-36125.err](logs/flyeasy-36125.err), [flyeasy-36125.out](logs/flyeasy-36125.out) |
+| 36126 | 2026-09-28 10:44 | RUNNING | 00:15:04 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy-c.sbatch results/zero_theta.json results/ride_easy_zero.json 0.15 0.15 22` | [flyeasyc-36126.out](logs/flyeasyc-36126.out) |
+| 36127 | 2026-09-28 10:54 | RUNNING | 00:05:27 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-slow.sbatch results/ride_lane.json results/ride_slow.json 0.08 0.25 23` | [flyslow-36127.out](logs/flyslow-36127.out) |
 
 ## Full command lines
 

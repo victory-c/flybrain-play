@@ -57,6 +57,8 @@ def parse():
     ap.add_argument("--sigma-new", type=float, default=0.8, help="CEM width for decoder weights absent from --init-theta")
     ap.add_argument("--lane-filter", default=None, help="runs/probe.py json: add one matched-filter lane signal (HS) with one gain")
     ap.add_argument("--sigma-lane-filter", type=float, default=2.0, help="CEM width for the lane-filter gain")
+    ap.add_argument("--center-all", action="store_true", help="read every steering feature as its deviation from the warm-up rate")
+    ap.add_argument("--tau-lane-ms", type=float, default=40.0, help="smoothing of the lane channel (LANE_DNS + lane filter); roll stays at --tau-ms")
     ap.add_argument("--ridge", type=float, default=1.0)
     ap.add_argument("--sigma0", type=float, default=0.15, help="CEM search width around the teacher fit")
     ap.add_argument("--lane-penalty", type=float, default=0.01, help="fitness cost per m^2 of lateral offset per second")
@@ -95,7 +97,7 @@ class Ride:
                 print("sensory gain overrides:", gains, flush=True)
             self.readout = Readout(meta, types=READOUTS[a.readout], device=self.dev)
             lf = lane_filter_from_probe(a.lane_filter, self.readout) if a.lane_filter else None
-            self.decoder = Decoder(self.readout, lane_filter=lf)
+            self.decoder = Decoder(self.readout, lane_filter=lf, center_all=a.center_all)
             print("senses :", self.senses.describe())
             print("readout:", self.readout.describe(), flush=True)
             brain = Brain(ROOT / "brain.npz")
@@ -121,6 +123,7 @@ class Ride:
             loop.set_rates(self.senses.rates(bikes.state, bikes.psi_dot))
             counts, pop = loop.run(a.warmup_ms)
             smooth = self.readout.features(counts, a.warmup_ms)
+            slow = smooth.clone()
             self.decoder.set_center(smooth)
             if verbose:
                 f0 = smooth.mean(0).cpu().numpy()
@@ -143,13 +146,14 @@ class Ride:
                 counts, pop = loop.run(a.ctrl_ms)
                 f = self.readout.features(counts, a.ctrl_ms)
                 smooth += (f - smooth) * min(1.0, a.ctrl_ms / a.tau_ms)
+                slow += (f - slow) * min(1.0, a.ctrl_ms / a.tau_lane_ms)
                 gf_hist.append(self.readout.gf_spikes(counts))
                 gf_hist = gf_hist[-max(1, int(round(50.0 / a.ctrl_ms))):]
                 if not a.no_bail:
                     bail = (torch.stack(gf_hist).sum(0) >= 4) & alive
                     bikes.done |= bail
                     bailed |= bail
-                steer, power, brake = self.decoder.act(theta, smooth)
+                steer, power, brake = self.decoder.act(theta, smooth, slow if a.tau_lane_ms != a.tau_ms else None)
                 if collect is not None or beta > 0:
                     expert = bikes.pd_oracle()
                     if collect is not None and alive.any():

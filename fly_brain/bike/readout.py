@@ -81,7 +81,7 @@ class Readout:
 class Decoder:
     """theta = [steer weights (F), steer bias, pedal gain, pedal bias, brake gain, brake bias]."""
 
-    def __init__(self, readout, steer_max=6.0, power_max=250.0, brake_max=6.0, rate_scale=50.0, lane_filter=None):
+    def __init__(self, readout, steer_max=6.0, power_max=250.0, brake_max=6.0, rate_scale=50.0, lane_filter=None, center_all=False):
         """lane_filter: optional (F,) matched filter from runs/probe.py (each feature's response to left-vs-right HS
         drive). Its output, sum_j w_j (f_j - warm-up f_j), is one lane signal with one extra gain: theta[-1]."""
         self.r = readout
@@ -94,7 +94,11 @@ class Decoder:
         self.steer_max, self.power_max, self.brake_max, self.rate_scale = steer_max, power_max, brake_max, rate_scale
         # lane-channel features are read as deviations from each rider's warm-up rate (they fire at ~30 Hz baseline;
         # uncentred, any weight on them is a standing steering bias). The other features stay absolute.
-        self.center_mask = torch.tensor([g[0] in LANE_DNS for g in readout.groups], dtype=torch.float32, device=readout.dev)
+        self.center_mask = torch.tensor([center_all or g[0] in LANE_DNS for g in readout.groups], dtype=torch.float32, device=readout.dev)
+        lane_feats = [g[0] in LANE_DNS for g in readout.groups]
+        if lane_filter is not None:  # every feature the matched filter uses belongs to the (slow) lane channel
+            lane_feats = [a or float(w) != 0.0 for a, w in zip(lane_feats, lane_filter)]
+        self.lane_mask = torch.tensor(lane_feats, dtype=torch.float32, device=readout.dev)
         self.center = None
 
     def set_center(self, f):
@@ -122,9 +126,13 @@ class Decoder:
         return s
 
     @torch.no_grad()
-    def act(self, theta, f):
-        """theta (B, D), f (B, F) smoothed Hz -> steer torque (Nm), power (W), brake (m/s^2)."""
+    def act(self, theta, f, f_slow=None):
+        """theta (B, D), f (B, F) smoothed Hz -> steer torque (Nm), power (W), brake (m/s^2).
+        f_slow: the same features smoothed over a longer window; used for the lane channel (LANE_DNS features and
+        the lane filter), whose 5-15 Hz modulations are buried in 40 ms spike-count noise."""
         F = self.F
+        if f_slow is not None:
+            f = f + (f_slow - f) * self.lane_mask
         z = (f - self.center if self.center is not None else f) / self.rate_scale
         arg = (z * theta[:, :F]).sum(1) + theta[:, F]
         if self.lane_filter is not None:

@@ -8,3 +8,12 @@ CEM starts from best_theta of results/ride_lane.json; 18 new decoder weights sta
   population 15,039 spikes/s per brain
 gen  0  fit best   5.32 mean   2.33  upright  2.24 s (max  5.14,   0% finish)  dist   8.6 m  |y| 1.53 m  v 4.11  bailed 0  pop 74,160 sp/s  107s
 gen  1  fit best   6.42 mean   3.34  upright  3.26 s (max  6.29,   0% finish)  dist  12.3 m  |y| 2.52 m  v 4.12  bailed 0  pop 66,602 sp/s  129s
+gen  2  fit best  10.34 mean   3.66  upright  3.57 s (max 10.16,   0% finish)  dist  13.5 m  |y| 2.66 m  v 4.16  bailed 0  pop 70,736 sp/s  206s
+gen  3  fit best   8.96 mean   4.02  upright  3.92 s (max  8.79,   0% finish)  dist  14.9 m  |y| 2.57 m  v 4.18  bailed 0  pop 68,267 sp/s  179s
+gen  4  fit best  11.94 mean   4.02  upright  3.92 s (max 12.00,   2% finish)  dist  15.1 m  |y| 2.41 m  v 4.19  bailed 0  pop 74,046 sp/s  242s
+gen  5  fit best   8.87 mean   3.68  upright  3.59 s (max  8.76,   0% finish)  dist  13.8 m  |y| 2.55 m  v 4.19  bailed 0  pop 73,553 sp/s  178s
+gen  6  fit best   7.29 mean   4.12  upright  4.03 s (max  7.00,   0% finish)  dist  15.5 m  |y| 3.05 m  v 4.20  bailed 0  pop 67,940 sp/s  143s
+gen  7  fit best   7.14 mean   4.17  upright  4.10 s (max  6.82,   0% finish)  dist  15.9 m  |y| 3.39 m  v 4.26  bailed 0  pop 64,336 sp/s  140s
+gen  8  fit best   9.10 mean   4.23  upright  4.14 s (max  8.96,   0% finish)  dist  16.0 m  |y| 2.87 m  v 4.27  bailed 0  pop 71,390 sp/s  182s
+gen  9  fit best   8.02 mean   4.11  upright  4.03 s (max  8.08,   0% finish)  dist  15.5 m  |y| 2.93 m  v 4.23  bailed 0  pop 73,280 sp/s  165s
+gen 10  fit best   8.58 mean   4.16  upright  4.08 s (max  8.44,   0% finish)  dist  15.6 m  |y| 3.00 m  v 4.27  bailed 0  pop 72,089 sp/s  172s
