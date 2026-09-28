@@ -8,7 +8,7 @@ a spiking network. We give it drinks, record every neuron, and put it in charge 
 | Demo | What you see |
 |---|---|
 | [The fly rides a Tarmac SL9](https://flybrain-play.vercel.app/ride/) | 3D replay: the brain balances a Specialized S-Works Tarmac SL9 in side gusts. Chase cam, side cam, or the fly's own eyes. Also: [charts](https://flybrain-play.vercel.app/ride/charts), [PD rider without a brain](https://flybrain-play.vercel.app/ride/oracle), [brain in the loop but not steering](https://flybrain-play.vercel.app/ride/open-loop) |
-| [Fly Brain Live](https://flybrain-play.vercel.app/dashboard/) | Whole-brain activity in 50 ms frames while the fly tastes 12 drinks (orange juice, bubble tea, cola, espresso, lager, tsipouro, ...), with the feeding motor neuron MN9 |
+| [Fly Brain Live](https://flybrain-play.vercel.app/dashboard/) | Brain activity in 50 ms frames (all 140,638 neurons with a known position) across 12 replays of 11 drinks (orange juice, bubble tea, cola, espresso, lager, tsipouro, ...; Piña Colada fed and hungry, Negroni very hungry), with the feeding motor neuron MN9 |
 | [Fly Bar](https://flybrain-play.vercel.app/bar/) | The 3D bar app: nine cocktails ranked by how much the fly wants them, and the brain lighting up |
 | [Fly Bar, classic](https://flybrain-play.vercel.app/classic) | Single-page version: from the tongue to the proboscis |
 
@@ -22,7 +22,8 @@ unmodified; everything after it is ours:
 1. **Ran the Fly Bar on a Slurm cluster** (`flybar.sbatch`, `serve.sh`, `fly_brain/runs/serve.py`).
    `./serve.sh "🧋 奶茶" --sugar 80 --caffeine 150 --ph 6.5` serves any custom drink.
 2. **Fly Brain Live dashboard** (`fly_brain/dashboard/`, `fly_brain/export/export_dashboard.py`,
-   `pack_dashboard.py`): time-resolved replays of the whole 3D neuron cloud (140,638 points) for 12 drinks.
+   `pack_dashboard.py`): time-resolved replays of the whole 3D neuron cloud (140,638 neurons with a known position) for 12
+   replays of 11 drinks.
 3. **GPU port** (`fly_brain/brain/sim.py`, `device="cuda"`; `runs/bench_gpu.py`). A single trial is
    Python-loop bound (~8.5 s per simulated second either way); batching wins: 128 trials in 34.6 s on
    one RTX A6000.
@@ -30,26 +31,31 @@ unmodified; everything after it is ours:
    `ride.sbatch`). Details in [fly_brain/bike/README.md](fly_brain/bike/README.md). In short:
    - bike state is turned into firing of real balance, wind, optic-flow and leg sensory neurons;
      descending-neuron firing is decoded into steering torque, pedalling and braking;
-   - the walking command neurons of the literature stay silent, but flight-steering descending
-     neurons (DNp20, DNp22, DNg46, ...) track roll rate with opposite sign left and right, so the fly
-     steers the bike with its flight-stabilisation reflex;
-   - a 29-weight decoder fitted to a PD teacher (R² 0.75) and refined with the cross-entropy method
-     keeps 16 riders up for a mean of 14.1 s out of 15 s; 10 of 16 never fall. The connectome is
-     never changed.
+   - the walking command neurons of the literature do not track the lean (most stay silent; MDN fires
+     at 5-19 Hz regardless of it), but flight-steering descending neurons (DNp20, DNg46, DNp22, ...)
+     track roll rate with opposite sign left and right (DNp20 r = +0.78 / -0.74), so the fly steers
+     the bike with its flight-stabilisation reflex;
+   - a 71-parameter decoder (66 steering weights on 33 descending- and wing-motor-neuron types, left
+     and right, plus a bias and 4 pedal/brake terms) fitted to a PD teacher (R² 0.75) and refined
+     with the cross-entropy method keeps 16 riders up for a mean of 14.1 s out of 15 s; 9 of 16 never
+     fall (a 10th goes down at 14.99 s). The connectome is never changed.
 5. **Demo site** (`site/`, `vercel.json`): `site/build.sh` builds the app and collects the pages.
 
 ```
 flybrain-play/
 ├── fly_brain/        the simulator + our additions (brain/, runs/, bike/, export/, dashboard/, app/, results/)
 ├── site/             landing page and build script for the Vercel site
-├── *.sbatch          Slurm jobs: flybar (CPU), cuda-venv, bench, dashboard, ride (GPU)
+├── *.sbatch          Slurm jobs: flybar (CPU), cuda-venv, bench, dashboard, ride, ride-lane (GPU)
 ├── serve.sh          serve one drink via srun
-└── logs/             Slurm output of the runs whose results are committed
+├── sync.sh           commit + push everything that changed (code, results, logs, JOBS.md)
+├── tools/            jobs_ledger.py writes JOBS.md from sacct
+├── JOBS.md           every Slurm job (sbatch and srun) with its exact command line and outputs
+└── logs/             Slurm output files of the sbatch jobs; logs/inline/ has scripts fed to srun on stdin
 ```
 
 ## Running it
 
-The web demos need nothing but a browser. To rebuild the site locally (Node 20+):
+The web demos need nothing but a browser. To rebuild the site locally (Node 20.19+ or 22.12+, as Vite 7 requires):
 
 ```bash
 bash site/build.sh && npx serve site/dist
@@ -57,9 +63,11 @@ bash site/build.sh && npx serve site/dist
 
 To run the simulations you need Python 3.11+ with `numpy pandas pyarrow torch` and the male CNS v1.0
 files (~1.1 GB, [male-cns.janelia.org/download](https://male-cns.janelia.org/download)) in
-`fly_brain/data/`; `python -m brain.build_brain` turns them into `brain.npz`. The sbatch scripts are
-written for the OCF `corruption` node (`/home/s/st/stevejobs/flybrain` paths, partition `ocf-hpc`); edit
-`ROOT` and the `#SBATCH` lines for another cluster. See [fly_brain/README.md](fly_brain/README.md) and
+`fly_brain/data/`; `cd fly_brain && python -m brain.build_brain` turns them into `fly_brain/brain.npz`
+(run every `python -m ...` step from `fly_brain/`). The sbatch scripts and `serve.sh` are written for the
+OCF `corruption` node (partition `ocf-hpc`) with absolute `/home/s/st/stevejobs/flybrain` paths; for
+another cluster, edit the `#SBATCH` lines, `ROOT` in flybar/cuda-venv.sbatch, the `cd` and venv lines
+in bench/dashboard/ride.sbatch, and the paths and `srun -p/-w` flags in serve.sh. See [fly_brain/README.md](fly_brain/README.md) and
 [fly_brain/bike/README.md](fly_brain/bike/README.md) for every step.
 
 Not committed (too large, or rebuildable): the connectome download, `brain.npz`, virtualenvs, raw

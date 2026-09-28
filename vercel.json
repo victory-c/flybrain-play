@@ -4,5 +4,6 @@
   "installCommand": "echo 'npm ci runs inside site/build.sh'",
   "buildCommand": "bash site/build.sh",
   "outputDirectory": "site/dist",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [{ "source": "/dashboard", "destination": "/dashboard/", "permanent": true }]
 }
