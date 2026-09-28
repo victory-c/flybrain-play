@@ -247,3 +247,12 @@ teacher fit: R^2 0.75 on the screen's samples; CEM starts from it
 gen  0  fit best   6.56 mean   2.40  upright  3.70 s (max 10.00,  17% finish)  dist   9.8 m  |y| 4.77 m  v 4.27  bailed 0  pop 73,709 sp/s  202s
 gen  1  fit best   5.84 mean   2.74  upright  4.95 s (max 10.00,  19% finish)  dist  13.6 m  |y| 8.20 m  v 4.24  bailed 0  pop 74,104 sp/s  202s
 gen  2  fit best   8.86 mean   2.80  upright  4.80 s (max 10.00,  19% finish)  dist  13.4 m  |y| 7.41 m  v 4.02  bailed 0  pop 77,527 sp/s  202s
+gen  3  fit best   7.63 mean   2.78  upright  5.40 s (max 10.00,  27% finish)  dist  14.8 m  |y| 8.40 m  v 4.29  bailed 0  pop 73,303 sp/s  202s
+gen  4  fit best   9.39 mean   3.49  upright  6.00 s (max 10.00,  31% finish)  dist  17.5 m  |y| 8.98 m  v 4.28  bailed 0  pop 71,066 sp/s  202s
+gen  5  fit best   6.34 mean   3.22  upright  5.86 s (max 10.00,  29% finish)  dist  16.9 m  |y| 8.58 m  v 4.35  bailed 0  pop 71,223 sp/s  202s
+gen  6  fit best   7.68 mean   3.28  upright  5.87 s (max 10.00,  25% finish)  dist  17.1 m  |y| 9.68 m  v 4.27  bailed 0  pop 73,276 sp/s  201s
+gen  7  fit best   8.86 mean   3.87  upright  7.11 s (max 10.00,  33% finish)  dist  20.3 m  |y| 9.11 m  v 4.22  bailed 0  pop 68,682 sp/s  200s
+gen  8  fit best   8.42 mean   3.27  upright  6.24 s (max 10.00,  35% finish)  dist  15.6 m  |y| 10.31 m  v 4.34  bailed 0  pop 67,946 sp/s  200s
+gen  9  fit best   9.44 mean   3.70  upright  8.02 s (max 10.00,  48% finish)  dist  19.3 m  |y| 14.18 m  v 4.33  bailed 0  pop 65,521 sp/s  200s
+gen 10  fit best  10.20 mean   4.46  upright  7.41 s (max 10.00,  40% finish)  dist  22.5 m  |y| 9.48 m  v 4.29  bailed 0  pop 69,049 sp/s  200s
+gen 11  fit best  10.53 mean   3.91  upright  7.22 s (max 10.00,  38% finish)  dist  20.5 m  |y| 10.44 m  v 4.27  bailed 0  pop 70,879 sp/s  199s

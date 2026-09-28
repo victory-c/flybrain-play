@@ -39,8 +39,11 @@ Commands run from the job's working directory (`.` = repo root, `fly_brain/` for
 | 36095 | 2026-09-27 07:05 | COMPLETED | 00:03:26 | 8 cpu, 40G, 1 gpu | replay of the best decoder -> results/ride_b_trace.json (the /ride/ demo) | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --replay results/ride_b.json --riders 16 --seconds 15 --seed 7 --trace results/ri...` (in `./fly_brain`) | `results/ride_b_trace.json` |
 | 36101 | None | CANCELLED | 00:00:00 | 1 gpu | cancelled: is a weak odour goal stable? | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -` (in `./fly_brain`) | [inline script](logs/inline/36101.py) |
 | 36102 | None | CANCELLED | 00:00:00 |  | cancelled: HS lane cue check | `srun -p ocf-hpc -w corruption -c 2 --mem=6G -t 5 --quiet /home/s/st/stevejobs/flybrain/venv/bin/python -` (in `./fly_brain`) | [inline script](logs/inline/36102.py) |
-| 36103 | 2026-09-28 08:15 | RUNNING | 00:14:54 | 8 cpu, 48G, 1 gpu | lane keeping: screen with HS lane cue -> CEM -> replay | `sbatch ride-lane.sbatch` | [flylane-36103.out](logs/flylane-36103.out) |
+| 36103 | 2026-09-28 08:15 | RUNNING | 00:44:54 | 8 cpu, 48G, 1 gpu | lane keeping: screen with HS lane cue -> CEM -> replay | `sbatch ride-lane.sbatch` | [flylane-36103.out](logs/flylane-36103.out) |
 | 36104 | None | CANCELLED | 00:00:00 |  |  | `srun -p ocf-hpc -w corruption -c 1 --mem=256M -t 1 --quiet bash -c timeout 10 ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/.ssh/flybrain_play_deploy -o IdentitiesOnly=yes -T git@github.com 2>&1 ¦ head -1` |  |
+| 36105 | 2026-09-28 08:52 | FAILED | 00:00:03 | 8 cpu, 40G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --init results/screen_lane_samples.npz --lane hs --dagger 2 --riders 4 --seconds ...` (in `./fly_brain`) | `/tmp/claude-93015/-home-s-st-stevejobs-flybrain/ff3d4c1f-4087-4f88-b1bd-f60320256b54/scratchpad/dagger_smoke.json` |
+| 36106 | 2026-09-28 08:52 | COMPLETED | 00:00:27 | 8 cpu, 40G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --init results/screen_lane_samples.npz --lane hs --dagger 2 --riders 4 --seconds ...` (in `./fly_brain`) | `results/dagger_smoke.json` |
+| 36107 | 2026-09-28 08:53 | RUNNING | 00:06:38 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-dagger.sbatch` | [flydagger-36107.out](logs/flydagger-36107.out) |
 
 ## Full command lines
 
@@ -91,4 +94,16 @@ srun -p ocf-hpc -w corruption -c 32 --mem=48G -t 40 --quiet env OMP_NUM_THREADS=
 
 ```bash
 srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --replay results/ride_b.json --riders 16 --seconds 15 --seed 7 --trace results/ride_b_trace.json
+```
+
+**36105** (python)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --init results/screen_lane_samples.npz --lane hs --dagger 2 --riders 4 --seconds 0.5 --out /tmp/claude-93015/-home-s-st-stevejobs-flybrain/ff3d4c1f-4087-4f88-b1bd-f60320256b54/scratchpad/dagger_smoke.json
+```
+
+**36106** (python)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --init results/screen_lane_samples.npz --lane hs --dagger 2 --riders 4 --seconds 0.5 --out results/dagger_smoke.json
 ```

@@ -51,6 +51,8 @@ def parse():
     ap.add_argument("--ridge", type=float, default=1.0)
     ap.add_argument("--sigma0", type=float, default=0.15, help="CEM search width around the teacher fit")
     ap.add_argument("--lane-penalty", type=float, default=0.01, help="fitness cost per m^2 of lateral offset per second")
+    ap.add_argument("--dagger", type=int, default=0, help="DAgger rounds instead of CEM: label visited states with the PD rider, refit")
+    ap.add_argument("--dagger-beta0", type=float, default=0.5, help="round-1 probability of executing the PD rider's action; halves each round")
     ap.add_argument("--elite", type=float, default=0.25)
     ap.add_argument("--sigma-min", type=float, default=0.05)
     ap.add_argument("--w-syn-scale", type=float, default=None, help="override synapse scale (default 0.45)")
@@ -91,7 +93,9 @@ class Ride:
                   f"w_syn {w:.4f} mV", flush=True)
 
     @torch.no_grad()
-    def episode(self, theta=None, oracle=False, seed=0, log=None, verbose=False):
+    def episode(self, theta=None, oracle=False, seed=0, log=None, verbose=False, collect=None, beta=0.0):
+        """collect: dict with lists 'X', 'y' -> appends (readout features / rate_scale, PD rider's torque) for every
+        alive rider and step (DAgger labels). beta: probability per rider and step of executing the PD rider's torque."""
         a, bikes, loop = self.a, self.bikes, self.loop
         B, dev = bikes.n, bikes.dev
         dt = a.ctrl_ms / 1000.0
@@ -132,6 +136,14 @@ class Ride:
                     bikes.done |= bail
                     bailed |= bail
                 steer, power, brake = self.decoder.act(theta, smooth)
+                if collect is not None or beta > 0:
+                    expert = bikes.pd_oracle()
+                    if collect is not None and alive.any():
+                        collect["X"].append((smooth[alive] / self.decoder.rate_scale).cpu().numpy())
+                        collect["y"].append(expert[alive].cpu().numpy())
+                    if beta > 0:
+                        use = torch.rand(B, device=dev) < beta
+                        steer = torch.where(use, expert.clamp(-self.decoder.steer_max, self.decoder.steer_max), steer)
                 pop_sum += float(pop.float().mean()) / dt
                 n_chunks += 1
             bikes.step(steer, power, brake, n_sub=n_sub)
@@ -196,6 +208,9 @@ def main():
         print("trace ->", a.trace)
         return
 
+    if a.dagger:
+        return dagger(a, ride, dec)
+
     # cross-entropy method over decoder weights
     rng = np.random.default_rng(a.seed)
     mu, sigma = dec.prior_mean(), dec.prior_sigma()
@@ -247,6 +262,53 @@ def fit_teacher(path, dec, ridge, names):
     top = np.argsort(-np.abs(wb[:-1]))[:8]
     print("  largest steering weights: " + ", ".join(f"{names[i]} {wb[i]:+.2f}" for i in top))
     return wb[:-1].astype(np.float32), np.float32(wb[-1]), float(r2)
+
+
+def ridge_fit(X, T, dec, ridge):
+    """atanh(torque / steer_max) ~ X w + b; returns (w, b, R^2)."""
+    y = np.arctanh(np.clip(T / dec.steer_max, -0.95, 0.95))
+    Xb = np.concatenate([X, np.ones((len(X), 1), dtype=X.dtype)], 1)
+    reg = ridge * np.eye(X.shape[1] + 1); reg[-1, -1] = 0.0
+    wb = np.linalg.solve(Xb.T @ Xb + reg, Xb.T @ y)
+    r2 = 1.0 - ((Xb @ wb - y) ** 2).sum() / ((y - y.mean()) ** 2).sum()
+    return wb[:-1].astype(np.float32), np.float32(wb[-1]), float(r2)
+
+
+def dagger(a, ride, dec):
+    """DAgger (Ross et al. 2011): the fly rides with the current decoder (mixed with the PD rider with probability
+    beta), every visited state is labelled with the PD rider's torque, all data so far is refit by ridge regression.
+    The PD rider keeps the lane (it leans toward the lane centre), so the lane-keeping part of steering is learned
+    wherever the readout neurons carry lane information."""
+    z = np.load(ROOT / a.init, allow_pickle=True)
+    assert list(z["feature_names"]) == list(ride.readout.names), "screen and ride use different readout populations"
+    al = z["alive"].reshape(-1).astype(bool)
+    Xs = [z["features"].reshape(-1, dec.F)[al] / dec.rate_scale]
+    Ts = [z["torque"].reshape(-1)[al]]
+    theta_np = dec.prior_mean()
+    history, best, t_all = [], None, time.time()
+    for it in range(a.dagger + 1):
+        w, b, r2 = ridge_fit(np.concatenate(Xs).astype(np.float64), np.concatenate(Ts).astype(np.float64), dec, a.ridge)
+        theta_np[:dec.F], theta_np[dec.F] = w, b
+        theta = torch.tensor(theta_np, device=ride.dev)[None, :].repeat(a.riders, 1)
+        beta = a.dagger_beta0 * 0.5 ** it if it < a.dagger - 1 else 0.0   # last rounds: the fly alone
+        col = {"X": [], "y": []}
+        r = ride.episode(theta, seed=a.seed + 1000 * (it + 1), verbose=(it == 0), collect=col, beta=beta)
+        n_new = sum(len(x) for x in col["X"])
+        if n_new:
+            Xs.append(np.concatenate(col["X"])); Ts.append(np.concatenate(col["y"]))
+        row = {"round": it, "beta": beta, "fit_r2": r2, "samples": int(sum(len(x) for x in Xs)), "fitness_mean": float(r["fitness"].mean()),
+               "upright_mean": float(r["upright"].mean()), "finish_frac": float((r["upright"] >= a.seconds - 1e-6).mean()),
+               "lateral_abs_mean": float(np.abs(r["lateral"]).mean()), "distance_mean": float(r["distance"].mean()), "wall_s": r["wall"]}
+        history.append(row)
+        print(f"dagger {it:2d}  beta {beta:5.3f}  fit R^2 {r2:.2f}  samples {row['samples']:,}  fitness {row['fitness_mean']:6.2f}  " + ride.summary(r), flush=True)
+        if beta == 0.0 and (best is None or row["fitness_mean"] > best[0]):
+            best = (row["fitness_mean"], theta_np.copy(), it)
+        (ROOT / a.out).write_text(json.dumps({
+            "config": vars(a), "method": "dagger", "device": ride.dev, "decoder_names": dec_names(dec), "dn_names": ride.readout.names,
+            "sense_names": ride.senses.names, "history": history, "best_round": best[2] if best else None,
+            "best_theta": (best[1] if best else theta_np).tolist(), "best_fitness": best[0] if best else None,
+            "wall_seconds": time.time() - t_all}, indent=1))
+    print(f"done: best pure-policy round {best[2] if best else '-'}, results -> {a.out}  ({(time.time() - t_all) / 60:.1f} min)")
 
 
 def dec_names(dec):

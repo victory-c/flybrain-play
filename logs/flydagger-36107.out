@@ -1,0 +1,8 @@
+== Mon Sep 28 08:53:23 AM PDT 2026 dagger
+Tarmac SL9 + 70 kg: 78.2 kg, self-stable 4.70..7.74 m/s; start at 4.0 m/s, gusts 15 Nm, 48 riders on cuda
+senses : VS_L 16, HS_L 5, HALT_L 104, JO_L 228, LEG1_L 45, VS_R 18, HS_R 5, HALT_R 101, JO_R 247, LEG1_R 20  (789 neurons)
+readout: DNp20_L 1, DNp20_R 1, DNp22_L 1, DNp22_R 1, DNg46_L 1, DNg46_R 1, DNge043_L 1, DNge043_R 1, DNb06_L 1, DNb06_R 1, DNp17_L 6, DNp17_R 6, DNpe013_L 1, DNpe013_R 1, DNge097_L 1, DNge097_R 1, DNg94_L 1, DNg94_R 1, DNg90_L 1, DNg90_R 1, DNge088_L 1, DNge088_R 1, DNp33_L 1, DNp33_R 1, DNge091_L 7, DNge091_R 7, DNg29_L 1, DNg29_R 1, DNg41_L 1, DNg41_R 1, DNp18_L 1, DNp18_R 1, DNp73_L 1, DNp73_R 1, DNb04_L 1, DNb04_R 1, b1 MN_L 1, b1 MN_R 1, b2 MN_L 1, b2 MN_R 1, b3 MN_L 1, b3 MN_R 1, hg1 MN_L 1, hg1 MN_R 1, hi2 MN_L 2, hi2 MN_R 2, i2 MN_L 1, i2 MN_R 1, DNa01_L 1, DNa01_R 1, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 1, DNb01_L 1, DNb01_R 1, DNp09_L 1, DNp09_R 1, DNg100_L 1, DNg100_R 1, DNg97_L 1, DNg97_R 1, MDN_L 2, MDN_R 2, DNp01_L 1, DNp01_R 1
+brain: 166,700 neurons, 789 driven, 92 read out, w_syn 0.1238 mV
+  after warm-up, DN rates (Hz): DNp20_L 33, DNp20_R 20, DNp22_R 1, DNg46_L 1, DNg46_R 2, DNge043_L 7, DNge043_R 10, DNb06_L 28, DNpe013_L 5, DNpe013_R 6, DNg90_R 2, DNp33_L 20, DNp33_R 4, DNge091_L 1, DNg29_L 37, DNg29_R 28, DNg41_L 18, DNg41_R 23, DNp18_L 28, DNp18_R 44, DNp73_L 52, DNp73_R 9, b2 MN_L 7, b2 MN_R 2, hg1 MN_L 16, hg1 MN_R 12, DNa01_L 2, DNa01_R 1, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 3, DNg100_L 1, DNg100_R 1
+  population 13,752 spikes/s per brain
+dagger  0  beta 0.500  fit R^2 0.75  samples 69,044  fitness  12.51  upright 11.72 s (max 12.00,  92% finish)  dist  49.7 m  |y| 0.36 m  v 4.38  bailed 0  pop 63,950 sp/s  244s
