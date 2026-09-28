@@ -43,5 +43,14 @@
   "mn9_hz": 85.3,
   "spikes_per_s": 84442,
   "gpu_gb": 5.99
+ },
+ {
+  "device": "cuda+graph",
+  "trials": 1024,
+  "seconds": 213.69,
+  "s_per_trial_s": 0.209,
+  "mn9_hz": 85.4,
+  "spikes_per_s": 84457,
+  "gpu_gb": 11.1
  }
 ]

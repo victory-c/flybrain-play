@@ -78,7 +78,8 @@ Commands run from the job's working directory (`.` = repo root, `fly_brain/` for
 | 36143 | 2026-09-28 14:53 | COMPLETED | 00:00:51 | 8 cpu, 32G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=32G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bench_gpu --graph --devi...` (in `./fly_brain`) | `results/bench_graph3.json` |
 | 36144 | 2026-09-28 14:54 | COMPLETED | 00:00:11 | 8 cpu, 32G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=32G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.profile_step --trials 128` (in `./fly_brain`) |  |
 | 36145 | 2026-09-28 14:55 | COMPLETED | 00:00:39 | 8 cpu, 48G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m tests.test_graph` (in `./fly_brain`) |  |
-| 36146 | 2026-09-28 14:56 | RUNNING | 00:03:48 | 8 cpu, 48G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bench_gpu --graph --devi...` (in `./fly_brain`) | `results/bench_graph4.json` |
+| 36146 | 2026-09-28 14:56 | COMPLETED | 00:06:15 | 8 cpu, 48G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bench_gpu --graph --devi...` (in `./fly_brain`) | `results/bench_graph4.json` |
+| 36147 | 2026-09-28 15:02 | COMPLETED | 00:02:10 | 8 cpu, 48G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bar --device cuda --grap...` (in `./fly_brain`) |  |
 
 ## Full command lines
 
@@ -183,4 +184,10 @@ srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=32G -t 40 --chdir=/home/s/
 
 ```bash
 srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bench_gpu --graph --devices cuda --trials 1 8 32 128 512 1024 --out results/bench_graph4.json
+```
+
+**36147** (env)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bar --device cuda --graph --tag _gpu
 ```
