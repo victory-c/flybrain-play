@@ -1,0 +1,47 @@
+[
+ {
+  "device": "cuda+graph",
+  "trials": 1,
+  "seconds": 1.43,
+  "s_per_trial_s": 1.433,
+  "mn9_hz": 80.0,
+  "spikes_per_s": 85116,
+  "gpu_gb": 0.63
+ },
+ {
+  "device": "cuda+graph",
+  "trials": 8,
+  "seconds": 2.75,
+  "s_per_trial_s": 0.344,
+  "mn9_hz": 84.4,
+  "spikes_per_s": 84310,
+  "gpu_gb": 0.66
+ },
+ {
+  "device": "cuda+graph",
+  "trials": 32,
+  "seconds": 7.74,
+  "s_per_trial_s": 0.242,
+  "mn9_hz": 85.8,
+  "spikes_per_s": 84409,
+  "gpu_gb": 1.19
+ },
+ {
+  "device": "cuda+graph",
+  "trials": 128,
+  "seconds": 28.27,
+  "s_per_trial_s": 0.221,
+  "mn9_hz": 85.8,
+  "spikes_per_s": 84472,
+  "gpu_gb": 2.16
+ },
+ {
+  "device": "cuda+graph",
+  "trials": 512,
+  "seconds": 107.66,
+  "s_per_trial_s": 0.21,
+  "mn9_hz": 85.3,
+  "spikes_per_s": 84442,
+  "gpu_gb": 5.99
+ }
+]

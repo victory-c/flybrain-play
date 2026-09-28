@@ -16,6 +16,7 @@ import numpy as np
 import pandas as pd
 
 from brain.sim import PARAMS, W_SYN_MALE_CNS, Brain, simulate
+from brain.sim_graph import simulate_graph
 from brain.taste import CHANNELS, INGREDIENTS, MENUS, neuron_input, taste_matrix, taste_vector
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +29,9 @@ def main():
     ap.add_argument("--menu", default="classic", choices=sorted(MENUS))
     ap.add_argument("--only", default="", help="comma-separated substrings of drink names")
     ap.add_argument("--scale", type=float, default=None, help="w_syn scale (default: W_SYN_MALE_CNS)")
+    ap.add_argument("--device", default="cpu", help="cpu or cuda")
+    ap.add_argument("--graph", action="store_true", help="CUDA-Graph simulator (brain/sim_graph.py)")
+    ap.add_argument("--tag", default="", help="suffix for the results file")
     args = ap.parse_args()
     w_syn = PARAMS["w_syn"] * args.scale if args.scale else W_SYN_MALE_CNS
     bin_ms = 50.0
@@ -54,8 +58,9 @@ def main():
         u = neuron_input(t, M)
         on = u >= 1.0  # ignore channels that are only numerically non-zero
         print(f"\n== {name}  taste = [" + " ".join(f"{c} {v:.2f}" for c, v in zip(CHANNELS, t)) + "]", flush=True)
-        r = simulate(brain, grn_idx[on], u[on], readout_idx=mn9, n_run=n_run, t_run=t_run, bin_ms=bin_ms,
-                     params={"w_syn": w_syn}, progress=False)
+        sim = simulate_graph if args.graph else simulate
+        r = sim(brain, grn_idx[on], u[on], readout_idx=mn9, n_run=n_run, t_run=t_run, bin_ms=bin_ms,
+                params={"w_syn": w_syn}, progress=False, device=args.device)
         pop = r["pop_hz"]
         per_trial = r["readout"][:, 0].sum(1) / (t_run / 1000.0)  # MN9_L
         rest = np.ones(brain.n, bool)
@@ -87,7 +92,7 @@ def main():
         print(f"{i:2d}. {row['emoji']} {row['drink']:<18} {row['mn9_hz']:6.1f} ± {row['mn9_sem']:4.1f} Hz  {bar}")
     run = {"n_run": n_run, "t_run_ms": t_run, "w_syn_mV": w_syn, "dataset": "male-cns v1.0",
            "menu": args.menu, "only": only}
-    tag = ("" if args.menu == "classic" else f"_{args.menu}") + (f"_scale{args.scale}" if args.scale else "")
+    tag = ("" if args.menu == "classic" else f"_{args.menu}") + (f"_scale{args.scale}" if args.scale else "") + args.tag
     (out / (f"bar_pilot{tag}.json" if only else f"bar{tag}.json")).write_text(
         json.dumps({"run": run, "ranking": rows}, indent=2, ensure_ascii=False), encoding="utf-8")
 

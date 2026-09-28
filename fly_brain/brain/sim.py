@@ -68,7 +68,7 @@ class Brain:
 
 @torch.no_grad()
 def simulate(brain, stim_idx, stim_hz, readout_idx=(), params=None, n_run=None, t_run=None,
-             bin_ms=10.0, seed=0, silence_idx=(), progress=True, stim_seg_ms=None, device=None):
+             bin_ms=10.0, seed=0, silence_idx=(), progress=True, stim_seg_ms=None, device=None, stats=None):
     """Run n_run trials in one batch on `device` ("cpu" default, or "cuda").
 
     stim_idx/stim_hz: neurons driven by Poisson input and their rates (Hz). stim_hz may be 2-D
@@ -155,6 +155,10 @@ def simulate(brain, stim_idx, stim_hz, readout_idx=(), params=None, n_run=None, 
             starts = col_ptr[pre]
             lens = col_ptr[pre + 1] - starts
             total = int(lens.sum())
+            if stats is not None:
+                stats["max_spk"] = max(stats.get("max_spk", 0), int(arriving.numel()))
+                stats["max_syn"] = max(stats.get("max_syn", 0), total)
+                stats["sum_syn"] = stats.get("sum_syn", 0) + total
             if total:
                 rep = torch.repeat_interleave
                 pos = rep(starts - (torch.cumsum(lens, 0) - lens), lens) + torch.arange(total, device=dev)
