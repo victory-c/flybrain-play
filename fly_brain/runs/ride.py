@@ -48,6 +48,10 @@ def parse():
     ap.add_argument("--no-bail", action="store_true", help="ignore giant-fibre escapes")
     ap.add_argument("--tau-ms", type=float, default=40.0, help="readout smoothing time constant")
     ap.add_argument("--init", default=None, help="screen *_samples.npz: fit the steering decoder to the teacher first")
+    ap.add_argument("--init-theta", default=None, help="results json whose best_theta seeds CEM (e.g. a DAgger result)")
+    ap.add_argument("--lane-cap", type=float, default=25.0, help="cap on the squared lateral offset in the lane penalty (m^2)")
+    ap.add_argument("--offroad", type=float, default=0.0, help="if > 0: leaving the road (|y| > this, m) ends a rider's run like a fall")
+    ap.add_argument("--gains", default="", help="sensory gain overrides for bike/senses.py GAINS, e.g. 'hs_heading=200,hs_lane=60'")
     ap.add_argument("--ridge", type=float, default=1.0)
     ap.add_argument("--sigma0", type=float, default=0.15, help="CEM search width around the teacher fit")
     ap.add_argument("--lane-penalty", type=float, default=0.01, help="fitness cost per m^2 of lateral offset per second")
@@ -80,7 +84,10 @@ class Ride:
         self.loop = self.senses = self.readout = self.decoder = None
         if not a.oracle:
             meta = pd.read_parquet(ROOT / "brain_meta.parquet")
-            self.senses = Senses(meta, goal=a.goal, device=self.dev, lane=a.lane)
+            gains = {kv.split("=")[0].strip(): float(kv.split("=")[1]) for kv in a.gains.split(",") if "=" in kv}
+            self.senses = Senses(meta, goal=a.goal, device=self.dev, lane=a.lane, gains=gains)
+            if gains:
+                print("sensory gain overrides:", gains, flush=True)
             self.readout = Readout(meta, device=self.dev)
             self.decoder = Decoder(self.readout)
             print("senses :", self.senses.describe())
@@ -148,9 +155,11 @@ class Ride:
                 n_chunks += 1
             bikes.step(steer, power, brake, n_sub=n_sub)
             s = bikes.state
+            if a.offroad > 0:
+                bikes.done |= s[:, 1].abs() > a.offroad
             al = alive.float()
             upright += al * dt
-            fitness += al * dt * (1.0 + 0.02 * s[:, 3] - a.lane_penalty * (s[:, 1] ** 2).clamp(max=25.0) - 0.002 * steer ** 2)
+            fitness += al * dt * (1.0 + 0.02 * s[:, 3] - a.lane_penalty * (s[:, 1] ** 2).clamp(max=a.lane_cap) - 0.002 * steer ** 2)
             if not oracle:
                 loop.set_rates(self.senses.rates(s, bikes.psi_dot))
             if log is not None:
@@ -219,6 +228,10 @@ def main():
         mu[:dec.F], mu[dec.F] = w, b
         sigma[:dec.F + 1] = a.sigma0
         print(f"teacher fit: R^2 {r2:.2f} on the screen's samples; CEM starts from it", flush=True)
+    if a.init_theta:
+        mu = np.array(json.loads((ROOT / a.init_theta).read_text())["best_theta"], dtype=np.float32)
+        sigma[:dec.F + 1] = a.sigma0
+        print(f"CEM starts from best_theta of {a.init_theta}", flush=True)
     n_elite = max(2, int(round(a.elite * a.riders)))
     history, best_theta, best_fit = [], mu.copy(), -np.inf
     t_all = time.time()

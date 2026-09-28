@@ -6,3 +6,22 @@ brain: 166,700 neurons, 789 driven, 92 read out, w_syn 0.1238 mV
   after warm-up, DN rates (Hz): DNp20_L 33, DNp20_R 20, DNp22_R 1, DNg46_L 1, DNg46_R 2, DNge043_L 7, DNge043_R 10, DNb06_L 28, DNpe013_L 5, DNpe013_R 6, DNg90_R 2, DNp33_L 20, DNp33_R 4, DNge091_L 1, DNg29_L 37, DNg29_R 28, DNg41_L 18, DNg41_R 23, DNp18_L 28, DNp18_R 44, DNp73_L 52, DNp73_R 9, b2 MN_L 7, b2 MN_R 2, hg1 MN_L 16, hg1 MN_R 12, DNa01_L 2, DNa01_R 1, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 3, DNg100_L 1, DNg100_R 1
   population 13,752 spikes/s per brain
 dagger  0  beta 0.500  fit R^2 0.75  samples 69,044  fitness  12.51  upright 11.72 s (max 12.00,  92% finish)  dist  49.7 m  |y| 0.36 m  v 4.38  bailed 0  pop 63,950 sp/s  244s
+dagger  1  beta 0.250  fit R^2 0.63  samples 105,004  fitness   7.49  upright  7.49 s (max 12.00,  15% finish)  dist  30.8 m  |y| 2.06 m  v 4.51  bailed 0  pop 83,342 sp/s  244s
+dagger  2  beta 0.125  fit R^2 0.64  samples 132,870  fitness   5.59  upright  5.81 s (max 12.00,   4% finish)  dist  23.5 m  |y| 2.26 m  v 4.49  bailed 0  pop 87,038 sp/s  243s
+dagger  3  beta 0.062  fit R^2 0.66  samples 162,985  fitness   5.11  upright  6.27 s (max 12.00,   4% finish)  dist  24.7 m  |y| 4.31 m  v 4.52  bailed 0  pop 87,114 sp/s  242s
+dagger  4  beta 0.031  fit R^2 0.66  samples 184,910  fitness   4.51  upright  4.57 s (max  9.01,   0% finish)  dist  18.3 m  |y| 1.75 m  v 4.41  bailed 0  pop 83,333 sp/s  182s
+dagger  5  beta 0.016  fit R^2 0.66  samples 208,968  fitness   4.52  upright  5.01 s (max 12.00,   2% finish)  dist  19.9 m  |y| 2.32 m  v 4.44  bailed 0  pop 87,051 sp/s  241s
+dagger  6  beta 0.008  fit R^2 0.66  samples 230,127  fitness   4.38  upright  4.41 s (max  9.19,   0% finish)  dist  17.5 m  |y| 1.54 m  v 4.40  bailed 0  pop 83,848 sp/s  186s
+dagger  7  beta 0.000  fit R^2 0.66  samples 253,445  fitness   4.45  upright  4.86 s (max  9.67,   0% finish)  dist  19.2 m  |y| 2.54 m  v 4.44  bailed 0  pop 84,908 sp/s  195s
+dagger  8  beta 0.000  fit R^2 0.66  samples 274,995  fitness   4.46  upright  4.49 s (max  9.58,   0% finish)  dist  18.0 m  |y| 1.41 m  v 4.42  bailed 0  pop 84,170 sp/s  193s
+done: best pure-policy round 8, results -> results/ride_dagger.json  (32.9 min)
+== Mon Sep 28 09:26:18 AM PDT 2026 replay
+Tarmac SL9 + 70 kg: 78.2 kg, self-stable 4.70..7.74 m/s; start at 4.0 m/s, gusts 15 Nm, 16 riders on cuda
+senses : VS_L 16, HS_L 5, HALT_L 104, JO_L 228, LEG1_L 45, VS_R 18, HS_R 5, HALT_R 101, JO_R 247, LEG1_R 20  (789 neurons)
+readout: DNp20_L 1, DNp20_R 1, DNp22_L 1, DNp22_R 1, DNg46_L 1, DNg46_R 1, DNge043_L 1, DNge043_R 1, DNb06_L 1, DNb06_R 1, DNp17_L 6, DNp17_R 6, DNpe013_L 1, DNpe013_R 1, DNge097_L 1, DNge097_R 1, DNg94_L 1, DNg94_R 1, DNg90_L 1, DNg90_R 1, DNge088_L 1, DNge088_R 1, DNp33_L 1, DNp33_R 1, DNge091_L 7, DNge091_R 7, DNg29_L 1, DNg29_R 1, DNg41_L 1, DNg41_R 1, DNp18_L 1, DNp18_R 1, DNp73_L 1, DNp73_R 1, DNb04_L 1, DNb04_R 1, b1 MN_L 1, b1 MN_R 1, b2 MN_L 1, b2 MN_R 1, b3 MN_L 1, b3 MN_R 1, hg1 MN_L 1, hg1 MN_R 1, hi2 MN_L 2, hi2 MN_R 2, i2 MN_L 1, i2 MN_R 1, DNa01_L 1, DNa01_R 1, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 1, DNb01_L 1, DNb01_R 1, DNp09_L 1, DNp09_R 1, DNg100_L 1, DNg100_R 1, DNg97_L 1, DNg97_R 1, MDN_L 2, MDN_R 2, DNp01_L 1, DNp01_R 1
+brain: 166,700 neurons, 789 driven, 92 read out, w_syn 0.1238 mV
+  after warm-up, DN rates (Hz): DNp20_L 33, DNp20_R 20, DNp22_R 1, DNg46_R 1, DNge043_L 9, DNge043_R 13, DNb06_L 31, DNpe013_L 4, DNpe013_R 7, DNg90_L 1, DNg90_R 2, DNp33_L 19, DNp33_R 3, DNge091_L 1, DNg29_L 36, DNg29_R 26, DNg41_L 23, DNg41_R 27, DNp18_L 28, DNp18_R 48, DNp73_L 52, DNp73_R 6, b2 MN_L 6, b2 MN_R 1, hg1 MN_L 15, hg1 MN_R 11, DNa01_L 3, DNa02_L 1, DNa02_R 1, DNa03_R 4, DNg100_L 1, DNg100_R 1
+  population 16,488 spikes/s per brain
+replay of results/ride_dagger.json: upright  4.85 s (max  9.65,   0% finish)  dist  19.2 m  |y| 3.23 m  v 4.43  bailed 0  pop 84,564 sp/s  132s
+trace -> results/ride_dagger_trace.json
+== done Mon Sep 28 09:28:34 AM PDT 2026

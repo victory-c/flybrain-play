@@ -1,0 +1,13 @@
+== Mon Sep 28 09:12:17 AM PDT 2026 cem-offroad from results/ride_lane.json -> results/ride_road.json
+Tarmac SL9 + 70 kg: 78.2 kg, self-stable 4.70..7.74 m/s; start at 4.0 m/s, gusts 15 Nm, 48 riders on cuda
+senses : VS_L 16, HS_L 5, HALT_L 104, JO_L 228, LEG1_L 45, VS_R 18, HS_R 5, HALT_R 101, JO_R 247, LEG1_R 20  (789 neurons)
+readout: DNp20_L 1, DNp20_R 1, DNp22_L 1, DNp22_R 1, DNg46_L 1, DNg46_R 1, DNge043_L 1, DNge043_R 1, DNb06_L 1, DNb06_R 1, DNp17_L 6, DNp17_R 6, DNpe013_L 1, DNpe013_R 1, DNge097_L 1, DNge097_R 1, DNg94_L 1, DNg94_R 1, DNg90_L 1, DNg90_R 1, DNge088_L 1, DNge088_R 1, DNp33_L 1, DNp33_R 1, DNge091_L 7, DNge091_R 7, DNg29_L 1, DNg29_R 1, DNg41_L 1, DNg41_R 1, DNp18_L 1, DNp18_R 1, DNp73_L 1, DNp73_R 1, DNb04_L 1, DNb04_R 1, b1 MN_L 1, b1 MN_R 1, b2 MN_L 1, b2 MN_R 1, b3 MN_L 1, b3 MN_R 1, hg1 MN_L 1, hg1 MN_R 1, hi2 MN_L 2, hi2 MN_R 2, i2 MN_L 1, i2 MN_R 1, DNa01_L 1, DNa01_R 1, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 1, DNb01_L 1, DNb01_R 1, DNp09_L 1, DNp09_R 1, DNg100_L 1, DNg100_R 1, DNg97_L 1, DNg97_R 1, MDN_L 2, MDN_R 2, DNp01_L 1, DNp01_R 1
+brain: 166,700 neurons, 789 driven, 92 read out, w_syn 0.1238 mV
+CEM starts from best_theta of results/ride_lane.json
+  after warm-up, DN rates (Hz): DNp20_L 33, DNp20_R 21, DNp22_R 1, DNg46_L 1, DNg46_R 2, DNge043_L 8, DNge043_R 12, DNb06_L 31, DNpe013_L 5, DNpe013_R 5, DNg90_R 1, DNp33_L 19, DNp33_R 4, DNge091_L 1, DNg29_L 36, DNg29_R 27, DNg41_L 21, DNg41_R 24, DNp18_L 28, DNp18_R 45, DNp73_L 53, DNp73_R 8, b2 MN_L 6, b2 MN_R 2, hg1 MN_L 16, hg1 MN_R 11, DNa01_L 2, DNa02_L 2, DNa02_R 1, DNa03_L 1, DNa03_R 3, DNg100_L 1, DNg100_R 1, MDN_L 1
+  population 15,610 spikes/s per brain
+gen  0  fit best   7.91 mean   3.12  upright  3.00 s (max  7.63,   0% finish)  dist  11.8 m  |y| 2.21 m  v 4.21  bailed 0  pop 70,405 sp/s  155s
+gen  1  fit best  10.77 mean   3.22  upright  3.12 s (max 10.25,   0% finish)  dist  11.6 m  |y| 2.78 m  v 4.05  bailed 0  pop 65,544 sp/s  205s
+gen  2  fit best  10.74 mean   4.64  upright  4.54 s (max 10.28,   0% finish)  dist  16.9 m  |y| 3.01 m  v 3.83  bailed 0  pop 66,067 sp/s  206s
+gen  3  fit best   9.73 mean   3.84  upright  3.75 s (max  9.37,   0% finish)  dist  14.8 m  |y| 3.08 m  v 4.19  bailed 0  pop 64,226 sp/s  188s
+gen  4  fit best  10.32 mean   4.68  upright  4.60 s (max 10.42,   0% finish)  dist  18.0 m  |y| 3.33 m  v 4.16  bailed 0  pop 62,862 sp/s  209s
