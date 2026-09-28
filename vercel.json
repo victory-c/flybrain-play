@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo 'npm ci runs inside site/build.sh'",
+  "buildCommand": "bash site/build.sh",
+  "outputDirectory": "site/dist",
+  "cleanUrls": true
+}

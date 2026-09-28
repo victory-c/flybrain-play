@@ -32,6 +32,9 @@ export type BarData = {
   drinks: Drink[];
 };
 
+/** public/data, relative to wherever the app is served from (vite --base). */
+const DATA = `${import.meta.env.BASE_URL}data/`;
+
 export type BrainPoints = { xyz: Float32Array; group: Uint8Array; count: number };
 
 /** Walking commands read out of the brain's descending neurons (walk.json), looped while she wanders. */
@@ -39,7 +42,7 @@ export type WalkData = { binMs: number; forward: number[]; turn: number[]; sourc
 
 export async function loadWalk(): Promise<WalkData | null> {
   try {
-    const res = await fetch("/data/walk.json");
+    const res = await fetch(`${DATA}walk.json`);
     if (!res.ok) return null;
     return await res.json();
   } catch {
@@ -57,15 +60,15 @@ export const MOOD_WORD: Record<Mood, string> = {
 export const MOOD_FACE: Record<Mood, string> = { love: "😍", like: "😋", meh: "🤔", yuck: "🤢" };
 
 export async function loadBar(): Promise<BarData> {
-  const res = await fetch("/data/drinks.json");
+  const res = await fetch(`${DATA}drinks.json`);
   if (!res.ok) throw new Error("Λείπουν τα δεδομένα του μπαρ. Τρέξε python export_web.py και ξαναχτίσε την εφαρμογή.");
   return res.json();
 }
 
 export async function loadBrain(count: number): Promise<BrainPoints> {
   const [xyz, group] = await Promise.all([
-    fetch("/data/brain_xyz.bin").then((r) => r.arrayBuffer()),
-    fetch("/data/brain_group.bin").then((r) => r.arrayBuffer()),
+    fetch(`${DATA}brain_xyz.bin`).then((r) => r.arrayBuffer()),
+    fetch(`${DATA}brain_group.bin`).then((r) => r.arrayBuffer()),
   ]);
   return { xyz: new Float32Array(xyz), group: new Uint8Array(group), count };
 }
@@ -73,7 +76,7 @@ export async function loadBrain(count: number): Promise<BrainPoints> {
 const activityCache = new Map<string, Promise<Uint8Array>>();
 export function loadActivity(file: string): Promise<Uint8Array> {
   if (!activityCache.has(file)) {
-    activityCache.set(file, fetch(`/data/${file}`).then((r) => r.arrayBuffer()).then((b) => new Uint8Array(b)));
+    activityCache.set(file, fetch(`${DATA}${file}`).then((r) => r.arrayBuffer()).then((b) => new Uint8Array(b)));
   }
   return activityCache.get(file)!;
 }

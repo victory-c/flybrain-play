@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>flybrain-play</title>
+<meta name="description" content="A fruit fly's whole central nervous system (166,700 neurons, every synapse) tastes drinks and rides a road bike. Interactive replays.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪰</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f3f1ec; --panel:#fff; --line:#d9d5cc; --ink:#1c1b18; --ink2:#5f5b53; --mute:#8b867c;
+  --accent:#d8501f; --bar:#b8452a; --dash:#2f7fc5; --ride:#2b8a5b; --classic:#8a6d1f;
+  --font:"Manrope","PingFang SC","Noto Sans SC",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#15171c; --panel:#1d2027; --line:#333843; --ink:#eeeae2; --ink2:#b6b0a4; --mute:#7f7a70;
+    --accent:#e8602a; --bar:#e0714f; --dash:#5a9ad6; --ride:#4fbf83; --classic:#d0aa4a;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#15171c; --panel:#1d2027; --line:#333843; --ink:#eeeae2; --ink2:#b6b0a4; --mute:#7f7a70;
+  --accent:#e8602a; --bar:#e0714f; --dash:#5a9ad6; --ride:#4fbf83; --classic:#d0aa4a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55}
+a{color:inherit}
+main{max-width:1040px;margin:0 auto;padding:56px 16px 40px}
+header h1{font-size:clamp(34px,6vw,56px);line-height:1.05;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+header h1 span{color:var(--accent)}
+.lede{font-size:clamp(17px,2.2vw,20px);color:var(--ink2);max-width:720px;margin:0 0 6px}
+.zh{color:var(--mute);margin:0 0 22px}
+.stats{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:var(--mono);font-size:13px;color:var(--ink2);margin:0 0 40px;padding:0;list-style:none}
+.stats b{color:var(--ink);font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.card{position:relative;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px;text-decoration:none;transition:transform .15s,border-color .15s}
+.card::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;border-radius:14px 0 0 14px;background:var(--c)}
+.card:hover{transform:translateY(-2px);border-color:var(--c)}
+.card .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--c);margin-bottom:6px}
+.card h2{margin:0 0 8px;font-size:22px;line-height:1.2}
+.card p{margin:0 0 12px;color:var(--ink2);font-size:15px}
+.card .zh{font-size:14px;margin:0 0 14px}
+.card .go{margin-top:auto;font-weight:700;color:var(--c)}
+.links{display:flex;flex-wrap:wrap;gap:6px 14px;margin:-4px 0 0;padding:0;list-style:none;font-size:14px}
+.links a{color:var(--ink2);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.links a:hover{color:var(--ink)}
+section.about{margin-top:48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px 40px;color:var(--ink2);font-size:15px}
+section.about h3{color:var(--ink);font-size:16px;margin:0 0 6px}
+section.about p{margin:0}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--mute);display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+footer a{color:var(--ink2)}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>flybrain<span>-play</span></h1>
+  <p class="lede">We took the complete wiring diagram of a male fruit fly's central nervous system, ran current through it, and asked it to taste drinks and ride a road bike.</p>
+  <p class="zh">果蝇全脑连接组模拟：尝饮料、骑公路车。</p>
+  <ul class="stats">
+    <li><b>166,700</b> neurons</li>
+    <li>every synapse from <b>male CNS v1.0</b></li>
+    <li>leaky integrate-and-fire, <b>0.1 ms</b> steps</li>
+    <li>connectome never trained</li>
+  </ul>
+</header>
+
+<div class="grid">
+  <a class="card" href="/ride/" style="--c:var(--ride)">
+    <div class="kicker">3D replay · new</div>
+    <h2>The fly rides a Tarmac SL9</h2>
+    <p>The whole brain balances a Whipple-model road bike in 15 Nm side gusts. It steers with the descending neurons it uses to stabilise flight. Best decoder: 16 riders, 15 s each, mean 14.1 s upright.</p>
+    <p class="zh">苍蝇大脑骑 S-Works Tarmac SL9：跟拍 / 侧拍 / 苍蝇视角</p>
+    <span class="go">Watch the ride →</span>
+  </a>
+  <a class="card" href="/dashboard/" style="--c:var(--dash)">
+    <div class="kicker">Live brain · 12 drinks</div>
+    <h2>Fly Brain Live</h2>
+    <p>Every neuron's firing, in 50 ms frames, while the fly tastes orange juice, bubble tea, cola, espresso, lager and more. Watch whether the feeding motor neuron MN9 fires.</p>
+    <p class="zh">果蝇尝饮料时全脑活动回放</p>
+    <span class="go">Open the dashboard →</span>
+  </a>
+  <a class="card" href="/bar/" style="--c:var(--bar)">
+    <div class="kicker">3D web app · 9 cocktails</div>
+    <h2>Fly Bar</h2>
+    <p>A fly walks into a bar. Each cocktail becomes a taste vector on its real gustatory neurons; the bar ranks what it likes, and the 3D brain lights up. Piña Colada wins.</p>
+    <p class="zh">苍蝇酒吧：鸡尾酒排行榜与 3D 大脑</p>
+    <span class="go">Enter the bar →</span>
+  </a>
+  <a class="card" href="/classic" style="--c:var(--classic)">
+    <div class="kicker">Single page</div>
+    <h2>Fly Bar, classic</h2>
+    <p>The original one-file version of the bar: from tongue to proboscis, the taste channels and the circuit that ends at MN9, rebuilt from our run.</p>
+    <p class="zh">单页版苍蝇酒吧</p>
+    <span class="go">Open →</span>
+  </a>
+</div>
+
+<section class="about">
+  <div>
+    <h3>More ride replays</h3>
+    <ul class="links">
+      <li><a href="/ride/charts">brain rider, charts</a></li>
+      <li><a href="/ride/oracle">PD rider, no brain</a></li>
+      <li><a href="/ride/oracle-charts">PD rider, charts</a></li>
+      <li><a href="/ride/open-loop">brain in loop, no steering</a></li>
+      <li><a href="/ride/open-loop-charts">open loop, charts</a></li>
+    </ul>
+  </div>
+  <div>
+    <h3>What is real</h3>
+    <p>Neurons, synapses and their signs come from the Janelia / Google male CNS v1.0 connectome; the neuron model follows Shiu et al., <i>Nature</i> 2024. How a drink or a bike's lean maps onto sensory neurons is modeled, and so is the bike decoder.</p>
+  </div>
+  <div>
+    <h3>Where it ran</h3>
+    <p>On a Slurm node with RTX A6000 GPUs. One whole-brain trial takes ~8 s; batched on the GPU, 128 trials take 35 s, and 32 brains ride at ~14 s of wall time per second of bike time.</p>
+  </div>
+</section>
+
+<footer>
+  <span>Built on <a href="https://github.com/sstamou03/fly_brain">sstamou03/fly_brain</a> · data <a href="https://male-cns.janelia.org/download">male-cns.janelia.org</a></span>
+  <a href="https://github.com/victory-c/flybrain-play">Source on GitHub</a>
+</footer>
+</main>
+</body>
+</html>
