@@ -39,7 +39,8 @@ input[type=range]{width:260px}
 <div id="hud" class="panel"><div><span class="big" id="v">0.0</span><span class="unit">km/h</span></div>
 <div class="row"><span>倾角 lean</span><b id="phi">0°</b></div><div class="row"><span>把角 steer</span><b id="delta">0°</b></div>
 <div class="row"><span>转向扭矩</span><b id="T">0 Nm</b></div><div class="row"><span>踩踏功率</span><b id="P">0 W</b></div>
-<div class="row"><span>踏频</span><b id="cad">0 rpm</b></div><div class="row"><span>里程</span><b id="x">0 m</b></div><div class="row"><span>直立骑手</span><b id="alive"></b></div></div>
+<div class="row"><span>踏频</span><b id="cad">0 rpm</b></div><div class="row"><span>里程</span><b id="x">0 m</b></div><div class="row"><span>离路中心</span><b id="lat">0 m</b></div>
+<div class="row"><span>这名骑手在路上</span><b id="road">—</b></div><div class="row"><span>仍在路上的骑手</span><b id="alive"></b></div></div>
 <div id="brain" class="panel"><h4>🪰 苍蝇全脑 <span id="pop"></span> spikes/s</h4><div id="bars"></div><div style="font-size:11px;color:#778;margin-top:6px">下行神经元 左(蓝) / 右(红)，Hz</div></div>
 <div id="ctl" class="panel"><button id="play">▶ 播放</button><select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
 <input id="time" type="range" min="0" value="0"><span id="clock" style="font-variant-numeric:tabular-nums;min-width:56px">0.00 s</span>
@@ -209,8 +210,11 @@ function frame(){const row=tr[k];for(let i=0;i<shown;i++){bikes[i].root.visible=
  const $=id=>document.getElementById(id);
  $('v').textContent=(s[3]*3.6).toFixed(1);$('phi').textContent=(s[4]*57.3).toFixed(1)+'°';$('delta').textContent=(s[5]*57.3).toFixed(1)+'°';
  $('T').textContent=row.steer[rider].toFixed(2)+' Nm';$('P').textContent=row.power[rider].toFixed(0)+' W';$('cad').textContent=(row.done[rider]?0:s[3]/(2*Math.PI*G.R)/1.5*60).toFixed(0)+' rpm';$('x').textContent=s[0].toFixed(1)+' m';
- $('alive').textContent=row.done.filter(d=>!d).length+' / '+B;$('pop').textContent=row.pop_hz?Math.round(row.pop_hz[rider]).toLocaleString():'—';
- $('fall').style.display=row.done[rider]?'block':'none';$('clock').textContent=row.t.toFixed(2)+' s';slider.value=k;
+ const RH=D.road_half||3.5,onRoad=(r,i)=>!r.done[i]&&Math.abs(r.state[i][1])<=RH;
+ $('alive').textContent=row.state.filter((_,i)=>onRoad(row,i)&&(!D.road_time||row.t<=D.road_time[i]+1e-6)).length+' / '+B;$('pop').textContent=row.pop_hz?Math.round(row.pop_hz[rider]).toLocaleString():'—';
+ $('lat').textContent=(s[1]>=0?'右 ':'左 ')+Math.abs(s[1]).toFixed(2)+' m';
+ if(D.road_time)$('road').textContent=Math.min(row.t,D.road_time[rider]).toFixed(1)+' / '+tr[tr.length-1].t.toFixed(0)+' s';
+ const fallEl=$('fall');if(row.done[rider]){fallEl.textContent='倒了！';fallEl.style.display='block'}else if(Math.abs(s[1])>RH){fallEl.textContent='出界 · 骑进草地了';fallEl.style.display='block'}else fallEl.style.display='none';$('clock').textContent=row.t.toFixed(2)+' s';slider.value=k;
  if(row.dn_hz){const d=row.dn_hz[rider];for(const p of pairs){p.el[0].style.transform='scaleX('+Math.min(1,d[p.l]/120)+')';p.el[1].style.transform='scaleX('+Math.min(1,d[p.r]/120)+')'}}
  snap=false;renderer.render(scene,camera);window.DONE=1}
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}addEventListener('resize',resize);resize();
@@ -261,13 +265,25 @@ def main():
         row["state"] = [[round(v, 4) for v in s] for s in row["state"]]
     data["dn_names"] = [names[i] for i in keep]
     res = data.pop("result", None)
-    if res and "upright" in res:
-        data["best_rider"] = int(max(range(len(res["upright"])), key=lambda i: (res["upright"][i], -abs(res["lateral"][i]))))
+    # time each rider spends upright AND on the road (|y| <= road half-width), from the trace itself
+    half = 3.5
+    road = []
+    for i in range(len(data["trace"][0]["state"])):
+        t_end = data["trace"][-1]["t"]
+        for row in data["trace"]:
+            if row["done"][i] or abs(row["state"][i][1]) > half:
+                t_end = row["t"]
+                break
+        road.append(round(t_end, 2))
+    data["road_time"], data["road_half"] = road, half
+    up = res["upright"] if res and "upright" in res else [0.0] * len(road)
+    data["best_rider"] = int(max(range(len(road)), key=lambda i: (road[i], up[i])))
     bike = "" if a.bike == "none" or not Path(a.bike).exists() else base64.b64encode(Path(a.bike).read_bytes()).decode()
     html = HTML.replace("__DATA__", json.dumps(data, separators=(",", ":")).replace("</", "<\\/")).replace("__BIKE__", bike)
     dst.write_text(html)
     print(f"{dst}  ({dst.stat().st_size / 1e6:.1f} MB, {len(data['trace'])} steps, {len(data['trace'][0]['state'])} riders, "
           f"bike: {Path(a.bike).name if bike else 'procedural Tarmac SL9'})")
+    print(f"  time on the road per rider (s): {road}  -> default rider #{data['best_rider']}")
 
 
 if __name__ == "__main__":

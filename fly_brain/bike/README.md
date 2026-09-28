@@ -72,6 +72,49 @@ python -m export.export_ride results/ride_trace.json results/ride_view.html   # 
 On the cluster: `sbatch ride.sbatch --init results/screen_samples.npz --riders 48 --generations 15` (repo
 root one level up; see JOBS.md there for every run's exact command).
 
+## Lane keeping (staying on the 7 m road)
+
+The lane cue is optic flow on the horizontal-system (HS) cells: drifting or heading toward one road edge
+drives that eye's HS cells harder (`--lane hs`, gains `hs_lane` per m, `hs_heading` per rad). Four findings:
+
+* **The balance neurons carry no heading.** In the passenger screen, every roll-rate neuron looked like a
+  heading neuron (r_psi about -0.85 r_phi_dot), but that is the bike's weave: heading swings in antiphase with
+  roll rate. Flipping which eye's VS/HS cells get the rotation (`--polarity physio`) flipped both together.
+* **The fly has a separate yaw/lane channel.** `runs/probe.py` holds the bike upright and drives only the left or
+  only the right HS cells: DNa16, DNb03, DNa06, DNp15 (the HS-to-neck DN), DNge107/086/031/033, DNg41, DNp18 and
+  the neck motor neuron GNG283 respond, a different set from the VS-driven roll channel (DNp20, DNg46, DNp22...).
+  These are `LANE_DNS` (`--readout lane`), read as deviations from each rider's warm-up rate.
+* **The lane channel is slow and noisy**, so it is smoothed over 300 ms (`--tau-lane-ms 300`) while roll stays at
+  40 ms, and it enters as one matched-filter signal (the probe's response pattern, `--lane-filter results/probe.json`)
+  with one learned gain.
+* **Test at road speed.** At 5.5 m/s (20 km/h) the Tarmac/V4Rs is self-stable, so a 5 Nm breeze does not knock it
+  over but walks it off the road in about 5 s hands-off: staying on the road is the fly's steering.
+
+Result (`ride-slow.sbatch`, then `sweep-gain.sbatch`): the same decoder with only the lane gain changed,
+48 riders x 15 s, identical gusts, leaving the road ends a run.
+
+| lane gain | mean time on road | riders on for all 15 s |
+|---|---|---|
+| hands-off (no steering) | 5.0 s | 0% |
+| 0 (lane channel off) | 4.7 s | 2% |
+| **-0.29 (learned)** | **8.4 s** | **17%** |
+| -0.5 | 6.8 s | 6% |
+| -1 / -2 / -4 | 3.7 / 1.7 / 0.8 s | 0% |
+| +1 (wrong sign) | 1.2 s | 0% |
+
+Replay of the final decoder (population mean, 16 riders x 20 s, no cut-off): 9.1 s on the road on average
+(hands-off: 5.4 s), 2 riders on it the whole 20 s. Too much gain over-corrects through the brain's lag, which is
+why the optimum is small. Things that did not work: CEM with a lane penalty only (balanced, but headings
+wandered 60-280 deg), DAgger imitation of the PD rider (lag makes the copied steering unstable, ~4.5 s upright).
+
+```bash
+python -m runs.probe --pop HS VS HALT --out results/probe.json
+python -m runs.ride --replay results/ride_slow_mu.json --tau-lane-ms 300 --lane-filter results/probe.json \
+    --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 20 \
+    --trace results/ride_slow_mu_trace.json
+python -m export.export_ride3d results/ride_slow_mu_trace.json results/ride_3d.html
+```
+
 ## The 3D bike in the replay
 
 The followed rider rides `assets/colnago_v4rs.glb`: the Colnago V4Rs (size 510, Campagnolo Super

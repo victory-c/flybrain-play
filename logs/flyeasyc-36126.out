@@ -24,3 +24,16 @@ gen 13  fit best  15.63 mean   6.11  upright  5.86 s (max 15.00,   2% finish)  d
 gen 14  fit best  15.56 mean   5.74  upright  5.49 s (max 15.00,   2% finish)  dist  28.6 m  |y| 3.46 m  v 5.22  bailed 0  pop 72,963 sp/s  305s
 gen 15  fit best  15.72 mean   5.90  upright  5.64 s (max 15.00,   2% finish)  dist  29.5 m  |y| 3.50 m  v 5.24  bailed 0  pop 71,684 sp/s  303s
 gen 16  fit best  11.05 mean   5.65  upright  5.40 s (max 10.48,   0% finish)  dist  27.5 m  |y| 3.37 m  v 5.10  bailed 0  pop 71,439 sp/s  213s
+gen 17  fit best  15.72 mean   5.98  upright  5.70 s (max 15.00,   2% finish)  dist  29.0 m  |y| 3.44 m  v 5.09  bailed 0  pop 70,240 sp/s  303s
+done: best fitness 15.97, results -> results/ride_easy_zero.json  (75.8 min)
+== Mon Sep 28 12:00:49 PM PDT 2026 replay
+Tarmac SL9 + 70 kg: 78.2 kg, self-stable 4.70..7.74 m/s; start at 5.5 m/s, gusts 5 Nm, 16 riders on cuda
+sensory gain overrides: {'hs_heading': 150.0, 'hs_lane': 50.0}
+senses : VS_L 16, HS_L 5, HALT_L 104, JO_L 228, LEG1_L 45, VS_R 18, HS_R 5, HALT_R 101, JO_R 247, LEG1_R 20  (789 neurons)
+readout: DNp20_L 1, DNp20_R 1, DNp22_L 1, DNp22_R 1, DNg46_L 1, DNg46_R 1, DNge043_L 1, DNge043_R 1, DNb06_L 1, DNb06_R 1, DNp17_L 6, DNp17_R 6, DNpe013_L 1, DNpe013_R 1, DNge097_L 1, DNge097_R 1, DNg94_L 1, DNg94_R 1, DNg90_L 1, DNg90_R 1, DNge088_L 1, DNge088_R 1, DNp33_L 1, DNp33_R 1, DNge091_L 7, DNge091_R 7, DNg29_L 1, DNg29_R 1, DNg41_L 1, DNg41_R 1, DNp18_L 1, DNp18_R 1, DNp73_L 1, DNp73_R 1, DNb04_L 1, DNb04_R 1, b1 MN_L 1, b1 MN_R 1, b2 MN_L 1, b2 MN_R 1, b3 MN_L 1, b3 MN_R 1, hg1 MN_L 1, hg1 MN_R 1, hi2 MN_L 2, hi2 MN_R 2, i2 MN_L 1, i2 MN_R 1, DNa01_L 1, DNa01_R 1, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 1, DNb01_L 1, DNb01_R 1, DNp09_L 1, DNp09_R 1, DNg100_L 1, DNg100_R 1, DNg97_L 1, DNg97_R 1, MDN_L 2, MDN_R 2, DNp01_L 1, DNp01_R 1, DNa16_L 1, DNa16_R 1, DNb03_L 2, DNb03_R 2, DNa06_L 1, DNa06_R 1, DNp15_L 1, DNp15_R 1, DNge107_L 1, DNge107_R 1, DNge086_L 1, DNge086_R 1, DNge031_L 1, DNge031_R 1, DNge033_L 1, DNge033_R 1, GNG283_L 1, GNG283_R 1
+brain: 166,700 neurons, 789 driven, 112 read out, w_syn 0.1238 mV
+  after warm-up, DN rates (Hz): DNp20_L 39, DNp20_R 22, DNp22_R 1, DNg46_R 1, DNge043_L 10, DNge043_R 18, DNb06_L 38, DNpe013_L 4, DNpe013_R 6, DNg94_L 1, DNg94_R 1, DNg90_R 3, DNp33_L 26, DNp33_R 11, DNge091_L 3, DNg29_L 46, DNg29_R 29, DNg41_L 30, DNg41_R 34, DNp18_L 34, DNp18_R 54, DNp73_L 64, DNp73_R 6, b2 MN_L 11, b2 MN_R 4, hg1 MN_L 24, hg1 MN_R 15, DNa01_L 3, DNa02_L 1, DNa02_R 2, DNa03_R 5, DNa16_L 2, DNa16_R 12, DNb03_L 8, DNb03_R 7, DNa06_L 9, DNa06_R 17, DNp15_L 6, DNp15_R 32, DNge107_L 2, DNge107_R 20, DNge086_R 4, DNge031_L 21, DNge031_R 26, DNge033_L 9, DNge033_R 18, GNG283_L 4, GNG283_R 20
+  population 22,072 spikes/s per brain
+replay of results/ride_easy_zero.json: upright 30.00 s (max 30.00, 100% finish)  dist  60.5 m  |y| 89.93 m  v 6.06  bailed 0  pop 71,151 sp/s  405s
+trace -> results/ride_easy_zero_trace.json
+== done Mon Sep 28 12:07:39 PM PDT 2026

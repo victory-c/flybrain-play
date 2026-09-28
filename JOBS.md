@@ -62,9 +62,10 @@ Commands run from the job's working directory (`.` = repo root, `fly_brain/` for
 | 36123 | 2026-09-28 10:41 | COMPLETED | 00:00:19 | 4 cpu, 8G |  | `srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 5 --quiet /home/s/st/stevejobs/flybrain/venv/bin/python -` (in `./fly_brain`) |  |
 | 36124 | 2026-09-28 10:42 | COMPLETED | 01:06:33 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy.sbatch results/ride_lane.json results/ride_easy_seeded.json 0.08 0.25 21` | [flyeasy-36124.out](logs/flyeasy-36124.out) |
 | 36125 | 2026-09-28 10:42 | CANCELLED | 00:02:55 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy.sbatch results/zero_theta.json results/ride_easy_zero.json 0.15 0.15 22` | [flyeasy-36125.err](logs/flyeasy-36125.err), [flyeasy-36125.out](logs/flyeasy-36125.out) |
-| 36126 | 2026-09-28 10:44 | RUNNING | 01:15:04 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy-c.sbatch results/zero_theta.json results/ride_easy_zero.json 0.15 0.15 22` | [flyeasyc-36126.out](logs/flyeasyc-36126.out) |
-| 36127 | 2026-09-28 10:54 | RUNNING | 01:05:27 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-slow.sbatch results/ride_lane.json results/ride_slow.json 0.08 0.25 23` | [flyslow-36127.out](logs/flyslow-36127.out) |
-| 36128 | 2026-09-28 11:50 | RUNNING | 00:09:51 | 8 cpu, 48G, 1 gpu |  | `sbatch sweep-gain.sbatch handsoff gain_+0.00 gain_-0.29 gain_-1.00 gain_-2.00 gain_-4.00 gain_-0.50 gain_+1.00` | [flysweep-36128.out](logs/flysweep-36128.out) |
+| 36126 | 2026-09-28 10:44 | COMPLETED | 01:22:42 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy-c.sbatch results/zero_theta.json results/ride_easy_zero.json 0.15 0.15 22` | [flyeasyc-36126.out](logs/flyeasyc-36126.out) |
+| 36127 | 2026-09-28 10:54 | COMPLETED | 01:24:01 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-slow.sbatch results/ride_lane.json results/ride_slow.json 0.08 0.25 23` | [flyslow-36127.out](logs/flyslow-36127.out) |
+| 36128 | 2026-09-28 11:50 | COMPLETED | 00:25:32 | 8 cpu, 48G, 1 gpu |  | `sbatch sweep-gain.sbatch handsoff gain_+0.00 gain_-0.29 gain_-1.00 gain_-2.00 gain_-4.00 gain_-0.50 gain_+1.00` | [flysweep-36128.out](logs/flysweep-36128.out) |
+| 36129 | 2026-09-28 12:12 | COMPLETED | 00:04:35 | 8 cpu, 40G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 30 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --replay results/ride_slow_mu.json --tau-lane-ms 300 --lane-filter results/probe....` (in `./fly_brain`) | `results/ride_slow_mu_trace.json` |
 
 ## Full command lines
 
@@ -139,4 +140,10 @@ srun -p ocf-hpc -w corruption -c 48 --mem=64G -t 60 --quiet env OMP_NUM_THREADS=
 
 ```bash
 srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.screen --riders 16 --seconds 8 --lane hs --polarity physio --out results/screen_physio.json
+```
+
+**36129** (python)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 30 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --replay results/ride_slow_mu.json --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 20 --seed 7 --trace results/ride_slow_mu_trace.json
 ```
