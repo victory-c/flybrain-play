@@ -7,3 +7,13 @@ brain: 166,700 neurons, 789 driven, 92 read out, w_syn 0.1238 mV
 CEM starts from best_theta of results/ride_lane.json
   after warm-up, DN rates (Hz): DNp20_L 32, DNp20_R 20, DNp22_R 1, DNg46_R 1, DNge043_L 7, DNge043_R 11, DNb06_L 29, DNpe013_L 4, DNpe013_R 5, DNg90_R 2, DNp33_L 20, DNp33_R 3, DNge091_L 1, DNg29_L 36, DNg29_R 28, DNg41_L 20, DNg41_R 22, DNp18_L 28, DNp18_R 45, DNp73_L 52, DNp73_R 9, b2 MN_L 6, b2 MN_R 2, hg1 MN_L 14, hg1 MN_R 10, DNa01_L 1, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 3, DNg100_L 1
   population 13,181 spikes/s per brain
+gen  0  fit best   8.78 mean   3.08  upright  2.97 s (max  8.80,   0% finish)  dist  11.4 m  |y| 2.27 m  v 4.18  bailed 0  pop 73,286 sp/s  181s
+gen  1  fit best   8.69 mean   3.37  upright  3.29 s (max  8.66,   0% finish)  dist  12.5 m  |y| 2.46 m  v 4.10  bailed 0  pop 71,996 sp/s  177s
+gen  2  fit best   9.47 mean   3.46  upright  3.38 s (max  9.28,   0% finish)  dist  12.8 m  |y| 2.66 m  v 4.11  bailed 0  pop 72,126 sp/s  206s
+gen  3  fit best   7.01 mean   3.24  upright  3.18 s (max  6.98,   0% finish)  dist  12.0 m  |y| 2.77 m  v 4.02  bailed 0  pop 71,472 sp/s  159s
+gen  4  fit best   7.31 mean   3.47  upright  3.38 s (max  7.13,   0% finish)  dist  13.3 m  |y| 2.52 m  v 4.19  bailed 0  pop 71,479 sp/s  146s
+gen  5  fit best   8.13 mean   4.23  upright  4.14 s (max  7.86,   0% finish)  dist  16.5 m  |y| 3.08 m  v 4.36  bailed 0  pop 69,517 sp/s  160s
+gen  6  fit best   8.31 mean   4.08  upright  4.02 s (max  8.78,   0% finish)  dist  16.0 m  |y| 3.38 m  v 4.43  bailed 0  pop 63,025 sp/s  178s
+gen  7  fit best   9.28 mean   4.47  upright  4.36 s (max  8.89,   0% finish)  dist  17.1 m  |y| 3.11 m  v 4.33  bailed 0  pop 65,305 sp/s  180s
+gen  8  fit best  11.29 mean   4.68  upright  4.58 s (max 11.07,   0% finish)  dist  17.8 m  |y| 3.11 m  v 4.26  bailed 0  pop 72,148 sp/s  222s
+gen  9  fit best  10.02 mean   4.68  upright  4.64 s (max 10.28,   0% finish)  dist  18.1 m  |y| 3.28 m  v 4.27  bailed 0  pop 68,695 sp/s  207s

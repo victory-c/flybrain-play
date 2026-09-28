@@ -44,8 +44,9 @@ Commands run from the job's working directory (`.` = repo root, `fly_brain/` for
 | 36105 | 2026-09-28 08:52 | FAILED | 00:00:03 | 8 cpu, 40G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --init results/screen_lane_samples.npz --lane hs --dagger 2 --riders 4 --seconds ...` (in `./fly_brain`) | `/tmp/claude-93015/-home-s-st-stevejobs-flybrain/ff3d4c1f-4087-4f88-b1bd-f60320256b54/scratchpad/dagger_smoke.json` |
 | 36106 | 2026-09-28 08:52 | COMPLETED | 00:00:27 | 8 cpu, 40G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --init results/screen_lane_samples.npz --lane hs --dagger 2 --riders 4 --seconds ...` (in `./fly_brain`) | `results/dagger_smoke.json` |
 | 36107 | 2026-09-28 08:53 | COMPLETED | 00:35:11 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-dagger.sbatch` | [flydagger-36107.out](logs/flydagger-36107.out) |
-| 36108 | 2026-09-28 09:12 | RUNNING | 00:17:44 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-offroad.sbatch results/ride_lane.json results/ride_road.json` | [flyroad-36108.out](logs/flyroad-36108.out) |
-| 36109 | 2026-09-28 09:27 | RUNNING | 00:02:58 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-offroad2.sbatch results/ride_lane.json results/ride_road2.json` | [flyroad2-36109.out](logs/flyroad2-36109.out) |
+| 36108 | 2026-09-28 09:12 | RUNNING | 00:47:44 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-offroad.sbatch results/ride_lane.json results/ride_road.json` | [flyroad-36108.out](logs/flyroad-36108.out) |
+| 36109 | 2026-09-28 09:27 | RUNNING | 00:32:58 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-offroad2.sbatch results/ride_lane.json results/ride_road2.json` | [flyroad2-36109.out](logs/flyroad2-36109.out) |
+| 36110 | 2026-09-28 09:33 | COMPLETED | 00:05:10 | 48 cpu, 64G |  | `srun -p ocf-hpc -w corruption -c 48 --mem=64G -t 60 --quiet env OMP_NUM_THREADS=48 /home/s/st/stevejobs/flybrain/venv/bin/python -m runs.screen --riders 16 --seconds 8 --lane hs --device cpu --out results/screen_lane_...` (in `./fly_brain`) | `results/screen_lane_psi.json` |
 
 ## Full command lines
 
@@ -108,4 +109,10 @@ srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/
 
 ```bash
 srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --init results/screen_lane_samples.npz --lane hs --dagger 2 --riders 4 --seconds 0.5 --out results/dagger_smoke.json
+```
+
+**36110** (env)
+
+```bash
+srun -p ocf-hpc -w corruption -c 48 --mem=64G -t 60 --quiet env OMP_NUM_THREADS=48 /home/s/st/stevejobs/flybrain/venv/bin/python -m runs.screen --riders 16 --seconds 8 --lane hs --device cpu --out results/screen_lane_psi.json
 ```

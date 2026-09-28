@@ -24,7 +24,7 @@ from brain.loop import BrainLoop
 from brain.sim import W_SYN_MALE_CNS, Brain
 
 ROOT = Path(__file__).resolve().parents[1]
-VARS = ["phi", "phi_dot", "delta", "y", "psi_dot", "v"]
+VARS = ["phi", "phi_dot", "delta", "y", "psi_dot", "v", "psi"]
 
 
 def main():
@@ -84,7 +84,7 @@ def main():
         samples["torque"].append(torque.cpu().numpy().astype(np.float32))
         samples["state"].append(s.cpu().numpy().astype(np.float32))
         samples["alive"].append((~bikes.done).cpu().numpy())
-        x = torch.stack([s[:, 4], s[:, 6], s[:, 5], s[:, 1], bikes.psi_dot, s[:, 3]], 0).double()  # (V, B)
+        x = torch.stack([s[:, 4], s[:, 6], s[:, 5], s[:, 1], bikes.psi_dot, s[:, 3], s[:, 2]], 0).double()  # (V, B)
         alive = (~bikes.done).double()
         S_r += (r * alive[:, None]).sum(0)
         S_rr += (r * r * alive[:, None]).sum(0)

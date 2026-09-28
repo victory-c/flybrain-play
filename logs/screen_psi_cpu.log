@@ -1,0 +1,236 @@
+screen: 16 riders, 8 s, PD rider steering, gusts 25.0 Nm, 789 driven neurons, on cpu
+  t= 1.0s  alive 16/16  mean|phi| 10.4 deg  pop 125,150 sp/s  wall 33s
+  t= 2.0s  alive 16/16  mean|phi|  7.9 deg  pop 137,531 sp/s  wall 70s
+  t= 3.0s  alive 16/16  mean|phi|  6.0 deg  pop 134,819 sp/s  wall 108s
+  t= 4.0s  alive 16/16  mean|phi|  9.2 deg  pop 138,131 sp/s  wall 146s
+  t= 5.0s  alive 16/16  mean|phi|  5.9 deg  pop 125,825 sp/s  wall 185s
+  t= 6.0s  alive 16/16  mean|phi|  6.6 deg  pop 129,381 sp/s  wall 223s
+  t= 7.0s  alive 16/16  mean|phi|  6.0 deg  pop 122,006 sp/s  wall 261s
+  t= 8.0s  alive 16/16  mean|phi|  6.0 deg  pop 114,806 sp/s  wall 299s
+
+== population by superclass (Hz mean per neuron, and total spikes/s per brain)
+                        n    hz    total
+superclass                              
+cb_intrinsic        32164   1.3  40450.0
+vnc_intrinsic       13161   0.7   9624.0
+descending_neuron    1314   6.4   8420.4
+ascending_neuron     1846   3.1   5717.5
+ol_intrinsic        89403   0.0   4300.1
+vnc_motor             708   4.2   2944.7
+visual_centrifugal    563   5.2   2917.9
+visual_projection    9157   0.1    860.5
+cb_motor              107   6.4    683.2
+vnc_efferent           94   2.0    189.5
+efferent_ascending      8  18.6    148.6
+cb_endocrine           72   1.1     79.7
+vnc_endocrine          22   1.3     28.2
+cb_sensory           4393   0.0      0.6
+cb_efferent             4   0.0      0.0
+
+driven neurons total 49,039 sp/s; rest of brain 76,365 sp/s; 3,521 neurons > 1 Hz, 1,964 > 20 Hz
+
+== descending neurons above 0.5 Hz (257 of 1314)
+   type              instance somaSide  cruise_hz  mean_hz  r_phi  r_phi_dot  r_delta   r_y
+DNge027             DNge027_R        R   7.500000   153.98  -0.04       0.04    -0.04  0.10
+DNge027             DNge027_L        L   7.500000   146.25  -0.05       0.04    -0.04  0.10
+DNge143             DNge143_L        L   6.250000   127.48  -0.03       0.04    -0.03  0.09
+  DNg33               DNg33_R        R   0.000000   125.56  -0.05      -0.00    -0.01  0.09
+  DNg33               DNg33_L        L   0.000000   125.50  -0.05      -0.00    -0.01  0.09
+DNge039             DNge039_R        R   5.420000   125.42  -0.03       0.05    -0.03  0.09
+DNge039             DNge039_L        L   6.040000   122.73  -0.07       0.05    -0.06  0.10
+  DNg73               DNg73_R        R   5.830000   122.53  -0.04       0.04    -0.03  0.09
+DNge143             DNge143_R        R   5.620000   118.25  -0.03       0.05    -0.04  0.09
+DNge044             DNge044_L        L   5.830000   118.16  -0.05       0.05    -0.05  0.09
+DNge022             DNge022_R        R   5.420000   112.78  -0.04       0.04    -0.03  0.09
+  DNg62               DNg62_L        L   5.000000   111.36  -0.02       0.03    -0.02  0.08
+DNge060             DNge060_R        R   5.210000   109.47  -0.04       0.04    -0.03  0.08
+DNge044             DNge044_R        R   5.210000   107.22  -0.03       0.04    -0.02  0.08
+  DNg62               DNg62_R        R   5.830000   106.72  -0.09       0.04    -0.07  0.11
+  DNg73               DNg73_L        L   4.580000   103.48  -0.03       0.03    -0.02  0.08
+DNge022             DNge022_L        L   4.790000    94.88  -0.05       0.04    -0.04  0.08
+DNge012             DNge012_L        L   5.420000    92.47  -0.10       0.04    -0.08  0.12
+DNg12_e             DNg12_e_R        R   4.170000    91.95  -0.02       0.05    -0.03  0.09
+DNg12_d             DNg12_d_R        R   4.380000    87.19  -0.04       0.04    -0.04  0.09
+DNge019             DNge019_R        R   4.380000    85.55  -0.03       0.04    -0.03  0.08
+  DNg41 DNg41(hb5813024629)_R        R  23.959999    82.05   0.16      -0.12     0.21 -0.07
+DNge060             DNge060_L        L   3.750000    81.80  -0.05       0.08    -0.07  0.11
+  DNg41               DNg41_L        L  18.120001    80.73  -0.12       0.06    -0.14  0.01
+DNg12_a             DNg12_a_R        R   3.750000    79.92  -0.04       0.05    -0.04  0.09
+DNge033             DNge033_R        R  12.500000    78.16   0.00       0.06    -0.02  0.06
+DNge012             DNge012_R        R   3.540000    77.90   0.01       0.03     0.00  0.06
+DNge019             DNge019_R        R   3.540000    77.82  -0.04       0.03    -0.03  0.08
+DNg12_e             DNg12_e_R        R   3.330000    76.59  -0.02       0.04    -0.02  0.08
+DNge019             DNge019_L        L   3.540000    76.37  -0.03       0.04    -0.03  0.08
+DNge078             DNge078_L        L   3.330000    75.95  -0.00       0.03    -0.00  0.06
+DNge019             DNge019_L        L   3.330000    75.70  -0.03       0.04    -0.03  0.08
+  DNg22               DNg22_L        L   3.540000    74.73  -0.09       0.04    -0.07  0.11
+DNge019             DNge019_L        L   3.540000    74.04  -0.03       0.03    -0.02  0.08
+DNg12_c             DNg12_c_R        R   3.540000    73.86  -0.04       0.03    -0.03  0.08
+DNg12_e             DNg12_e_R        R   3.540000    72.91  -0.03       0.04    -0.03  0.08
+  DNg87               DNg87_R        R   3.120000    72.91   0.01       0.02     0.01  0.05
+  DNg22               DNg22_R        R   3.120000    72.05  -0.03       0.04    -0.03  0.07
+DNg12_e             DNg12_e_L        L   3.330000    71.98  -0.05       0.04    -0.05  0.09
+DNg12_c             DNg12_c_R        R   3.540000    71.66  -0.03       0.04    -0.03  0.08
+
+== motor neurons above 0.5 Hz (165 of 815)
+                            type                           instance somaSide superclass  cruise_hz  mean_hz  r_phi  r_phi_dot  r_delta
+Tergopleural/Pleural promotor MN Tergopleural/Pleural promotor MN_L        L  vnc_motor       5.21   112.17  -0.05       0.06    -0.05
+Tergopleural/Pleural promotor MN Tergopleural/Pleural promotor MN_L        L  vnc_motor       4.58   103.16  -0.01       0.05    -0.02
+Tergopleural/Pleural promotor MN Tergopleural/Pleural promotor MN_R        R  vnc_motor       4.38   102.55  -0.02       0.04    -0.03
+                          GNG668                           GNG668_L        L   cb_motor       4.79   102.30  -0.06       0.04    -0.05
+                          GNG668                           GNG668_R        R   cb_motor       4.58    94.41  -0.03       0.04    -0.04
+                          MNad21                           MNad21_L        L  vnc_motor       0.62    85.03   0.00      -0.01     0.00
+                          MNad21                           MNad21_R        R  vnc_motor       0.42    79.60   0.00       0.00    -0.00
+                          MNad21                           MNad21_L        L  vnc_motor       0.42    78.34  -0.00      -0.02     0.00
+     Sternal anterior rotator MN      Sternal anterior rotator MN_L        L  vnc_motor       3.12    75.03  -0.08       0.03    -0.07
+     Sternal anterior rotator MN      Sternal anterior rotator MN_R        R  vnc_motor       2.71    72.84  -0.02       0.02    -0.02
+Tergopleural/Pleural promotor MN Tergopleural/Pleural promotor MN_R        R  vnc_motor       3.12    72.37  -0.03       0.02    -0.02
+                           b1 MN                            b1 MN_L        L  vnc_motor       0.62    72.05  -0.11      -0.34     0.14
+                           b2 MN                            b2 MN_L        L  vnc_motor       9.38    70.02  -0.10      -0.27     0.11
+                           i1 MN                            i1 MN_R        R  vnc_motor       0.00    65.21   0.05       0.07    -0.02
+                  Fe reductor MN                   Fe reductor MN_R        R  vnc_motor       2.71    64.07  -0.01       0.04    -0.02
+                  Fe reductor MN                   Fe reductor MN_L        L  vnc_motor       3.12    63.88  -0.07       0.02    -0.05
+                           b1 MN                            b1 MN_R        R  vnc_motor       0.00    63.84   0.15       0.32    -0.10
+                  Fe reductor MN                   Fe reductor MN_R        R  vnc_motor       2.71    63.74  -0.01       0.04    -0.02
+                          GNG641                           GNG641_R        R   cb_motor       2.50    63.17  -0.03       0.02    -0.02
+                           b2 MN                            b2 MN_R        R  vnc_motor       4.58    61.59   0.06       0.17    -0.07
+                          GNG641                           GNG641_L        L   cb_motor       1.46    60.04   0.01       0.11    -0.06
+                           b3 MN                            b3 MN_R        R  vnc_motor       0.00    56.52   0.11       0.31    -0.13
+                          GNG651                           GNG651_L        L   cb_motor       1.87    54.80  -0.02       0.01    -0.01
+                          hi2 MN                           hi2 MN_L        L  vnc_motor       0.00    54.63  -0.08      -0.25     0.10
+                          GNG651                           GNG651_R        R   cb_motor       1.87    54.48   0.02       0.02     0.01
+                          MNad21                           MNad21_R        R  vnc_motor       0.00    53.59   0.00      -0.00     0.00
+                          GNG314                           GNG314_R        R   cb_motor       3.33    53.48   0.00      -0.05     0.05
+                          MNwm35                           MNwm35_L        L  vnc_motor       0.00    53.24  -0.06      -0.15     0.05
+                  Fe reductor MN                   Fe reductor MN_L        L  vnc_motor       2.50    50.09  -0.04       0.02    -0.03
+                          MNwm35                           MNwm35_R        R  vnc_motor       0.00    43.16   0.01      -0.00     0.01
+                          hi2 MN                           hi2 MN_R        R  vnc_motor       0.00    41.52   0.10       0.26    -0.10
+                          hi2 MN                           hi2 MN_L        L  vnc_motor       0.00    40.73  -0.05      -0.16     0.06
+                          hi2 MN                           hi2 MN_R        R  vnc_motor       0.00    39.98   0.06       0.14    -0.05
+     Sternal anterior rotator MN      Sternal anterior rotator MN_R        R  vnc_motor       1.67    39.37  -0.01       0.02    -0.01
+                          MNad25                           MNad25_L        L  vnc_motor       0.00    37.05  -0.05      -0.13     0.05
+                          MNad25                           MNad25_R        R  vnc_motor       0.00    37.01  -0.01      -0.01     0.00
+                          hg1 MN                           hg1 MN_L        L  vnc_motor      17.92    36.27  -0.12      -0.17     0.02
+                          GNG650                           GNG650_L        L   cb_motor       0.00    33.32  -0.02      -0.24     0.14
+                          hg1 MN                           hg1 MN_R        R  vnc_motor      13.54    32.66   0.06       0.12    -0.03
+                         hDVM MN                          hDVM MN_R        R  vnc_motor       0.00    31.66  -0.04      -0.09     0.03
+
+== output-side neurons most correlated with phi
+    type                instance somaSide        superclass  mean_hz  r_phi  r_phi  r_phi_dot  r_delta
+   DNp33         DNp33(SAD095)_R        R descending_neuron    10.74  -0.36  -0.36       0.01    -0.25
+   DNp12         DNp12(WED105)_L        L descending_neuron    26.95  -0.35  -0.35       0.03    -0.25
+   DNp18                 DNp18_R        R descending_neuron    16.18   0.34   0.34      -0.06     0.28
+AN09B015              AN09B015_R        R  ascending_neuron    11.61   0.32   0.32       0.11     0.17
+   DNg56                 DNg56_L        L descending_neuron     6.70  -0.30  -0.30       0.07    -0.25
+ DNge138               DNge138_M        M descending_neuron     8.90  -0.29  -0.29       0.03    -0.22
+ DNge132               DNge132_L        L descending_neuron     4.33  -0.28  -0.28       0.01    -0.20
+ DNge091               DNge091_L        L descending_neuron    14.10  -0.28  -0.28       0.01    -0.20
+ DNge091               DNge091_L        L descending_neuron     7.91  -0.28  -0.28       0.02    -0.20
+    pIP1                  pIP1_L        L descending_neuron    20.18  -0.28  -0.28       0.01    -0.19
+AN17B009              AN17B009_L        L  ascending_neuron     7.59   0.27   0.27       0.11     0.13
+ DNge016               DNge016_L        L descending_neuron    42.58  -0.25  -0.25       0.01    -0.18
+ DNge175               DNge175_L        L descending_neuron     8.43  -0.24  -0.24       0.02    -0.18
+AN17B009              AN17B009_R        R  ascending_neuron    13.59  -0.24  -0.24      -0.07    -0.15
+AN08B014              AN08B014_L        L  ascending_neuron     3.95  -0.24  -0.24      -0.00    -0.16
+   DNp73                 DNp73_L        L descending_neuron    63.94  -0.22  -0.22      -0.01    -0.14
+   DNg29                 DNg29_L        L descending_neuron    53.61  -0.22  -0.22      -0.01    -0.14
+ DNge091               DNge091_L        L descending_neuron     3.72  -0.21  -0.21       0.02    -0.16
+ DNpe017 DNpe017(hb1406000196)_L        L descending_neuron     6.34  -0.21  -0.21       0.01    -0.15
+   DNg99                 DNg99_R        R descending_neuron    28.74  -0.20  -0.20      -0.05    -0.11
+  MNhl01                MNhl01_R        R         vnc_motor     5.66  -0.20  -0.20      -0.11    -0.05
+AN17B011              AN17B011_L        L  ascending_neuron     6.95   0.20   0.20       0.04     0.12
+   DNb05                 DNb05_L        L descending_neuron     2.55  -0.19  -0.19       0.00    -0.13
+   DNp12         DNp12(WED105)_R        R descending_neuron     8.88  -0.19  -0.19       0.05    -0.16
+   DNp18                 DNp18_L        L descending_neuron     9.55  -0.19  -0.19       0.01    -0.15
+
+== output-side neurons most correlated with phi_dot
+    type                instance somaSide        superclass  mean_hz  r_phi_dot  r_phi  r_phi_dot  r_delta
+   DNp20                 DNp20_R        R descending_neuron    54.40       0.78   0.07       0.78    -0.49
+   DNp20                 DNp20_L        L descending_neuron    69.38      -0.74  -0.11      -0.74     0.43
+   DNg46                 DNg46_R        R descending_neuron    35.88       0.69   0.04       0.69    -0.45
+   DNg46                 DNg46_L        L descending_neuron    35.25      -0.68  -0.02      -0.68     0.45
+   DNp22   DNp22(hb1560471374)_R        R descending_neuron    29.71       0.67   0.08       0.67    -0.41
+   DNp22                 DNp22_L        L descending_neuron    28.65      -0.67  -0.06      -0.67     0.41
+ DNge043 DNge043(hb1499778528)_R        R descending_neuron    25.62       0.56   0.06       0.56    -0.36
+ DNge043 DNge043(hb1499778528)_L        L descending_neuron    20.19      -0.55  -0.04      -0.55     0.35
+ DNge088               DNge088_L        L descending_neuron    15.74      -0.53  -0.05      -0.53     0.33
+   DNb06                 DNb06_L        L descending_neuron    23.47      -0.51  -0.06      -0.51     0.30
+ DNge097               DNge097_L        L descending_neuron    12.86      -0.48  -0.03      -0.48     0.31
+ANXXX094              ANXXX094_R        R  ascending_neuron    13.90      -0.45  -0.03      -0.45     0.29
+ DNge097               DNge097_R        R descending_neuron     9.92       0.43   0.04       0.43    -0.28
+   DNp17       DNp17(DNp16/17)_R        R descending_neuron    10.27       0.43   0.08       0.43    -0.25
+   DNp17                 DNp17_L        L descending_neuron     9.98      -0.42  -0.04      -0.42     0.25
+   DNp17                 DNp17_R        R descending_neuron     8.58       0.41   0.06       0.41    -0.25
+AN06B014              AN06B014_L        L  ascending_neuron    73.36       0.40   0.15       0.40    -0.16
+   DNg94                 DNg94_R        R descending_neuron     8.97       0.40   0.06       0.40    -0.24
+AN06B014              AN06B014_R        R  ascending_neuron    95.41      -0.39  -0.13      -0.39     0.15
+   DNp17                 DNp17_L        L descending_neuron     8.27      -0.38  -0.04      -0.38     0.23
+   b1 MN                 b1 MN_L        L         vnc_motor    72.05      -0.34  -0.11      -0.34     0.14
+ANXXX094              ANXXX094_L        L  ascending_neuron     5.78       0.33   0.02       0.33    -0.22
+   b1 MN                 b1 MN_R        R         vnc_motor    63.84       0.32   0.15       0.32    -0.10
+   DNp17                 DNp17_R        R descending_neuron     5.15       0.32   0.08       0.32    -0.17
+   b3 MN                 b3 MN_R        R         vnc_motor    56.52       0.31   0.11       0.31    -0.13
+
+== output-side neurons most correlated with delta
+    type                instance somaSide        superclass  mean_hz  r_delta  r_phi  r_phi_dot  r_delta
+   DNp20                 DNp20_R        R descending_neuron    54.40    -0.49   0.07       0.78    -0.49
+   DNg46                 DNg46_R        R descending_neuron    35.88    -0.45   0.04       0.69    -0.45
+   DNg46                 DNg46_L        L descending_neuron    35.25     0.45  -0.02      -0.68     0.45
+   DNp20                 DNp20_L        L descending_neuron    69.38     0.43  -0.11      -0.74     0.43
+   DNp22                 DNp22_L        L descending_neuron    28.65     0.41  -0.06      -0.67     0.41
+   DNp22   DNp22(hb1560471374)_R        R descending_neuron    29.71    -0.41   0.08       0.67    -0.41
+ DNge043 DNge043(hb1499778528)_R        R descending_neuron    25.62    -0.36   0.06       0.56    -0.36
+ DNge043 DNge043(hb1499778528)_L        L descending_neuron    20.19     0.35  -0.04      -0.55     0.35
+ DNge088               DNge088_L        L descending_neuron    15.74     0.33  -0.05      -0.53     0.33
+ DNge097               DNge097_L        L descending_neuron    12.86     0.31  -0.03      -0.48     0.31
+   DNb06                 DNb06_L        L descending_neuron    23.47     0.30  -0.06      -0.51     0.30
+ANXXX094              ANXXX094_R        R  ascending_neuron    13.90     0.29  -0.03      -0.45     0.29
+   DNp18                 DNp18_R        R descending_neuron    16.18     0.28   0.34      -0.06     0.28
+ DNge097               DNge097_R        R descending_neuron     9.92    -0.28   0.04       0.43    -0.28
+   DNp17                 DNp17_L        L descending_neuron     9.98     0.25  -0.04      -0.42     0.25
+   DNp12         DNp12(WED105)_L        L descending_neuron    26.95    -0.25  -0.35       0.03    -0.25
+   DNg56                 DNg56_L        L descending_neuron     6.70    -0.25  -0.30       0.07    -0.25
+   DNp17       DNp17(DNp16/17)_R        R descending_neuron    10.27    -0.25   0.08       0.43    -0.25
+   DNp33         DNp33(SAD095)_R        R descending_neuron    10.74    -0.25  -0.36       0.01    -0.25
+   DNp17                 DNp17_R        R descending_neuron     8.58    -0.25   0.06       0.41    -0.25
+   DNg94                 DNg94_R        R descending_neuron     8.97    -0.24   0.06       0.40    -0.24
+   DNp17                 DNp17_L        L descending_neuron     8.27     0.23  -0.04      -0.38     0.23
+ANXXX094              ANXXX094_L        L  ascending_neuron     5.78    -0.22   0.02       0.33    -0.22
+ DNge138               DNge138_M        M descending_neuron     8.90    -0.22  -0.29       0.03    -0.22
+   DNg41   DNg41(hb5813024629)_R        R descending_neuron    82.05     0.21   0.16      -0.12     0.21
+
+== output types whose left and right members disagree about lean (candidates for steering)
+        type        superclass  n    hz  rphi_L  rphi_R  rdot_L  rdot_R  asym
+       DNp20 descending_neuron  2 61.89   -0.11    0.07   -0.74    0.78  1.71
+       DNp22 descending_neuron  2 29.18   -0.06    0.08   -0.67    0.67  1.48
+       DNg46 descending_neuron  2 35.57   -0.02    0.04   -0.68    0.69  1.44
+     DNge043 descending_neuron  2 22.90   -0.04    0.06   -0.55    0.56  1.21
+     DNge097 descending_neuron  2 11.39   -0.03    0.04   -0.48    0.43  0.99
+       b1 MN         vnc_motor  2 67.95   -0.11    0.15   -0.34    0.32  0.92
+       b3 MN         vnc_motor  2 43.07   -0.07    0.11   -0.30    0.31  0.80
+       DNg94 descending_neuron  2  6.09   -0.04    0.06   -0.25    0.40  0.75
+       DNp17 descending_neuron  9  5.63   -0.03    0.06   -0.30    0.33  0.73
+       b2 MN         vnc_motor  2 65.80   -0.10    0.06   -0.27    0.17  0.61
+       DNp18 descending_neuron  2 12.86   -0.19    0.34    0.01   -0.06  0.60
+     DNpe013 descending_neuron  2  3.21   -0.06    0.07   -0.26    0.16  0.56
+       DNg90 descending_neuron  2  3.49   -0.05    0.06   -0.30    0.13  0.55
+      hi2 MN         vnc_motor  4 44.21   -0.07    0.08   -0.20    0.20  0.55
+    hiii2 MN         vnc_motor  2 15.57   -0.02    0.09   -0.16    0.27  0.55
+      GNG650          cb_motor  2 24.52   -0.02    0.12   -0.24    0.15  0.53
+     DNpe008 descending_neuron  4  2.29   -0.03    0.04   -0.23    0.23  0.53
+      hg1 MN         vnc_motor  2 34.46   -0.12    0.06   -0.17    0.12  0.48
+     DNpe014 descending_neuron  4  3.93   -0.02    0.07   -0.15    0.23  0.47
+Ti flexor MN         vnc_motor  3  7.26   -0.02    0.09   -0.22    0.13  0.46
+       DNg41 descending_neuron  2 81.39   -0.12    0.16    0.06   -0.12  0.46
+        pIP1 descending_neuron  2 11.12   -0.28    0.15    0.01   -0.00  0.44
+      MNhm42         vnc_motor  2 27.01   -0.09    0.04   -0.21    0.10  0.44
+      MNad14         vnc_motor  4  5.58   -0.02    0.09   -0.18    0.14  0.43
+      MNad46         vnc_motor  2  9.39    0.00    0.09   -0.15    0.19  0.43
+      MNad30         vnc_motor  2 16.58   -0.01    0.09   -0.20    0.13  0.42
+     DNge175 descending_neuron  2  9.13   -0.24    0.15    0.02    0.01  0.41
+      MNad28         vnc_motor  2 30.61   -0.03    0.05   -0.10    0.22  0.40
+     DNge087 descending_neuron  3  6.15    0.01    0.05   -0.19    0.17  0.40
+      MNad40         vnc_motor  2  4.28   -0.09    0.07   -0.17    0.06  0.39
+-> results/screen_lane_psi_samples.npz: 800 chunks x 16 riders of readout features + teacher torque
+
+-> results/screen_lane_psi.json (+ .parquet with every neuron)   brain 300s wall
