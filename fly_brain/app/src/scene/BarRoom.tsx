@@ -97,7 +97,7 @@ export function BarRoom() {
       top: woodTexture("#3e2413", "#1f1108", 6, [4, 1], 9),
       shelf: woodTexture("#4a2d19", "#2a180d", 4, [6, 1], 13),
       poster1: posterTexture("FLY\nBAR", "est. 2026 · Drosophila", "#3a1f10", "#e9d6b4"),
-      poster2: posterTexture("166.700\nνευρώνες", "ένας εγκέφαλος, δέκα ποτά", "#f1e3c8", "#6a2418"),
+      poster2: posterTexture("166,700\nneurons", "one brain, ten drinks", "#f1e3c8", "#6a2418"),
     }),
     [],
   );

@@ -16,15 +16,15 @@
    "garnish": "orange",
    "recipe": [
     {
-     "label": "Ζάχαρη",
+     "label": "Sugar",
      "value": "104 g/L"
     },
     {
-     "label": "Αλκοόλ",
+     "label": "Alcohol",
      "value": "21.6 %"
     },
     {
-     "label": "Πικράδα",
+     "label": "Bitterness",
      "value": "90"
     },
     {
@@ -171,27 +171,27 @@
     "lit": 1383,
     "regions": [
      {
-      "name": "γεύση",
+      "name": "taste",
       "lit": 387
      },
      {
-      "name": "κεντρικός εγκέφαλος",
+      "name": "central brain",
       "lit": 351
      },
      {
-      "name": "νευρικό κορδόνι (πόδια, φτερά)",
+      "name": "nerve cord (legs, wings)",
       "lit": 246
      },
      {
-      "name": "κέντρο γεύσης και σίτισης",
+      "name": "taste and feeding center",
       "lit": 243
      },
      {
-      "name": "εντολές προς το σώμα",
+      "name": "commands to the body",
       "lit": 56
      },
      {
-      "name": "μνήμη και ανταμοιβή",
+      "name": "memory and reward",
       "lit": 35
      }
     ]
@@ -209,19 +209,19 @@
    "garnish": "mint",
    "recipe": [
     {
-     "label": "Ζάχαρη",
+     "label": "Sugar",
      "value": "58 g/L"
     },
     {
-     "label": "Αλκοόλ",
+     "label": "Alcohol",
      "value": "11 %"
     },
     {
-     "label": "Πικράδα",
+     "label": "Bitterness",
      "value": "10"
     },
     {
-     "label": "Ανθρακικό",
+     "label": "Carbonation",
      "value": "3 g/L"
     },
     {
@@ -368,27 +368,27 @@
     "lit": 1355,
     "regions": [
      {
-      "name": "γεύση",
+      "name": "taste",
       "lit": 436
      },
      {
-      "name": "κεντρικός εγκέφαλος",
+      "name": "central brain",
       "lit": 291
      },
      {
-      "name": "κέντρο γεύσης και σίτισης",
+      "name": "taste and feeding center",
       "lit": 267
      },
      {
-      "name": "νευρικό κορδόνι (πόδια, φτερά)",
+      "name": "nerve cord (legs, wings)",
       "lit": 229
      },
      {
-      "name": "εντολές προς το σώμα",
+      "name": "commands to the body",
       "lit": 51
      },
      {
-      "name": "μνήμη και ανταμοιβή",
+      "name": "memory and reward",
       "lit": 29
      }
     ]
@@ -406,23 +406,23 @@
    "garnish": "grapefruit",
    "recipe": [
     {
-     "label": "Ζάχαρη",
+     "label": "Sugar",
      "value": "55 g/L"
     },
     {
-     "label": "Αλκοόλ",
+     "label": "Alcohol",
      "value": "11 %"
     },
     {
-     "label": "Πικράδα",
+     "label": "Bitterness",
      "value": "30"
     },
     {
-     "label": "Αλάτι",
+     "label": "Salt",
      "value": "2.5 g/L"
     },
     {
-     "label": "Ανθρακικό",
+     "label": "Carbonation",
      "value": "3 g/L"
     },
     {
@@ -569,27 +569,27 @@
     "lit": 1441,
     "regions": [
      {
-      "name": "γεύση",
+      "name": "taste",
       "lit": 471
      },
      {
-      "name": "κεντρικός εγκέφαλος",
+      "name": "central brain",
       "lit": 319
      },
      {
-      "name": "κέντρο γεύσης και σίτισης",
+      "name": "taste and feeding center",
       "lit": 265
      },
      {
-      "name": "νευρικό κορδόνι (πόδια, φτερά)",
+      "name": "nerve cord (legs, wings)",
       "lit": 240
      },
      {
-      "name": "εντολές προς το σώμα",
+      "name": "commands to the body",
       "lit": 57
      },
      {
-      "name": "μνήμη και ανταμοιβή",
+      "name": "memory and reward",
       "lit": 31
      }
     ]
@@ -607,15 +607,15 @@
    "garnish": "orange",
    "recipe": [
     {
-     "label": "Ζάχαρη",
+     "label": "Sugar",
      "value": "51 g/L"
     },
     {
-     "label": "Αλκοόλ",
+     "label": "Alcohol",
      "value": "30.6 %"
     },
     {
-     "label": "Πικράδα",
+     "label": "Bitterness",
      "value": "20"
     },
     {
@@ -762,27 +762,27 @@
     "lit": 1299,
     "regions": [
      {
-      "name": "γεύση",
+      "name": "taste",
       "lit": 387
      },
      {
-      "name": "κεντρικός εγκέφαλος",
+      "name": "central brain",
       "lit": 350
      },
      {
-      "name": "κέντρο γεύσης και σίτισης",
+      "name": "taste and feeding center",
       "lit": 217
      },
      {
-      "name": "νευρικό κορδόνι (πόδια, φτερά)",
+      "name": "nerve cord (legs, wings)",
       "lit": 204
      },
      {
-      "name": "εντολές προς το σώμα",
+      "name": "commands to the body",
       "lit": 50
      },
      {
-      "name": "μνήμη και ανταμοιβή",
+      "name": "memory and reward",
       "lit": 33
      }
     ]
@@ -800,11 +800,11 @@
    "garnish": "passion",
    "recipe": [
     {
-     "label": "Ζάχαρη",
+     "label": "Sugar",
      "value": "119 g/L"
     },
     {
-     "label": "Αλκοόλ",
+     "label": "Alcohol",
      "value": "14.1 %"
     },
     {
@@ -951,27 +951,27 @@
     "lit": 1281,
     "regions": [
      {
-      "name": "γεύση",
+      "name": "taste",
       "lit": 385
      },
      {
-      "name": "κεντρικός εγκέφαλος",
+      "name": "central brain",
       "lit": 285
      },
      {
-      "name": "κέντρο γεύσης και σίτισης",
+      "name": "taste and feeding center",
       "lit": 247
      },
      {
-      "name": "νευρικό κορδόνι (πόδια, φτερά)",
+      "name": "nerve cord (legs, wings)",
       "lit": 233
      },
      {
-      "name": "εντολές προς το σώμα",
+      "name": "commands to the body",
       "lit": 48
      },
      {
-      "name": "όσφρηση",
+      "name": "smell",
       "lit": 30
      }
     ]
@@ -989,19 +989,19 @@
    "garnish": "orange",
    "recipe": [
     {
-     "label": "Ζάχαρη",
+     "label": "Sugar",
      "value": "75 g/L"
     },
     {
-     "label": "Αλκοόλ",
+     "label": "Alcohol",
      "value": "8.2 %"
     },
     {
-     "label": "Πικράδα",
+     "label": "Bitterness",
      "value": "50"
     },
     {
-     "label": "Ανθρακικό",
+     "label": "Carbonation",
      "value": "4 g/L"
     },
     {
@@ -1148,27 +1148,27 @@
     "lit": 1481,
     "regions": [
      {
-      "name": "γεύση",
+      "name": "taste",
       "lit": 435
      },
      {
-      "name": "κεντρικός εγκέφαλος",
+      "name": "central brain",
       "lit": 318
      },
      {
-      "name": "κέντρο γεύσης και σίτισης",
+      "name": "taste and feeding center",
       "lit": 304
      },
      {
-      "name": "νευρικό κορδόνι (πόδια, φτερά)",
+      "name": "nerve cord (legs, wings)",
       "lit": 269
      },
      {
-      "name": "εντολές προς το σώμα",
+      "name": "commands to the body",
       "lit": 56
      },
      {
-      "name": "όσφρηση",
+      "name": "smell",
       "lit": 33
      }
     ]
@@ -1186,15 +1186,15 @@
    "garnish": "lime",
    "recipe": [
     {
-     "label": "Ζάχαρη",
+     "label": "Sugar",
      "value": "52.5 g/L"
     },
     {
-     "label": "Αλκοόλ",
+     "label": "Alcohol",
      "value": "15.7 %"
     },
     {
-     "label": "Πικράδα",
+     "label": "Bitterness",
      "value": "5"
     },
     {
@@ -1341,27 +1341,27 @@
     "lit": 1232,
     "regions": [
      {
-      "name": "γεύση",
+      "name": "taste",
       "lit": 386
      },
      {
-      "name": "κεντρικός εγκέφαλος",
+      "name": "central brain",
       "lit": 311
      },
      {
-      "name": "κέντρο γεύσης και σίτισης",
+      "name": "taste and feeding center",
       "lit": 213
      },
      {
-      "name": "νευρικό κορδόνι (πόδια, φτερά)",
+      "name": "nerve cord (legs, wings)",
       "lit": 190
      },
      {
-      "name": "εντολές προς το σώμα",
+      "name": "commands to the body",
       "lit": 47
      },
      {
-      "name": "μνήμη και ανταμοιβή",
+      "name": "memory and reward",
       "lit": 31
      }
     ]
@@ -1379,11 +1379,11 @@
    "garnish": "pineapple",
    "recipe": [
     {
-     "label": "Ζάχαρη",
+     "label": "Sugar",
      "value": "89.5 g/L"
     },
     {
-     "label": "Αλκοόλ",
+     "label": "Alcohol",
      "value": "10.5 %"
     },
     {
@@ -1530,27 +1530,27 @@
     "lit": 1288,
     "regions": [
      {
-      "name": "γεύση",
+      "name": "taste",
       "lit": 379
      },
      {
-      "name": "κέντρο γεύσης και σίτισης",
+      "name": "taste and feeding center",
       "lit": 295
      },
      {
-      "name": "νευρικό κορδόνι (πόδια, φτερά)",
+      "name": "nerve cord (legs, wings)",
       "lit": 265
      },
      {
-      "name": "κεντρικός εγκέφαλος",
+      "name": "central brain",
       "lit": 225
      },
      {
-      "name": "εντολές προς το σώμα",
+      "name": "commands to the body",
       "lit": 58
      },
      {
-      "name": "όσφρηση",
+      "name": "smell",
       "lit": 26
      }
     ]
@@ -1568,19 +1568,19 @@
    "garnish": "lime",
    "recipe": [
     {
-     "label": "Ζάχαρη",
+     "label": "Sugar",
      "value": "58.7 g/L"
     },
     {
-     "label": "Αλκοόλ",
+     "label": "Alcohol",
      "value": "8.7 %"
     },
     {
-     "label": "Πικράδα",
+     "label": "Bitterness",
      "value": "60"
     },
     {
-     "label": "Ανθρακικό",
+     "label": "Carbonation",
      "value": "3.5 g/L"
     },
     {
@@ -1727,27 +1727,27 @@
     "lit": 1422,
     "regions": [
      {
-      "name": "γεύση",
+      "name": "taste",
       "lit": 438
      },
      {
-      "name": "κεντρικός εγκέφαλος",
+      "name": "central brain",
       "lit": 334
      },
      {
-      "name": "κέντρο γεύσης και σίτισης",
+      "name": "taste and feeding center",
       "lit": 270
      },
      {
-      "name": "νευρικό κορδόνι (πόδια, φτερά)",
+      "name": "nerve cord (legs, wings)",
       "lit": 234
      },
      {
-      "name": "εντολές προς το σώμα",
+      "name": "commands to the body",
       "lit": 57
      },
      {
-      "name": "μνήμη και ανταμοιβή",
+      "name": "memory and reward",
       "lit": 33
      }
     ]

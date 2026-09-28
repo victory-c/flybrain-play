@@ -119,7 +119,7 @@ export function BrainView({ data }: { data: BarData }) {
           <OrbitControls enableZoom={false} enablePan={false} rotateSpeed={0.5} />
         </Canvas>
       ) : (
-        <p className="brain-loading">Φορτώνει ο εγκέφαλος…</p>
+        <p className="brain-loading">Loading the brain…</p>
       )}
     </div>
   );

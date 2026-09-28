@@ -146,12 +146,12 @@ function Tag({ drink, index, provisional }: { drink: Drink; index: number; provi
       type="button"
       className={`tag ${active || heading === "true" ? "on" : ""} ${chosen ? "chosen" : ""}`}
       onClick={() => giveDrink(index)}
-      title={`Δώσε της ${drink.name}`}
+      title={`Give him a ${drink.name}`}
     >
       <span className="tag-emoji" aria-hidden="true">{drink.emoji}</span>
       <span className="tag-name">{drink.name}</span>
       <span className={`tag-mood ${tasted === "true" && !provisional ? drink.mood : ""}`}>
-        {tasted !== "true" ? "δεν το δοκίμασε" : provisional ? "δοκιμάστηκε" : MOOD_WORD[drink.mood]}
+        {tasted !== "true" ? "not tasted yet" : provisional ? "tasted" : MOOD_WORD[drink.mood]}
       </span>
     </button>
   );

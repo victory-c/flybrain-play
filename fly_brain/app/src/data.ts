@@ -37,7 +37,7 @@ const DATA = `${import.meta.env.BASE_URL}data/`;
 
 export type BrainPoints = { xyz: Float32Array; group: Uint8Array; count: number };
 
-/** Walking commands read out of the brain's descending neurons (walk.json), looped while she wanders. */
+/** Walking commands read out of the brain's descending neurons (walk.json), looped while he wanders. */
 export type WalkData = { binMs: number; forward: number[]; turn: number[]; source: string };
 
 export async function loadWalk(): Promise<WalkData | null> {
@@ -51,17 +51,17 @@ export async function loadWalk(): Promise<WalkData | null> {
 }
 
 export const MOOD_WORD: Record<Mood, string> = {
-  love: "Το λάτρεψε",
-  like: "Της αρέσει",
-  meh: "Το σκέφτεται",
-  yuck: "Μπλιαχ",
+  love: "He loves it",
+  like: "He likes it",
+  meh: "He's not sure",
+  yuck: "Yuck",
 };
 
 export const MOOD_FACE: Record<Mood, string> = { love: "😍", like: "😋", meh: "🤔", yuck: "🤢" };
 
 export async function loadBar(): Promise<BarData> {
   const res = await fetch(`${DATA}drinks.json`);
-  if (!res.ok) throw new Error("Λείπουν τα δεδομένα του μπαρ. Τρέξε python export_web.py και ξαναχτίσε την εφαρμογή.");
+  if (!res.ok) throw new Error("The bar data is missing. Run python -m export.export_web and rebuild the app.");
   return res.json();
 }
 

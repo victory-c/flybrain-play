@@ -32,26 +32,26 @@ def region(t, c, s):
     """Plain-language brain region of a neuron from its type, class and superclass."""
     t, c, s = (x if isinstance(x, str) else "" for x in (t, c, s))  # missing annotations come as NaN
     if c == "gustatory":
-        return "γεύση"
+        return "taste"
     if c in ("olfactory", "ALPN", "ALLN", "ALIN", "ALON") or t.startswith(("lLN", "vLN", "l2LN")):
-        return "όσφρηση"
+        return "smell"
     if c in ("Kenyon_Cell", "MBON", "DAN"):
-        return "μνήμη και ανταμοιβή"
+        return "memory and reward"
     if c == "CX":
-        return "πλοήγηση"
+        return "navigation"
     if s.startswith(("ol_", "visual")) or c == "visual":
-        return "όραση"
+        return "vision"
     if "motor" in s or "efferent" in s:
-        return "μύες"
+        return "muscles"
     if s == "descending_neuron":
-        return "εντολές προς το σώμα"
+        return "commands to the body"
     if s.startswith("vnc") or s == "ascending_neuron":
-        return "νευρικό κορδόνι (πόδια, φτερά)"
+        return "nerve cord (legs, wings)"
     if t.startswith(("GNG", "PRW", "SEZ")):
-        return "κέντρο γεύσης και σίτισης"
+        return "taste and feeding center"
     if "sensory" in s:
-        return "αισθήσεις"
-    return "κεντρικός εγκέφαλος"
+        return "senses"
+    return "central brain"
 
 #                    glass        liquid     garnish
 STYLE = {
@@ -66,8 +66,8 @@ STYLE = {
     "Gin & Tonic":      ("highball",  "#E4F1EE", "lime"),
     "Lager Beer":       ("pint",      "#E09A2C", "foam"),
 }
-RECIPE = [("sugar_gL", "Ζάχαρη", "g/L"), ("abv_pct", "Αλκοόλ", "%"), ("caffeine_mgL", "Καφεΐνη", "mg/L"),
-          ("ibu", "Πικράδα", ""), ("salt_gL", "Αλάτι", "g/L"), ("co2_gL", "Ανθρακικό", "g/L"), ("ph", "pH", "")]
+RECIPE = [("sugar_gL", "Sugar", "g/L"), ("abv_pct", "Alcohol", "%"), ("caffeine_mgL", "Caffeine", "mg/L"),
+          ("ibu", "Bitterness", ""), ("salt_gL", "Salt", "g/L"), ("co2_gL", "Carbonation", "g/L"), ("ph", "pH", "")]
 
 
 def slugify(name):

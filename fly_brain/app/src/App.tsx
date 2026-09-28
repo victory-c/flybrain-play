@@ -4,13 +4,13 @@ import { BarScene } from "./scene/BarScene";
 import { BrainView } from "./brain/BrainView";
 import { configureTour, giveDrink, setSpeed, setView, startTour, useTour, useTourClock } from "./store";
 
-const nf = new Intl.NumberFormat("el-GR");
+const nf = new Intl.NumberFormat("en-US");
 
 const REASON: Record<Drink["mood"], string> = {
-  love: "Από όλο το μενού, αυτό θα παρήγγελνε.",
-  like: "Της αρέσει, αλλά όχι όσο αυτό που παρήγγειλε.",
-  meh: "Το σκέφτεται, αλλά μάλλον θα διάλεγε κάτι άλλο.",
-  yuck: "Πολύ πικρό για μύγα. Δεν θα το παρήγγελνε.",
+  love: "Of everything on the menu, this is the one he’d order.",
+  like: "He likes it, but not as much as the one he ordered.",
+  meh: "He’s not sure. He’d probably pick something else.",
+  yuck: "Too bitter for a fly. He wouldn’t order it.",
 };
 
 function Status({ data, walk }: { data: BarData; walk: WalkData | null }) {
@@ -22,7 +22,7 @@ function Status({ data, walk }: { data: BarData; walk: WalkData | null }) {
   if (phase === "settled" && at) {
     return (
       <div className="status chosen">
-        <p className="eyebrow">Θα παρήγγελνε</p>
+        <p className="eyebrow">He’d order</p>
         <h2 className="status-title">
           <span aria-hidden="true">{at.emoji}</span> {at.name}
         </h2>
@@ -30,28 +30,28 @@ function Status({ data, walk }: { data: BarData; walk: WalkData | null }) {
       </div>
     );
   }
-  let eyebrow = "Στο μπαρ";
-  let title = "Κάνει βόλτες στον πάγκο";
+  let eyebrow = "At the bar";
+  let title = "Wandering along the counter";
   let text = walk
-    ? "Πού πάει και πότε στρίβει το αποφασίζουν οι νευρώνες του εγκεφάλου της που κινούν τα πόδια. Πάτα «Ξεκίνα τη γευσιγνωσία» να δοκιμάσει τα ποτά σου."
-    : "Περιμένει να της δώσεις ποτά. Πάτα «Ξεκίνα τη γευσιγνωσία» να τα δοκιμάσει ένα-ένα.";
+    ? "The neurons in his brain that move his legs decide where he goes and when he turns. Press “Start the tasting” to have him try your drinks."
+    : "He’s waiting for you to give him drinks. Press “Start the tasting” to have him try them one by one.";
   if (phase === "flying" && to) {
-    eyebrow = finale === "true" ? "Αποφάσισε" : `Ποτό ${Number(tastedCount) + 1} από ${data.drinks.length}`;
-    title = finale === "true" ? `Γυρίζει στο ${to.name}` : `Πετάει προς το ${to.name}`;
-    text = finale === "true" ? "Τα δοκίμασε όλα και ξέρει τι θέλει." : "Κάθεται στο χείλος του ποτηριού.";
+    eyebrow = finale === "true" ? "He’s decided" : `Drink ${Number(tastedCount) + 1} of ${data.drinks.length}`;
+    title = finale === "true" ? `Heading back to the ${to.name}` : `Flying to the ${to.name}`;
+    text = finale === "true" ? "He’s tried them all and knows what he wants." : "He lands on the rim of the glass.";
   } else if (phase === "tasting" && at) {
-    eyebrow = "Δοκιμάζει";
+    eyebrow = "Tasting";
     title = at.name;
-    text = "Πατάει στο ποτό, βγάζει την προβοσκίδα και ο εγκέφαλός της αποφασίζει.";
+    text = "He steps into the drink, extends his proboscis, and his brain decides.";
   } else if ((phase === "reacting" || phase === "idle") && at && data.provisional) {
-    eyebrow = "Δοκιμάστηκε";
+    eyebrow = "Tasted";
     title = at.name;
     text =
       Number(tastedCount) === data.drinks.length
-        ? "Τα δοκίμασε όλα. Η παραγγελία της βγαίνει μόλις ολοκληρωθεί ο υπολογισμός."
-        : "Ο εγκέφαλός της αντέδρασε. Η γνώμη της θα φανεί όταν ολοκληρωθεί ο υπολογισμός.";
+        ? "He’s tried them all. His order will be ready once the computation finishes."
+        : "His brain reacted. His verdict will show once the computation finishes.";
   } else if ((phase === "reacting" || phase === "idle") && at) {
-    eyebrow = "Η γνώμη της";
+    eyebrow = "His verdict";
     title = `${MOOD_FACE[at.mood]} ${MOOD_WORD[at.mood]}`;
     text = `${at.name}: ${REASON[at.mood]}`;
   }
@@ -67,7 +67,7 @@ function Status({ data, walk }: { data: BarData; walk: WalkData | null }) {
 function ViewHint() {
   const free = useTour((s) => s.view === "free");
   if (!free) return null;
-  return <p className="view-hint">Σύρε για να γυρίσεις · ροδέλα για ζουμ</p>;
+  return <p className="view-hint">Drag to rotate · scroll to zoom</p>;
 }
 
 function Controls({ data }: { data: BarData }) {
@@ -77,16 +77,16 @@ function Controls({ data }: { data: BarData }) {
   return (
     <div className="controls">
       <button type="button" className="btn primary" onClick={startTour}>
-        {running ? "Ξανά από την αρχή" : "Ξεκίνα τη γευσιγνωσία"}
+        {running ? "Start over" : "Start the tasting"}
       </button>
       <button type="button" className="btn" onClick={() => setSpeed(speed === 1 ? 2.5 : 1)}>
-        {speed === 1 ? "Πιο γρήγορα" : "Κανονικά"}
+        {speed === 1 ? "Faster" : "Normal speed"}
       </button>
       <button type="button" className="btn" onClick={() => setView(view === "follow" ? "free" : "follow")}>
-        {view === "follow" ? "Όλο το μπαρ" : "Ακολούθα τη μύγα"}
+        {view === "follow" ? "Whole bar" : "Follow the fly"}
       </button>
-      <div className="picker" role="group" aria-label="Δώσε της ένα ποτό">
-        <span className="picker-label">Δώσε της:</span>
+      <div className="picker" role="group" aria-label="Give him a drink">
+        <span className="picker-label">Give him:</span>
         {data.drinks.map((d, i) => (
           <button key={d.id} type="button" className="chip" onClick={() => giveDrink(i)}>
             <span aria-hidden="true">{d.emoji}</span> {d.name}
@@ -105,11 +105,11 @@ function Ranking({ data }: { data: BarData }) {
     return (
       <div className="card ranking">
         <div className="card-head">
-          <h3>Τι θα παρήγγελνε</h3>
-          <span className="card-sub">υπολογίζεται</span>
+          <h3>What he’d order</h3>
+          <span className="card-sub">still computing</span>
         </div>
         <p className="empty">
-          Η μύγα δεν έχει αποφασίσει ακόμα. Ο εγκέφαλός της συγκρίνει πόσο εύκολα θα έπινε το καθένα.
+          The fly hasn’t decided yet. His brain is comparing how readily he’d drink each one.
         </p>
         <ol className="rank-list">
           {data.drinks.map((d, i) => (
@@ -119,7 +119,7 @@ function Ranking({ data }: { data: BarData }) {
                 <span aria-hidden="true">{d.emoji}</span> {d.name}
               </span>
               <span className="rank-bar" aria-hidden="true" />
-              <span className="rank-mood">{tasted.has(i) ? "δοκιμάστηκε" : "—"}</span>
+              <span className="rank-mood">{tasted.has(i) ? "tasted" : "—"}</span>
             </li>
           ))}
         </ol>
@@ -130,8 +130,8 @@ function Ranking({ data }: { data: BarData }) {
   return (
     <div className="card ranking">
       <div className="card-head">
-        <h3>Τι θα παρήγγελνε</h3>
-        <span className="card-sub">{tasted.size} από {data.drinks.length} δοκιμασμένα</span>
+        <h3>What he’d order</h3>
+        <span className="card-sub">{tasted.size} of {data.drinks.length} tasted</span>
       </div>
       <ol className="rank-list">
         {rows.map(({ d, i }) => {
@@ -161,7 +161,7 @@ function BrainRegions({ data }: { data: BarData }) {
   if (!cloud || !cloud.regions.length) {
     return (
       <p className="empty">
-        {d ? `Για το ${d.name} δεν έχει καταγραφεί ακόμα ποιοι νευρώνες ανάβουν.` : "Όταν δοκιμάζει ένα ποτό, εδώ φαίνεται ποια σημεία του εγκεφάλου της ανάβουν."}
+        {d ? `We haven’t recorded which neurons light up for the ${d.name} yet.` : "When he tastes a drink, this shows which parts of his brain light up."}
       </p>
     );
   }
@@ -169,7 +169,7 @@ function BrainRegions({ data }: { data: BarData }) {
   return (
     <div className="regions">
       <p className="regions-total">
-        <span aria-hidden="true">{d.emoji}</span> Με το {d.name} ανάβουν <b>{nf.format(cloud.lit)}</b> νευρώνες
+        <span aria-hidden="true">{d.emoji}</span> With the {d.name}, <b>{nf.format(cloud.lit)}</b> neurons light up
       </p>
       <ul>
         {cloud.regions.map((r) => (
@@ -190,13 +190,13 @@ function TasteCard({ data }: { data: BarData }) {
   const cur = useTour((s) => s.current ?? s.target ?? -1);
   const d = data.drinks[cur];
   const rows: [string, number, string][] = d
-    ? [["Γλυκό", d.taste.sweet, "like"], ["Πικρό", d.taste.bitter, "yuck"], ["Ανθρακικό", d.taste.fizz, "fizz"], ["Αλμυρό", d.taste.salt, "salt"]]
+    ? [["Sweetness", d.taste.sweet, "like"], ["Bitterness", d.taste.bitter, "yuck"], ["Carbonation", d.taste.fizz, "fizz"], ["Saltiness", d.taste.salt, "salt"]]
     : [];
   return (
     <div className="card taste">
       <div className="card-head">
-        <h3>Τι γεύση νιώθει</h3>
-        <span className="card-sub">{d ? `${d.emoji} ${d.name}` : "διάλεξε ποτό"}</span>
+        <h3>What he tastes</h3>
+        <span className="card-sub">{d ? `${d.emoji} ${d.name}` : "pick a drink"}</span>
       </div>
       {d ? (
         <>
@@ -220,7 +220,7 @@ function TasteCard({ data }: { data: BarData }) {
           </dl>
         </>
       ) : (
-        <p className="empty">Όταν η μύγα δοκιμάσει ένα ποτό, εδώ φαίνεται τι νιώθει στη γλώσσα και στα πόδια της.</p>
+        <p className="empty">When the fly tastes a drink, this shows what he senses on his tongue and legs.</p>
       )}
     </div>
   );
@@ -243,7 +243,7 @@ export default function App() {
   }, []);
 
   if (error) return <div className="fatal">{error}</div>;
-  if (!data) return <div className="fatal">Ανοίγει το μπαρ…</div>;
+  if (!data) return <div className="fatal">Opening the bar…</div>;
 
   return (
     <div className="app">
@@ -252,21 +252,21 @@ export default function App() {
           <span className="brand-mark" aria-hidden="true">🪰</span>
           <div>
             <h1>Fly Bar</h1>
-            <p>Μια μύγα με αληθινό εγκέφαλο διαλέγει ποτό</p>
+            <p>A fly with a real brain picks a drink</p>
           </div>
         </div>
         <div className="facts">
           <div>
-            <span>Εγκέφαλος</span>
-            <b>{nf.format(data.neurons)} νευρώνες</b>
+            <span>Brain</span>
+            <b>{nf.format(data.neurons)} neurons</b>
           </div>
           <div>
-            <span>Χάρτης</span>
+            <span>Map</span>
             <b>Google · Janelia</b>
           </div>
           <div>
-            <span>Μενού</span>
-            <b>{data.drinks.length} ποτά</b>
+            <span>Menu</span>
+            <b>{data.drinks.length} drinks</b>
           </div>
         </div>
       </header>
@@ -284,8 +284,8 @@ export default function App() {
       <section className="lower">
         <div className="card brain">
           <div className="card-head">
-            <h3>Ο εγκέφαλός της τώρα</h3>
-            <span className="card-sub">{nf.format(data.points)} νευρώνες στη θέση τους · σύρε για να γυρίσει</span>
+            <h3>His brain right now</h3>
+            <span className="card-sub">{nf.format(data.points)} neurons, each in its place · drag to rotate</span>
           </div>
           <BrainView data={data} />
           <BrainRegions data={data} />
@@ -297,12 +297,12 @@ export default function App() {
       </section>
 
       <footer className="foot">
-        {data.provisional && <p className="warn">Η παραγγελία της υπολογίζεται ακόμα.</p>}
+        {data.provisional && <p className="warn">His order is still being computed.</p>}
         <p>
-          Ο εγκέφαλος είναι ο πλήρης χάρτης μιας αρσενικής δροσόφιλας (Google & Janelia, 2026). Για κάθε ποτό τρέξαμε
-          προσομοίωση όλου του εγκεφάλου στον υπολογιστή, και εδώ βλέπεις την επανάληψή της: ποιοι νευρώνες άναψαν, πόσο
-          ήθελε να πιει και πόσο πικρό της φάνηκε. Για μια μύγα το αλκοόλ και η οξύτητα έχουν πικρή γεύση, οπότε
-          παραγγέλνει το κοκτέιλ που της φαίνεται λιγότερο πικρό σε σχέση με το πόσο γλυκό είναι.
+          The brain is the complete map of a male fruit fly (Google & Janelia, 2026). For each drink we ran a
+          simulation of the whole brain on a computer, and what you see here is its replay: which neurons lit up, how
+          much he wanted to drink, and how bitter it tasted to him. To a fly, alcohol and acidity taste bitter, so he
+          orders the cocktail that tastes least bitter for how sweet it is.
         </p>
       </footer>
     </div>

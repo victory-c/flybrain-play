@@ -72,16 +72,16 @@ function Bubble({ data }: { data: BarData }) {
   const drink = cur !== "" ? data.drinks[Number(cur)] : null;
   let text = "";
   let cls = "";
-  if (phase === "tasting" && drink) text = "γευσιγνωσία…";
+  if (phase === "tasting" && drink) text = "tasting…";
   if (phase === "reacting" && drink) {
-    text = data.provisional ? "δοκιμάστηκε" : `${MOOD_FACE[drink.mood]} ${MOOD_WORD[drink.mood]}`;
+    text = data.provisional ? "tasted" : `${MOOD_FACE[drink.mood]} ${MOOD_WORD[drink.mood]}`;
     cls = data.provisional ? "" : drink.mood;
   }
   if (phase === "settled" && drink) {
-    text = "Αυτό θέλω";
+    text = "This one";
     cls = "love";
   }
-  if (phase === "flying" && finale === "true") text = "Ξέρω τι θέλω!";
+  if (phase === "flying" && finale === "true") text = "I know what I want!";
   if (!text) return null;
   return (
     <Html position={[0, 0.07, 0]} center zIndexRange={[40, 30]} pointerEvents="none">
