@@ -40,6 +40,7 @@ Commands run from the job's working directory (`.` = repo root, `fly_brain/` for
 | 36101 | None | CANCELLED | 00:00:00 | 1 gpu | cancelled: is a weak odour goal stable? | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -` (in `./fly_brain`) | [inline script](logs/inline/36101.py) |
 | 36102 | None | CANCELLED | 00:00:00 |  | cancelled: HS lane cue check | `srun -p ocf-hpc -w corruption -c 2 --mem=6G -t 5 --quiet /home/s/st/stevejobs/flybrain/venv/bin/python -` (in `./fly_brain`) | [inline script](logs/inline/36102.py) |
 | 36103 | Unknown | PENDING | 00:00:00 | 1 gpu | lane keeping: screen with HS lane cue -> CEM -> replay | `sbatch ride-lane.sbatch` |  |
+| 36104 | None | CANCELLED | 00:00:00 |  |  | `srun -p ocf-hpc -w corruption -c 1 --mem=256M -t 1 --quiet bash -c timeout 10 ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/.ssh/flybrain_play_deploy -o IdentitiesOnly=yes -T git@github.com 2>&1 ¦ head -1` |  |
 
 ## Full command lines
 

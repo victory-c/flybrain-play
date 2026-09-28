@@ -15,3 +15,6 @@ __pycache__/
 site/dist/
 node_modules/
 .vercel/
+
+# sync.sh output (cron)
+.sync.log
