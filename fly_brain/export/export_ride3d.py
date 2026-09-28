@@ -36,11 +36,12 @@ input[type=range]{width:300px}
 <div id="brain" class="panel"><h4>🪰 苍蝇全脑 <span id="pop"></span> spikes/s</h4><div id="bars"></div><div style="font-size:11px;color:#778;margin-top:6px">下行神经元 左(蓝) / 右(红)，Hz</div></div>
 <div id="ctl" class="panel"><button id="play">▶ 播放</button><select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
 <input id="time" type="range" min="0" value="0"><span id="clock" style="font-variant-numeric:tabular-nums;min-width:56px">0.00 s</span>
-<button id="cam0" class="on">跟拍</button><button id="cam1">侧拍</button><button id="cam2">苍蝇视角</button><button id="ghosts" class="on">其他骑手</button>
+<button id="cam0" class="on">跟拍</button><button id="cam1">侧拍</button><button id="cam2">苍蝇视角</button><button id="cam3">特写</button><button id="ghosts" class="on">其他骑手</button>
 <select id="rider"></select></div>
 <div id="title" class="panel"></div><div id="fall">倒了！</div>
 <script id="data" type="application/json">__DATA__</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
 const D=JSON.parse(document.getElementById('data').textContent),tr=D.trace,B=tr[0].state.length,dt=tr[1].t-tr[0].t;
 const Q=new URLSearchParams(location.search);const dnNames=D.dn_names||[];const R=0.336,LAM=16.5*Math.PI/180;
@@ -69,47 +70,86 @@ const hillM=mat(0x7fa25a);for(let i=0;i<14;i++){const h=new THREE.Mesh(new THREE
 function tube(g,a,b,r,m){const d=new THREE.Vector3().subVectors(b,a),l=d.length();const c=new THREE.Mesh(new THREE.CylinderGeometry(r,r,l,10),m);c.position.copy(a).addScaledVector(d,0.5);c.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());c.castShadow=true;g.add(c);return c}
 const V=(x,y,z=0)=>new THREE.Vector3(x,y,z);
 const paint=mat(0xd21f2b,{roughness:.35,metalness:.3}),black=mat(0x151515,{roughness:.6}),alu=mat(0xbbbbbb,{metalness:.7,roughness:.3}),skin=mat(0xe0b08a),jersey=mat(0xf6f6f6,{roughness:.7}),shorts=mat(0x1a1a22),helmetM=mat(0xf4f4f4,{roughness:.3});
-function wheel(){const g=new THREE.Group();const tire=new THREE.Mesh(new THREE.TorusGeometry(R-0.014,0.014,10,40),black);tire.castShadow=true;g.add(tire);const rim=new THREE.Mesh(new THREE.TorusGeometry(R-0.05,0.022,6,40),mat(0x222222,{metalness:.5,roughness:.4}));g.add(rim);
- for(let i=0;i<18;i++){const a=i/18*Math.PI*2;tube(g,V(0,0,0),V(Math.cos(a)*(R-0.06),Math.sin(a)*(R-0.06),0),0.0025,alu)}const hub=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.1,8),alu);hub.rotation.x=Math.PI/2;g.add(hub);return g}
+const tan=mat(0xc9a36b,{roughness:.85}),rimM=mat(0x101010,{roughness:.35,metalness:.4}),steel=mat(0xd8d8d8,{metalness:.9,roughness:.25}),redAcc=mat(0xc8102e,{roughness:.4,metalness:.3});
+function lathe(pts,m,seg=48){const g=new THREE.LatheGeometry(pts.map(p=>new THREE.Vector2(p[0],p[1])),seg);const c=new THREE.Mesh(g,m);c.rotation.x=Math.PI/2;c.castShadow=true;return c}
+function wheel(depth){const g=new THREE.Group();const rOut=R-0.025,rIn=rOut-depth;
+ const tread=new THREE.Mesh(new THREE.TorusGeometry(R-0.012,0.012,12,56),black);tread.castShadow=true;g.add(tread);
+ g.add(new THREE.Mesh(new THREE.TorusGeometry(R-0.021,0.012,10,56),tan));
+ g.add(lathe([[rIn,-0.010],[rOut,-0.012],[rOut+0.004,0],[rOut,0.012],[rIn,0.010],[rIn,-0.010]],rimM));
+ for(let i=0;i<21;i++){const a=i/21*Math.PI*2,z=(i%2?1:-1)*0.018;const sp=new THREE.Mesh(new THREE.BoxGeometry(0.003,rIn-0.03,0.0015),steel);sp.position.set(Math.cos(a)*(rIn+0.03)/2*1.0,Math.sin(a)*(rIn+0.03)/2,z);sp.rotation.z=a-Math.PI/2;g.add(sp)}
+ const hub=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.1,12),black);hub.rotation.x=Math.PI/2;g.add(hub);
+ const rotor=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,0.002,40),steel);rotor.rotation.x=Math.PI/2;rotor.position.z=-0.058;g.add(rotor);
+ const rc2=new THREE.Mesh(new THREE.CylinderGeometry(0.045,0.045,0.003,24),black);rc2.rotation.x=Math.PI/2;rc2.position.z=-0.059;g.add(rc2);
+ return g}
+function decal(text,w,h){const c=document.createElement('canvas');c.width=1024;c.height=Math.round(1024*h/w);const x=c.getContext('2d');x.fillStyle='rgba(0,0,0,0)';x.fillRect(0,0,c.width,c.height);x.fillStyle='#fff';x.font='italic bold '+Math.round(c.height*0.78)+'px Helvetica,Arial,sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(text,c.width/2,c.height/2);
+ const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false})}
 function buildBike(ghost){const root=new THREE.Group();root.userData.ghost=ghost;const roll=new THREE.Group();root.add(roll);
- const rw=wheel();rw.position.set(0,R,0);roll.add(rw);
- const BB=V(0.41,0.264),ST=V(0.45,0.80),HT=V(0.80,0.80),HB=V(0.83,0.70),HUB=V(0,R),SAD=V(0.37,1.02);
- tube(roll,ST,HT,0.018,paint);tube(roll,BB,HB,0.022,paint);tube(roll,BB,ST,0.017,paint);tube(roll,ST,SAD,0.014,black);
- tube(roll,BB,HUB,0.011,paint);tube(roll,HUB,ST,0.009,paint);tube(roll,HT,HB,0.022,paint);
- const saddle=new THREE.Mesh(new THREE.BoxGeometry(0.26,0.035,0.13),black);saddle.position.copy(SAD).add(V(-0.02,0.02));roll.add(saddle);
- const bbShell=new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.035,0.09,10),paint);bbShell.rotation.x=Math.PI/2;bbShell.position.copy(BB);roll.add(bbShell);
- const ring=new THREE.Mesh(new THREE.TorusGeometry(0.10,0.006,4,30),alu);ring.position.copy(BB).add(V(0,0,0.06));roll.add(ring);
+ const BB=V(0.41,0.264),STt=V(0.44,0.79),HT=V(0.815,0.86),HB=V(0.848,0.71),HUB=V(0,R),SAD=V(0.37,1.00),SSJ=V(0.455,0.62),CROWN=V(0.862,0.65);
+ const rw=wheel(0.060);rw.position.copy(HUB);roll.add(rw);
+ // aero centre-plane tubes: 2:1 profiles by flattening the group sideways
+ const aero=new THREE.Group();aero.scale.z=0.5;roll.add(aero);
+ tube(aero,HB.clone().add(V(0.01,-0.02)),BB.clone().add(V(0.02,0.01)),0.038,paint);            // down tube
+ tube(aero,BB,STt.clone().add(V(-0.02,0.08)),0.028,paint);                                       // seat tube
+ tube(aero,STt.clone().add(V(-0.01,0.03)),SAD.clone().add(V(0.0,-0.02)),0.017,black);            // seat post
+ tube(aero,STt,HT,0.024,paint);                                                                  // top tube
+ tube(aero,HT.clone().add(V(-0.01,0.03)),HB.clone().add(V(0.0,-0.02)),0.034,paint);              // head tube
+ for(const z of[-0.045,0.045]){tube(roll,BB.clone().add(V(0.02,0,z*0.6)),HUB.clone().add(V(0.02,-0.0,z)),0.011,paint);   // chainstays
+  tube(roll,HUB.clone().add(V(0.0,0.01,z)),SSJ.clone().add(V(0,0,z*0.4)),0.008,paint)}                                     // dropped seat stays
+ const saddle=new THREE.Mesh(new THREE.BoxGeometry(0.26,0.03,0.135),black);saddle.position.copy(SAD).add(V(-0.03,0.015));roll.add(saddle);
+ // bottle cages
+ for(const [a,b] of[[V(0.60,0.50),V(0.70,0.62)],[V(0.43,0.47),V(0.44,0.58)]]){const bt=new THREE.Mesh(new THREE.CylinderGeometry(0.036,0.036,0.21,14),black);bt.position.copy(a).lerp(b,0.5);bt.quaternion.setFromUnitVectors(V(0,1,0),b.clone().sub(a).normalize());roll.add(bt)}
+ // drivetrain: crank, chainrings, chain, cassette, derailleur
+ const bbShell=new THREE.Mesh(new THREE.CylinderGeometry(0.036,0.036,0.09,12),paint);bbShell.rotation.x=Math.PI/2;bbShell.position.copy(BB);roll.add(bbShell);
+ const ring=lathe([[0.08,-0.0015],[0.105,-0.0015],[0.105,0.0015],[0.08,0.0015],[0.08,-0.0015]],steel,56);ring.position.copy(BB).add(V(0,0,0.062));roll.add(ring);
+ const ring2=lathe([[0.03,-0.0015],[0.08,-0.0015],[0.08,0.0015],[0.03,0.0015],[0.03,-0.0015]],black,40);ring2.position.copy(BB).add(V(0,0,0.056));roll.add(ring2);
+ const cass=new THREE.Mesh(new THREE.CylinderGeometry(0.048,0.03,0.04,24),steel);cass.rotation.x=Math.PI/2;cass.position.copy(HUB).add(V(0,0,0.06));roll.add(cass);
+ const der=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.09,0.02),black);der.position.copy(HUB).add(V(0.03,-0.07,0.06));roll.add(der);
+ const chainPts=[];for(let i=0;i<=40;i++){const a=i/40*Math.PI*2;const cx=i<20?BB.x:HUB.x,cy=i<20?BB.y:HUB.y,cr=i<20?0.105:0.045;const ang=i<20?(Math.PI/2+i/19*Math.PI):(3*Math.PI/2+(i-20)/20*Math.PI);chainPts.push(V(cx+cr*Math.cos(ang),cy+cr*Math.sin(ang),0.06))}
+ roll.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(chainPts,true),80,0.004,6,true),mat(0x777777,{metalness:.8,roughness:.4})));
+ // S-WORKS on the down tube, both sides
+ const dtDir=HB.clone().sub(BB).normalize(),dtMid=HB.clone().lerp(BB,0.55);const dm=decal('S-WORKS',0.34,0.06);
+ for(const side of[1,-1]){const pl=new THREE.Mesh(new THREE.PlaneGeometry(0.34,0.06),dm);pl.position.copy(dtMid).add(V(0,0,side*0.0205));pl.rotation.z=Math.atan2(dtDir.y,dtDir.x);if(side<0)pl.rotation.y=Math.PI;roll.add(pl)}
  // steered front assembly: pivot at head-tube bottom, axis tilted back by LAM
  const tilt=new THREE.Group();tilt.position.copy(HB);tilt.rotation.z=LAM;roll.add(tilt);const steer=new THREE.Group();tilt.add(steer);const un=new THREE.Group();un.rotation.z=-LAM;steer.add(un);
- const FW=V(0.981-0.83,R-0.70);tube(un,V(0,0),V(FW.x*0.5,FW.y*0.5,0.045),0.012,paint);tube(un,V(0,0),V(FW.x*0.5,FW.y*0.5,-0.045),0.012,paint);
- tube(un,V(FW.x*0.5,FW.y*0.5,0.045),V(FW.x,FW.y,0.045),0.010,paint);tube(un,V(FW.x*0.5,FW.y*0.5,-0.045),V(FW.x,FW.y,-0.045),0.010,paint);
- const fw=wheel();fw.position.copy(FW);un.add(fw);
- tube(un,V(0,0),V(-0.03,0.10),0.02,paint);tube(un,V(-0.03,0.10),V(0.07,0.13),0.015,black);// steerer + stem
- const bar=V(0.07,0.13);tube(un,V(bar.x,bar.y,-0.21),V(bar.x,bar.y,0.21),0.014,black);for(const z of[-0.2,0.2]){tube(un,V(bar.x,bar.y,z),V(bar.x+0.09,bar.y,z),0.013,black);tube(un,V(bar.x+0.09,bar.y,z),V(bar.x+0.10,bar.y-0.11,z),0.013,black)}
+ const rel=v=>v.clone().sub(HB);const FWc=rel(V(0.981,R)),CR=rel(CROWN);
+ tube(un,V(0,0),CR,0.03,paint);                                                                  // crown
+ for(const z of[-0.045,0.045]){tube(un,CR.clone().add(V(0,0,z)),FWc.clone().add(V(0,0,z)),0.012,paint)}   // fork blades
+ const fw=wheel(0.051);fw.position.copy(FWc);un.add(fw);
+ const cal=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.07,0.025),black);cal.position.copy(FWc).add(V(-0.02,0.07,-0.058));un.add(cal);
+ // integrated Roval Rapide cockpit: stem, flat aero tops, hoods, drops
+ const HTt=rel(HT.clone().add(V(-0.005,0.035)));tube(un,rel(HB.clone().add(V(0,0.0))),HTt,0.02,black);
+ const stemEnd=HTt.clone().add(V(0.10,0.02));tube(un,HTt,stemEnd,0.016,black);
+ const tops=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.02,0.40),black);tops.position.copy(stemEnd);un.add(tops);
+ for(const z of[-0.20,0.20]){const c0=stemEnd.clone().add(V(0,0,z));const pts=[c0,c0.clone().add(V(0.09,0.005)),c0.clone().add(V(0.13,-0.03)),c0.clone().add(V(0.125,-0.09)),c0.clone().add(V(0.07,-0.13))];
+  un.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),24,0.012,8,false),black));
+  const hood=new THREE.Mesh(new THREE.BoxGeometry(0.08,0.035,0.03),black);hood.position.copy(c0).add(V(0.12,0.015));un.add(hood)}
+ const bar=V(0.085,0.19);  // hoods position relative to HB, used by the rider's hands
  // rider
- const hip=V(0.40,0.99),sh=V(0.72,1.22),head=V(0.84,1.34);tube(roll,hip,sh,0.085,jersey);tube(roll,V(hip.x-0.03,hip.y),V(hip.x+0.05,hip.y-0.02),0.095,shorts);
+ const hip=V(0.40,0.99),sh=V(0.72,1.22),head=V(0.84,1.34);tube(roll,hip,sh,0.07,jersey);tube(roll,V(hip.x-0.03,hip.y),V(hip.x+0.05,hip.y-0.02),0.08,shorts);
  const helmet=new THREE.Mesh(new THREE.SphereGeometry(0.11,16,12),helmetM);helmet.position.copy(head).add(V(0,0.02));helmet.scale.set(1.15,0.95,1);helmet.castShadow=true;roll.add(helmet);
  const face=new THREE.Mesh(new THREE.SphereGeometry(0.085,12,10),skin);face.position.copy(head).add(V(0.02,-0.03));roll.add(face);
- const legs=[],arms=[];for(const s of[-1,1]){const z=0.14*s;const U=V(0,1,0);const thigh=tube(roll,hip,hip.clone().add(U),0.055,shorts),shin=tube(roll,hip,hip.clone().add(U),0.045,skin),shoe=new THREE.Mesh(new THREE.BoxGeometry(0.24,0.06,0.09),black);roll.add(shoe);const crank=tube(roll,BB,BB.clone().add(V(0,0.17)),0.012,black);legs.push({z,thigh,shin,shoe,crank});
-  const hand=V(1.00,0.81,z*1.45);const upper=tube(roll,sh,sh.clone().add(U),0.04,jersey),fore=tube(roll,sh,sh.clone().add(U),0.035,skin);arms.push({z:z*1.45,upper,fore,hand})}
+ const legs=[],arms=[];for(const s of[-1,1]){const z=0.14*s;const U=V(0,1,0);const thigh=tube(roll,hip,hip.clone().add(U),0.048,shorts),shin=tube(roll,hip,hip.clone().add(U),0.038,skin),shoe=new THREE.Mesh(new THREE.BoxGeometry(0.24,0.06,0.09),black);roll.add(shoe);const crank=tube(roll,BB,BB.clone().add(V(0,0.17)),0.012,black);legs.push({z,thigh,shin,shoe,crank});
+  const hand=V(0.97,0.88,z*1.45);const upper=tube(roll,sh,sh.clone().add(U),0.036,jersey),fore=tube(roll,sh,sh.clone().add(U),0.03,skin);arms.push({z:z*1.45,upper,fore,hand})}
  // the fly on the helmet
  const fly=new THREE.Group();fly.position.copy(head).add(V(-0.02,0.14));roll.add(fly);const body=new THREE.Mesh(new THREE.SphereGeometry(0.035,10,8),mat(0x3a2a1a,{roughness:.5}));body.scale.set(1.5,0.8,0.9);fly.add(body);
  const eyeM=mat(0xc0201a,{emissive:0x600000});for(const s of[-1,1]){const e=new THREE.Mesh(new THREE.SphereGeometry(0.012,8,6),eyeM);e.position.set(0.045,0.012,0.018*s);fly.add(e)}
  const wingM=new THREE.MeshStandardMaterial({color:0xdfe9ff,transparent:true,opacity:.45,side:THREE.DoubleSide});for(const s of[-1,1]){const w=new THREE.Mesh(new THREE.PlaneGeometry(0.075,0.03),wingM);w.position.set(-0.03,0.02,0.035*s);w.rotation.x=Math.PI/2;w.rotation.z=-0.5;fly.add(w)}
  const glow=new THREE.PointLight(0xff8040,0,0.6);glow.position.set(0,0.05,0);fly.add(glow);const halo=new THREE.Mesh(new THREE.SphereGeometry(0.06,10,8),new THREE.MeshBasicMaterial({color:0xffa060,transparent:true,opacity:0}));fly.add(halo);
  if(ghost){root.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=0.15;o.castShadow=false}});glow.intensity=0}
+ root.userData.bikeParts=[rw,aero,tilt,saddle,bbShell,ring,ring2,cass,der];
  return {root,roll,steer,rw,fw,legs,arms,fly,glow,halo,BB,hip,sh,helmet,crank:0,ghost}}
+function loadModel(bk,url,yawDeg){new THREE.GLTFLoader().load(url,g=>{const m=g.scene;m.rotation.y=(yawDeg||0)*Math.PI/180;m.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(m);const size=box.getSize(new THREE.Vector3());const L=Math.max(size.x,size.z);const k=(0.981+2*R)/L;m.scale.setScalar(k);m.updateMatrixWorld(true);const b2=new THREE.Box3().setFromObject(m);m.position.set(-R-b2.min.x,-b2.min.y,-(b2.min.z+b2.max.z)/2);m.traverse(o=>{if(o.isMesh){o.castShadow=true}});bk.roll.add(m);bk.roll.traverse(o=>{});for(const part of bk.root.userData.bikeParts)part.visible=false;bk.roll.children.forEach(c=>{if(c.isMesh&&c.material&&c.material.map&&c.material.transparent)c.visible=false})},undefined,e=>console.warn('model load failed',e))}
 function setTube(c,a,b){const d=new THREE.Vector3().subVectors(b,a),l=d.length();c.position.copy(a).addScaledVector(d,0.5);c.scale.set(1,l/c.geometry.parameters.height,1);c.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize())}
 function pose(bk,s,done,steerT,powerW,pop){const [x,y,psi,v,phi,delta]=s;bk.root.position.set(x,0,y);bk.root.rotation.y=-psi;
  bk.roll.rotation.x=done?(phi>=0?1:-1)*1.35:phi;bk.steer.rotation.y=-delta;
- const wa=x/R;bk.rw.rotation.z=-wa;bk.fw.rotation.z=-wa;const ca=wa/2.6;bk.crank=ca;
+ const wa=x/R;bk.rw.rotation.z=-wa;bk.fw.rotation.z=-wa;const ca=-wa/1.5;bk.crank=ca;
  for(const L of bk.legs){const a=ca+(L.z>0?0:Math.PI);const ped=V(bk.BB.x+0.17*Math.cos(a),bk.BB.y+0.17*Math.sin(a),L.z);setTube(L.crank,V(bk.BB.x,bk.BB.y,L.z*0.5),ped);
   const hip=V(bk.hip.x,bk.hip.y,L.z);const mid=hip.clone().lerp(ped,0.5);const d=new THREE.Vector3().subVectors(ped,hip);const n=V(-d.y,d.x,0).normalize();const half=Math.min(hip.distanceTo(ped)/2,0.455);const kneeOff=Math.sqrt(Math.max(0.46*0.46-half*half,0.0025));mid.addScaledVector(n,kneeOff);
   setTube(L.thigh,hip,mid);setTube(L.shin,mid,ped);L.shoe.position.copy(ped).add(V(0.05,-0.02));}
  for(const A of bk.arms){const sh=V(bk.sh.x,bk.sh.y,A.z*0.7);const hand=A.hand.clone();hand.z=A.z;hand.x+=(-delta*0.1)*(A.z>0?1:-1);const mid=sh.clone().lerp(hand,0.5).add(V(0.02,-0.08));setTube(A.upper,sh,mid);setTube(A.fore,mid,hand)}
  const g=Math.min(1,(pop||0)/150000);if(!bk.ghost)bk.glow.intensity=0.4+1.2*g;bk.halo.material.opacity=0.08+0.3*g;bk.halo.scale.setScalar(1+0.6*g)}
 // ---------- riders
-const bikes=[];const shown=Math.min(B,24);let hero=null;for(let i=0;i<shown;i++){const bk=buildBike(true);scene.add(bk.root);bikes.push(bk)}hero=buildBike(false);scene.add(hero.root);
+const bikes=[];const shown=Math.min(B,24);let hero=null;for(let i=0;i<shown;i++){const bk=buildBike(true);scene.add(bk.root);bikes.push(bk)}hero=buildBike(false);scene.add(hero.root);if(Q.get('model'))loadModel(hero,Q.get('model'),+(Q.get('model_yaw')||0));
 const rsel=document.getElementById('rider');for(let i=0;i<B;i++){const o=document.createElement('option');o.value=i;o.textContent='骑手 #'+i;rsel.appendChild(o)}
 let rider=Math.min(B-1,+(Q.get('rider')??(D.best_rider||0)));
 // ---------- brain bars
@@ -121,6 +161,7 @@ function frame(){const row=tr[k];for(let i=0;i<shown;i++){bikes[i].root.visible=
  const s=row.state[rider];const yaw=-s[2];const fwd=V(Math.cos(yaw),0,-Math.sin(yaw)),right=V(Math.sin(yaw),0,Math.cos(yaw));const base=V(s[0],0,s[1]);
  if(camMode===0){tmp.copy(base).addScaledVector(fwd,-5.5).addScaledVector(right,1.6).add(V(0,1.9,0));camPos.lerp(tmp,snap?1:0.08);camTgt.lerp(base.clone().add(V(0,0.9,0)).addScaledVector(fwd,1.5),snap?1:0.15);camera.position.copy(camPos);camera.lookAt(camTgt)}
  else if(camMode===1){tmp.copy(base).addScaledVector(right,7).addScaledVector(fwd,1.5).add(V(0,1.3,0));camPos.lerp(tmp,snap?1:0.1);camTgt.lerp(base.clone().add(V(0,0.8,0)),snap?1:0.2);camera.position.copy(camPos);camera.lookAt(camTgt)}
+ else if(camMode===3){tmp.copy(base).addScaledVector(right,2.6).addScaledVector(fwd,0.55).add(V(0,0.75,0));camPos.lerp(tmp,snap?1:0.1);camTgt.lerp(base.clone().add(V(0,0.62,0)).addScaledVector(fwd,0.5),snap?1:0.2);camera.position.copy(camPos);camera.lookAt(camTgt)}
  else{const bk=hero;{bk.fly.updateWorldMatrix(true,false);const p=new THREE.Vector3(0.05,0.06,0).applyMatrix4(bk.fly.matrixWorld);const f=new THREE.Vector3(3,0.3,0).applyMatrix4(bk.fly.matrixWorld);camera.position.copy(p);camera.up.set(0,1,0).applyQuaternion(new THREE.Quaternion().setFromRotationMatrix(bk.roll.matrixWorld));camera.lookAt(f);camera.up.set(0,1,0)}}
  sun.position.set(s[0]-20,40,25);sun.target.position.set(s[0],0,0);
  document.getElementById('v').textContent=(s[3]*3.6).toFixed(1);document.getElementById('phi').textContent=(s[4]*57.3).toFixed(1)+'°';document.getElementById('delta').textContent=(s[5]*57.3).toFixed(1)+'°';
@@ -134,9 +175,9 @@ function loop(ts){if(playing){const sp=parseFloat(document.getElementById('speed
 document.getElementById('play').onclick=()=>{if(k>=tr.length-1)k=0;playing=!playing;document.getElementById('play').textContent=playing?'⏸ 暂停':'▶ 播放'};
 slider.oninput=e=>{k=+e.target.value;snap=true};rsel.onchange=e=>{rider=+e.target.value;snap=true};
 document.getElementById('ghosts').onclick=e=>{showGhosts=!showGhosts;e.target.classList.toggle('on',showGhosts)};document.getElementById('ghosts').classList.toggle('on',showGhosts);
-for(const j of[0,1,2])document.getElementById('cam'+j).classList.toggle('on',j===camMode);rsel.value=rider;
-for(const i of[0,1,2]){document.getElementById('cam'+i).onclick=()=>{camMode=i;snap=true;for(const j of[0,1,2])document.getElementById('cam'+j).classList.toggle('on',j===i)}}
-addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();document.getElementById('play').click()}if(e.key==='1'||e.key==='2'||e.key==='3')document.getElementById('cam'+(+e.key-1)).click()});
+for(const j of[0,1,2,3])document.getElementById('cam'+j).classList.toggle('on',j===camMode);rsel.value=rider;
+for(const i of[0,1,2,3]){document.getElementById('cam'+i).onclick=()=>{camMode=i;snap=true;for(const j of[0,1,2,3])document.getElementById('cam'+j).classList.toggle('on',j===i)}}
+addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();document.getElementById('play').click()}if('1234'.includes(e.key))document.getElementById('cam'+(+e.key-1)).click()});
 requestAnimationFrame(loop);
 </script></body></html>
 """
