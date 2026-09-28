@@ -60,10 +60,10 @@ Commands run from the job's working directory (`.` = repo root, `fly_brain/` for
 | 36121 | 2026-09-28 10:33 | CANCELLED | 00:08:22 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-fast.sbatch hs_heading=150,hs_lane=50 results/ride_fast.json 0.25 12` | [flyfast-36121.err](logs/flyfast-36121.err), [flyfast-36121.out](logs/flyfast-36121.out) |
 | 36122 | 2026-09-28 10:40 | COMPLETED | 00:00:15 | 4 cpu, 8G |  | `srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 5 --quiet /home/s/st/stevejobs/flybrain/venv/bin/python -` (in `./fly_brain`) |  |
 | 36123 | 2026-09-28 10:41 | COMPLETED | 00:00:19 | 4 cpu, 8G |  | `srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 5 --quiet /home/s/st/stevejobs/flybrain/venv/bin/python -` (in `./fly_brain`) |  |
-| 36124 | 2026-09-28 10:42 | RUNNING | 00:18:01 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy.sbatch results/ride_lane.json results/ride_easy_seeded.json 0.08 0.25 21` | [flyeasy-36124.out](logs/flyeasy-36124.out) |
+| 36124 | 2026-09-28 10:42 | RUNNING | 00:48:01 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy.sbatch results/ride_lane.json results/ride_easy_seeded.json 0.08 0.25 21` | [flyeasy-36124.out](logs/flyeasy-36124.out) |
 | 36125 | 2026-09-28 10:42 | CANCELLED | 00:02:55 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy.sbatch results/zero_theta.json results/ride_easy_zero.json 0.15 0.15 22` | [flyeasy-36125.err](logs/flyeasy-36125.err), [flyeasy-36125.out](logs/flyeasy-36125.out) |
-| 36126 | 2026-09-28 10:44 | RUNNING | 00:15:04 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy-c.sbatch results/zero_theta.json results/ride_easy_zero.json 0.15 0.15 22` | [flyeasyc-36126.out](logs/flyeasyc-36126.out) |
-| 36127 | 2026-09-28 10:54 | RUNNING | 00:05:27 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-slow.sbatch results/ride_lane.json results/ride_slow.json 0.08 0.25 23` | [flyslow-36127.out](logs/flyslow-36127.out) |
+| 36126 | 2026-09-28 10:44 | RUNNING | 00:45:04 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-easy-c.sbatch results/zero_theta.json results/ride_easy_zero.json 0.15 0.15 22` | [flyeasyc-36126.out](logs/flyeasyc-36126.out) |
+| 36127 | 2026-09-28 10:54 | RUNNING | 00:35:27 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-slow.sbatch results/ride_lane.json results/ride_slow.json 0.08 0.25 23` | [flyslow-36127.out](logs/flyslow-36127.out) |
 
 ## Full command lines
 
