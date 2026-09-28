@@ -184,6 +184,7 @@ function frame(){const row=tr[k];for(let i=0;i<shown;i++){bikes[i].root.visible=
  if(camMode===0){tmp.copy(base).addScaledVector(fwd,-5.5).addScaledVector(right,1.6).add(V(0,1.9,0));camPos.lerp(tmp,snap?1:0.08);camTgt.lerp(base.clone().add(V(0,0.9,0)).addScaledVector(fwd,1.5),snap?1:0.15);camera.position.copy(camPos);camera.lookAt(camTgt)}
  else if(camMode===1){tmp.copy(base).addScaledVector(right,7).addScaledVector(fwd,1.5).add(V(0,1.3,0));camPos.lerp(tmp,snap?1:0.1);camTgt.lerp(base.clone().add(V(0,0.8,0)),snap?1:0.2);camera.position.copy(camPos);camera.lookAt(camTgt)}
  else if(camMode===3){tmp.copy(base).addScaledVector(right,2.6).addScaledVector(fwd,0.55).add(V(0,0.75,0));camPos.lerp(tmp,snap?1:0.1);camTgt.lerp(base.clone().add(V(0,0.62,0)).addScaledVector(fwd,0.5),snap?1:0.2);camera.position.copy(camPos);camera.lookAt(camTgt)}
+ else if(camMode===4){const c=base.clone().addScaledVector(fwd,0.5);camera.position.copy(c).add(V(0,3.0,0));camera.up.copy(fwd);camera.lookAt(c);camera.up.set(0,1,0)}  // top view (debug, ?cam=4)
  else{hero.fly.updateWorldMatrix(true,false);const p=V(0.05,0.06).applyMatrix4(hero.fly.matrixWorld),f=V(3,0.3).applyMatrix4(hero.fly.matrixWorld);camera.position.copy(p);camera.up.set(0,1,0).applyQuaternion(new THREE.Quaternion().setFromRotationMatrix(hero.roll.matrixWorld));camera.lookAt(f);camera.up.set(0,1,0)}
  sun.position.set(s[0]-20,40,25);sun.target.position.set(s[0],0,0);
  const $=id=>document.getElementById(id);

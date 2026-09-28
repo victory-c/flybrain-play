@@ -64,12 +64,29 @@ python -m runs.ride --open-loop --riders 8       # brain in the loop, prior deco
 python -m runs.screen --riders 16 --seconds 8    # passenger screen -> results/screen*.{json,parquet,npz}
 python -m runs.ride --init results/screen_samples.npz --riders 48 --generations 15  # learn
 python -m runs.ride --replay results/ride.json   # best decoder, logs state + DN rates every 10 ms
-python -m export.export_ride3d results/ride_trace.json results/ride_3d.html   # 3D road replay (chase / side / fly's eyes)
+python -m export.export_ride3d results/ride_trace.json results/ride_3d.html   # 3D road replay (chase / side / close-up / fly's eyes)
+python -m export.export_ride3d results/ride_trace.json out.html --bike none    # same, procedural Tarmac SL9 instead of the model
 python -m export.export_ride results/ride_trace.json results/ride_view.html   # 2D charts replay
 ```
 
 On the cluster: `sbatch ride.sbatch --init results/screen_samples.npz --riders 48 --generations 15` (repo
 root one level up; see JOBS.md there for every run's exact command).
+
+## The 3D bike in the replay
+
+The followed rider rides `assets/colnago_v4rs.glb`: the Colnago V4Rs (size 510, Campagnolo Super
+Record, Bora Ultra WTO) that Colnago's own web configurator loads from its CDN
+(assets.v2.londondynamics.com, pre-assembled "puzzledefault" GLB, 26 MB), Draco-compressed to 5.7 MB
+and embedded in the HTML. No free, downloadable model of a Tarmac SL9, Cervelo S5 or Giant TCR
+exists (a sweep of Sketchfab, Objaverse, GitHub, print sites, marketplaces, game-asset libraries and
+brand configurators found only paid ones, $20-95 on CGTrader, TurboSquid and 3DModels.org).
+
+It is Colnago's copyrighted marketing asset: fine to look at in a private replay, not to publish or
+redistribute, which is why `assets/*.glb` is git-ignored. The page re-parents the model's parts onto
+pivots: fork, integrated bar/stem and front wheel steer about the head-tube axis (72 deg, which puts
+the front hub 48.6 mm, the fork rake, ahead of the axis through the headset cap); both wheels with
+their rotors and the crank arms with chainrings spin. Saddle, hoods, bottom bracket and crank angle
+are read off the model, and the rider is sized to them.
 
 Speed on one RTX A6000: 48 riders run about 20 s of wall time per second of bike time, so a 10 s
 generation takes ~3.4 min and a 15-generation search ~51 min (logs/flyride-36091, -36092); a 16-rider
