@@ -22,7 +22,7 @@ import pandas as pd
 import torch
 
 from bike.dynamics import STATE, Peloton
-from bike.readout import Decoder, Readout
+from bike.readout import READOUTS, Decoder, Readout
 from bike.senses import Senses
 from bike.tarmac import eigen_speeds, tarmac_sl9, whipple_matrices
 from brain.loop import BrainLoop
@@ -52,6 +52,11 @@ def parse():
     ap.add_argument("--lane-cap", type=float, default=25.0, help="cap on the squared lateral offset in the lane penalty (m^2)")
     ap.add_argument("--offroad", type=float, default=0.0, help="if > 0: leaving the road (|y| > this, m) ends a rider's run like a fall")
     ap.add_argument("--gains", default="", help="sensory gain overrides for bike/senses.py GAINS, e.g. 'hs_heading=200,hs_lane=60'")
+    ap.add_argument("--polarity", default="legacy", choices=["legacy", "physio"], help="which eye's VS/HS cells a rotation drives (bike/senses.py)")
+    ap.add_argument("--readout", default="base", choices=["base", "lane"], help="readout neuron set (bike/readout.py READOUTS)")
+    ap.add_argument("--sigma-new", type=float, default=0.8, help="CEM width for decoder weights absent from --init-theta")
+    ap.add_argument("--lane-filter", default=None, help="runs/probe.py json: add one matched-filter lane signal (HS) with one gain")
+    ap.add_argument("--sigma-lane-filter", type=float, default=2.0, help="CEM width for the lane-filter gain")
     ap.add_argument("--ridge", type=float, default=1.0)
     ap.add_argument("--sigma0", type=float, default=0.15, help="CEM search width around the teacher fit")
     ap.add_argument("--lane-penalty", type=float, default=0.01, help="fitness cost per m^2 of lateral offset per second")
@@ -85,11 +90,12 @@ class Ride:
         if not a.oracle:
             meta = pd.read_parquet(ROOT / "brain_meta.parquet")
             gains = {kv.split("=")[0].strip(): float(kv.split("=")[1]) for kv in a.gains.split(",") if "=" in kv}
-            self.senses = Senses(meta, goal=a.goal, device=self.dev, lane=a.lane, gains=gains)
+            self.senses = Senses(meta, goal=a.goal, device=self.dev, lane=a.lane, gains=gains, polarity=a.polarity)
             if gains:
                 print("sensory gain overrides:", gains, flush=True)
-            self.readout = Readout(meta, device=self.dev)
-            self.decoder = Decoder(self.readout)
+            self.readout = Readout(meta, types=READOUTS[a.readout], device=self.dev)
+            lf = lane_filter_from_probe(a.lane_filter, self.readout) if a.lane_filter else None
+            self.decoder = Decoder(self.readout, lane_filter=lf)
             print("senses :", self.senses.describe())
             print("readout:", self.readout.describe(), flush=True)
             brain = Brain(ROOT / "brain.npz")
@@ -115,6 +121,7 @@ class Ride:
             loop.set_rates(self.senses.rates(bikes.state, bikes.psi_dot))
             counts, pop = loop.run(a.warmup_ms)
             smooth = self.readout.features(counts, a.warmup_ms)
+            self.decoder.set_center(smooth)
             if verbose:
                 f0 = smooth.mean(0).cpu().numpy()
                 print("  after warm-up, DN rates (Hz): " + ", ".join(f"{n} {v:.0f}" for n, v in zip(self.readout.names, f0)
@@ -201,7 +208,12 @@ def main():
     D = dec.D
     if a.replay or a.open_loop:
         if a.replay:
-            best = json.loads((ROOT / a.replay).read_text())["best_theta"]
+            src = json.loads((ROOT / a.replay).read_text())
+            best = src["best_theta"]
+            if src.get("decoder_names") and src["decoder_names"] != dec_names(dec):
+                old = dict(zip(src["decoder_names"], best))
+                best = [old.get(n, 0.0) for n in dec_names(dec)]
+                print("replay: decoder weights mapped by name onto this readout", flush=True)
             theta = torch.tensor(best, device=ride.dev)[None, :].repeat(a.riders, 1)
             label = f"replay of {a.replay}"
         else:
@@ -229,9 +241,17 @@ def main():
         sigma[:dec.F + 1] = a.sigma0
         print(f"teacher fit: R^2 {r2:.2f} on the screen's samples; CEM starts from it", flush=True)
     if a.init_theta:
-        mu = np.array(json.loads((ROOT / a.init_theta).read_text())["best_theta"], dtype=np.float32)
+        src = json.loads((ROOT / a.init_theta).read_text())
+        old = dict(zip(src.get("decoder_names", dec_names(dec)), src["best_theta"]))
+        names = dec_names(dec)
+        mu = np.array([old.get(n, 0.0) for n in names], dtype=np.float32)
         sigma[:dec.F + 1] = a.sigma0
-        print(f"CEM starts from best_theta of {a.init_theta}", flush=True)
+        new = [i for i, n in enumerate(names) if n not in old]
+        sigma[new] = a.sigma_new
+        print(f"CEM starts from best_theta of {a.init_theta}; {len(new)} new decoder weights start at 0 with width {a.sigma_new}", flush=True)
+    if dec.lane_filter is not None:
+        sigma[-1] = a.sigma_lane_filter
+        print(f"lane-filter gain starts at {mu[-1]:.2f} with width {a.sigma_lane_filter}", flush=True)
     n_elite = max(2, int(round(a.elite * a.riders)))
     history, best_theta, best_fit = [], mu.copy(), -np.inf
     t_all = time.time()
@@ -325,7 +345,22 @@ def dagger(a, ride, dec):
 
 
 def dec_names(dec):
-    return [f"steer:{n}" for n in dec.r.names] + ["steer:bias", "pedal:gain", "pedal:bias", "brake:gain", "brake:bias"]
+    names = [f"steer:{n}" for n in dec.r.names] + ["steer:bias", "pedal:gain", "pedal:bias", "brake:gain", "brake:bias"]
+    return names + (["steer:lane_filter"] if dec.lane_filter is not None else [])
+
+
+def lane_filter_from_probe(path, readout, pop="HS", zmin=3.0):
+    """Matched filter over readout features from a runs/probe.py result: each (type, side) feature gets its mean
+    left-minus-right response (Hz) to the probe; normalised so the probe's own response pattern reads as 1.0."""
+    recs = json.loads((ROOT / path).read_text())[pop]
+    by = {}
+    for r in recs:
+        if abs(r["z"]) >= zmin:
+            by.setdefault((r["type"], r["somaSide"]), []).append(r["diff"])
+    v = np.array([np.mean(by[(t, s)]) if (t, s) in by else 0.0 for t, s, _, _ in readout.groups], dtype=np.float32)
+    used = [f"{t}_{s} {np.mean(by[(t, s)]):+.1f}" for t, s, _, _ in readout.groups if (t, s) in by]
+    print(f"lane filter from {path}: {len(used)} features: " + ", ".join(used), flush=True)
+    return v / max(float((v ** 2).sum()), 1e-6)
 
 
 if __name__ == "__main__":

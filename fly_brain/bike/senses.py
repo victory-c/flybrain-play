@@ -78,9 +78,15 @@ def sensory_populations(meta, goal="none", lane="none"):
 
 
 class Senses:
-    def __init__(self, meta, goal="none", gains=None, device="cpu", lane="none"):
+    def __init__(self, meta, goal="none", gains=None, device="cpu", lane="none", polarity="legacy"):
+        """polarity: which eye's VS/HS cells a self-rotation drives.
+        'physio' follows fly lobula-plate physiology (Hausen 1982; Krapp & Hengstenberg 1996; Joesch et al. 2008):
+          HS cells are depolarised by front-to-back motion in their own eye, so a yaw to the RIGHT excites HS_L;
+          VS cells are depolarised by downward motion, so a roll to the RIGHT (right side down; the right eye sees the
+          world move up, the left eye sees it move down) excites VS_L.
+        'legacy' is the first, arbitrary assignment (the rotation's own side), kept so older decoders replay."""
         self.g = dict(GAINS, **(gains or {}))
-        self.goal, self.lane = goal, lane
+        self.goal, self.lane, self.polarity = goal, lane, polarity
         self.pops = sensory_populations(meta, goal)
         self.names = list(self.pops)
         self.idx = np.concatenate([self.pops[n] for n in self.names])
@@ -106,10 +112,11 @@ class Senses:
         y, psi, v, phi, delta, phi_dot, delta_dot = (state[:, i] for i in (1, 2, 3, 4, 5, 6, 7))
         base = g["base"]
         out = {}
-        out["VS_L"] = base + g["vs_roll"] * relu(-phi_dot)
-        out["VS_R"] = base + g["vs_roll"] * relu(phi_dot)
-        out["HS_L"] = base + g["hs_speed"] * v + g["hs_yaw"] * relu(-psi_dot)
-        out["HS_R"] = base + g["hs_speed"] * v + g["hs_yaw"] * relu(psi_dot)
+        s = 1.0 if self.polarity == "physio" else -1.0   # physio: right rotations drive the LEFT cells
+        out["VS_L"] = base + g["vs_roll"] * relu(s * phi_dot)
+        out["VS_R"] = base + g["vs_roll"] * relu(-s * phi_dot)
+        out["HS_L"] = base + g["hs_speed"] * v + g["hs_yaw"] * relu(s * psi_dot)
+        out["HS_R"] = base + g["hs_speed"] * v + g["hs_yaw"] * relu(-s * psi_dot)
         if self.lane == "hs":
             # MODELED lane cue on the horizontal-system cells: drifting right (y > 0) brings the right road edge
             # closer, so the right eye sees stronger flow; heading right of the road (psi > 0) likewise.

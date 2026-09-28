@@ -38,6 +38,7 @@ def main():
     ap.add_argument("--phi0", type=float, default=4.0)
     ap.add_argument("--lane", default="hs", choices=["hs", "none"], help="lane cue as HS optic-flow asymmetry")
     ap.add_argument("--goal", default="none")
+    ap.add_argument("--polarity", default="legacy", choices=["legacy", "physio"])
     ap.add_argument("--w-syn-scale", type=float, default=None)
     ap.add_argument("--device", default="auto")
     ap.add_argument("--seed", type=int, default=0)
@@ -47,7 +48,7 @@ def main():
     dev = ("cuda" if torch.cuda.is_available() else "cpu") if a.device == "auto" else a.device
 
     meta = pd.read_parquet(ROOT / "brain_meta.parquet")
-    senses = Senses(meta, goal=a.goal, device=dev, lane=a.lane)
+    senses = Senses(meta, goal=a.goal, device=dev, lane=a.lane, polarity=a.polarity)
     readout = Readout(meta, device=dev)
     ro_idx = torch.as_tensor(readout.idx, device=dev)
     brain = Brain(ROOT / "brain.npz")

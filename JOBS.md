@@ -44,9 +44,19 @@ Commands run from the job's working directory (`.` = repo root, `fly_brain/` for
 | 36105 | 2026-09-28 08:52 | FAILED | 00:00:03 | 8 cpu, 40G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --init results/screen_lane_samples.npz --lane hs --dagger 2 --riders 4 --seconds ...` (in `./fly_brain`) | `/tmp/claude-93015/-home-s-st-stevejobs-flybrain/ff3d4c1f-4087-4f88-b1bd-f60320256b54/scratchpad/dagger_smoke.json` |
 | 36106 | 2026-09-28 08:52 | COMPLETED | 00:00:27 | 8 cpu, 40G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.ride --init results/screen_lane_samples.npz --lane hs --dagger 2 --riders 4 --seconds ...` (in `./fly_brain`) | `results/dagger_smoke.json` |
 | 36107 | 2026-09-28 08:53 | COMPLETED | 00:35:11 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-dagger.sbatch` | [flydagger-36107.out](logs/flydagger-36107.out) |
-| 36108 | 2026-09-28 09:12 | RUNNING | 00:47:44 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-offroad.sbatch results/ride_lane.json results/ride_road.json` | [flyroad-36108.out](logs/flyroad-36108.out) |
-| 36109 | 2026-09-28 09:27 | RUNNING | 00:32:58 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-offroad2.sbatch results/ride_lane.json results/ride_road2.json` | [flyroad2-36109.out](logs/flyroad2-36109.out) |
+| 36108 | 2026-09-28 09:12 | COMPLETED | 00:54:16 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-offroad.sbatch results/ride_lane.json results/ride_road.json` | [flyroad-36108.out](logs/flyroad-36108.out) |
+| 36109 | 2026-09-28 09:27 | COMPLETED | 00:51:47 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-offroad2.sbatch results/ride_lane.json results/ride_road2.json` | [flyroad2-36109.out](logs/flyroad2-36109.out) |
 | 36110 | 2026-09-28 09:33 | COMPLETED | 00:05:10 | 48 cpu, 64G |  | `srun -p ocf-hpc -w corruption -c 48 --mem=64G -t 60 --quiet env OMP_NUM_THREADS=48 /home/s/st/stevejobs/flybrain/venv/bin/python -m runs.screen --riders 16 --seconds 8 --lane hs --device cpu --out results/screen_lane_...` (in `./fly_brain`) | `results/screen_lane_psi.json` |
+| 36111 | 2026-09-28 10:08 | COMPLETED | 00:01:41 | 8 cpu, 40G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.screen --riders 16 --seconds 8 --lane hs --polarity physio --out results/screen_physio...` (in `./fly_brain`) | `results/screen_physio.json` |
+| 36112 | 2026-09-28 10:11 | COMPLETED | 00:00:45 | 8 cpu, 40G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.probe --pop HS VS HALT --extra 30 --brains 16 --ms 1000 --out results/probe.json` (in `./fly_brain`) | `results/probe.json` |
+| 36113 | 2026-09-28 10:13 | CANCELLED | 00:04:13 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch  results/ride_lanedn.json` | [flylanedn-36113.err](logs/flylanedn-36113.err), [flylanedn-36113.out](logs/flylanedn-36113.out) |
+| 36114 | 2026-09-28 10:13 | CANCELLED | 00:04:13 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch hs_heading=150,hs_lane=50 results/ride_lanedn_strong.json` | [flylanedn-36114.err](logs/flylanedn-36114.err), [flylanedn-36114.out](logs/flylanedn-36114.out) |
+| 36115 | 2026-09-28 10:18 | CANCELLED | 00:04:56 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch  results/ride_lanedn.json` | [flylanedn-36115.err](logs/flylanedn-36115.err), [flylanedn-36115.out](logs/flylanedn-36115.out) |
+| 36116 | 2026-09-28 10:18 | CANCELLED | 00:04:56 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch hs_heading=150,hs_lane=50 results/ride_lanedn_strong.json` | [flylanedn-36116.err](logs/flylanedn-36116.err), [flylanedn-36116.out](logs/flylanedn-36116.out) |
+| 36117 | 2026-09-28 10:22 | RUNNING | 00:07:20 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch  results/ride_lanedn_narrow.json 0.25 8` | [flylanedn-36117.out](logs/flylanedn-36117.out) |
+| 36118 | 2026-09-28 10:23 | RUNNING | 00:06:56 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch hs_heading=150,hs_lane=50 results/ride_lanedn_strong.json 0.25 9` | [flylanedn-36118.out](logs/flylanedn-36118.out) |
+| 36119 | 2026-09-28 10:23 | CANCELLED | 00:02:19 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanedn.sbatch  results/ride_lanedn_tiny.json 0.1 10` | [flylanedn-36119.err](logs/flylanedn-36119.err), [flylanedn-36119.out](logs/flylanedn-36119.out) |
+| 36120 | 2026-09-28 10:25 | RUNNING | 00:04:34 | 8 cpu, 48G, 1 gpu |  | `sbatch ride-lanefilter.sbatch` | [flyfilter-36120.out](logs/flyfilter-36120.out) |
 
 ## Full command lines
 
@@ -115,4 +125,10 @@ srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/
 
 ```bash
 srun -p ocf-hpc -w corruption -c 48 --mem=64G -t 60 --quiet env OMP_NUM_THREADS=48 /home/s/st/stevejobs/flybrain/venv/bin/python -m runs.screen --riders 16 --seconds 8 --lane hs --device cpu --out results/screen_lane_psi.json
+```
+
+**36111** (python)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 15 --quiet /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.screen --riders 16 --seconds 8 --lane hs --polarity physio --out results/screen_physio.json
 ```

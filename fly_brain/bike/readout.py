@@ -23,6 +23,11 @@ LEAN_DNS = ["DNp33", "DNge091", "DNg29", "DNg41", "DNp18", "DNp73", "DNb04"]
 WING_STEERING_MNS = ["b1 MN", "b2 MN", "b3 MN", "hg1 MN", "hi2 MN", "i2 MN"]  # the fly's own flight-steering output
 WALKING_DNS = ["DNa01", "DNa02", "DNa03", "DNb01", "DNp09", "DNg100", "DNg97", "MDN", "DNp01"]  # literature roles
 DN_TYPES = ROLL_RATE_DNS + LEAN_DNS + WING_STEERING_MNS + WALKING_DNS
+# Found by runs/probe.py (bike held upright, extra drive to the left vs the right HS cells): the lateralised targets
+# of the horizontal-system (yaw / translational optic flow, i.e. the lane cue), distinct from the VS-driven roll
+# channel above. DNp15 is the HS-to-neck descending neuron; GNG283 is a brain motor neuron (head/neck).
+LANE_DNS = ["DNa16", "DNb03", "DNa06", "DNp15", "DNge107", "DNge086", "DNge031", "DNge033", "GNG283"]
+READOUTS = {"base": DN_TYPES, "lane": DN_TYPES + LANE_DNS}
 FORWARD = ["DNg100", "DNp09", "DNg97"]
 
 
@@ -76,11 +81,32 @@ class Readout:
 class Decoder:
     """theta = [steer weights (F), steer bias, pedal gain, pedal bias, brake gain, brake bias]."""
 
-    def __init__(self, readout, steer_max=6.0, power_max=250.0, brake_max=6.0, rate_scale=50.0):
+    def __init__(self, readout, steer_max=6.0, power_max=250.0, brake_max=6.0, rate_scale=50.0, lane_filter=None):
+        """lane_filter: optional (F,) matched filter from runs/probe.py (each feature's response to left-vs-right HS
+        drive). Its output, sum_j w_j (f_j - warm-up f_j), is one lane signal with one extra gain: theta[-1]."""
         self.r = readout
         self.F = readout.n_features
         self.D = self.F + 1 + 2 + 2
+        self.lane_filter = None if lane_filter is None else torch.as_tensor(lane_filter, dtype=torch.float32, device=readout.dev)
+        if self.lane_filter is not None:
+            self.D += 1
+        self.f0 = None
         self.steer_max, self.power_max, self.brake_max, self.rate_scale = steer_max, power_max, brake_max, rate_scale
+        # lane-channel features are read as deviations from each rider's warm-up rate (they fire at ~30 Hz baseline;
+        # uncentred, any weight on them is a standing steering bias). The other features stay absolute.
+        self.center_mask = torch.tensor([g[0] in LANE_DNS for g in readout.groups], dtype=torch.float32, device=readout.dev)
+        self.center = None
+
+    def set_center(self, f):
+        """f (B, F) smoothed Hz at the end of warm-up."""
+        self.center = f * self.center_mask
+        self.f0 = f.clone()
+
+    def lane_signal(self, f):
+        """(B,) matched-filter output; ~ +1 for a 60 Hz left-minus-right HS asymmetry (probe units)."""
+        if self.lane_filter is None or self.f0 is None:
+            return torch.zeros(f.shape[0], device=f.device)
+        return (f - self.f0) @ self.lane_filter
 
     def prior_mean(self):
         mu = np.zeros(self.D, dtype=np.float32)
@@ -99,8 +125,11 @@ class Decoder:
     def act(self, theta, f):
         """theta (B, D), f (B, F) smoothed Hz -> steer torque (Nm), power (W), brake (m/s^2)."""
         F = self.F
-        z = f / self.rate_scale
-        steer = self.steer_max * torch.tanh((z * theta[:, :F]).sum(1) + theta[:, F])
+        z = (f - self.center if self.center is not None else f) / self.rate_scale
+        arg = (z * theta[:, :F]).sum(1) + theta[:, F]
+        if self.lane_filter is not None:
+            arg = arg + theta[:, -1] * self.lane_signal(f)
+        steer = self.steer_max * torch.tanh(arg)
         fwd = f[:, self.r.forward].mean(1) / 20.0 if len(self.r.forward) else torch.zeros(f.shape[0], device=f.device)
         power = self.power_max * torch.sigmoid(theta[:, F + 1] * fwd + theta[:, F + 2])
         back = f[:, self.r.mdn].mean(1) / 10.0 if len(self.r.mdn) else torch.zeros(f.shape[0], device=f.device)
