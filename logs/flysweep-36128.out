@@ -1,0 +1,5 @@
+== 11:50:10 handsoff
+replay of results/sweep/handsoff.json: upright  4.99 s (max  8.53,   0% finish)  dist  25.7 m  |y| 3.34 m  v 5.05  bailed 0  pop 49,458 sp/s  175s
+== 11:53:09 gain_+0.00
+replay of results/sweep/gain_+0.00.json: upright  4.69 s (max 15.00,   2% finish)  dist  25.9 m  |y| 2.21 m  v 5.66  bailed 0  pop 76,695 sp/s  300s
+== 11:58:15 gain_-0.29
