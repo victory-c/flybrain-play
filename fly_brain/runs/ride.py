@@ -43,6 +43,7 @@ def parse():
     ap.add_argument("--phi0", type=float, default=2.0, help="initial lean sd, deg")
     ap.add_argument("--gust", type=float, default=15.0, help="side-gust roll torque sd, Nm")
     ap.add_argument("--gust-tau", type=float, default=1.0)
+    ap.add_argument("--lane", default="hs", choices=["hs", "none"], help="lane cue as HS optic-flow asymmetry")
     ap.add_argument("--goal", default="none", choices=["odor", "none"], help="odor goal saturates the antennal lobe at this synapse scale (see bike/README.md)")
     ap.add_argument("--no-bail", action="store_true", help="ignore giant-fibre escapes")
     ap.add_argument("--tau-ms", type=float, default=40.0, help="readout smoothing time constant")
@@ -77,7 +78,7 @@ class Ride:
         self.loop = self.senses = self.readout = self.decoder = None
         if not a.oracle:
             meta = pd.read_parquet(ROOT / "brain_meta.parquet")
-            self.senses = Senses(meta, goal=a.goal, device=self.dev)
+            self.senses = Senses(meta, goal=a.goal, device=self.dev, lane=a.lane)
             self.readout = Readout(meta, device=self.dev)
             self.decoder = Decoder(self.readout)
             print("senses :", self.senses.describe())

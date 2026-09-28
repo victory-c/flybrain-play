@@ -10,6 +10,7 @@ Every population below is a set of identified sensory neurons in the connectome;
   JO_L / JO_R       Johnston's organ wind/gravity (JO-C/E)   airspeed, lean angle          lean toward that side
   LEG1_L / LEG1_R   front-leg proprioceptors (ProLN)         handlebar angle and rate     bar turned away from that side
   ORN_L / ORN_R     ORN_DM1 (a food odour)                   bearing of a goal 50 m ahead the side the goal is on
+  (lane="hs")       HS cells again                           lateral offset + heading   side of the nearer road edge
 
 Sides are the connectome's rootSide for neurons that enter through a nerve (halteres, JO, legs,
 antennae) and somaSide for the optic-lobe cells. Rates are Hz, clipped to [0, cap].
@@ -38,6 +39,8 @@ GAINS = {  # Hz per unit
     "leg_steer_rate": 50.0, # per rad/s
     "orn_goal": 40.0,       # at full bearing (>= 0.4 rad to one side)
     "goal_ahead": 50.0,     # m
+    "hs_lane": 25.0,        # Hz per m of lateral offset (translational flow from the nearer road edge)
+    "hs_heading": 60.0,     # Hz per rad of heading away from the road direction
 }
 
 
@@ -47,7 +50,7 @@ def with_sides(meta):
     return meta.merge(raw, on="bodyId", how="left")
 
 
-def sensory_populations(meta, goal="none"):
+def sensory_populations(meta, goal="none", lane="none"):
     """OrderedDict name -> neuron indices (into brain.npz order)."""
     m = with_sides(meta) if "rootSide" not in meta.columns else meta
     ty, sub, cl = m["type"].astype(str), m["subclass"].astype(str), m["class"].astype(str)
@@ -75,9 +78,9 @@ def sensory_populations(meta, goal="none"):
 
 
 class Senses:
-    def __init__(self, meta, goal="none", gains=None, device="cpu"):
+    def __init__(self, meta, goal="none", gains=None, device="cpu", lane="none"):
         self.g = dict(GAINS, **(gains or {}))
-        self.goal = goal
+        self.goal, self.lane = goal, lane
         self.pops = sensory_populations(meta, goal)
         self.names = list(self.pops)
         self.idx = np.concatenate([self.pops[n] for n in self.names])
@@ -107,6 +110,11 @@ class Senses:
         out["VS_R"] = base + g["vs_roll"] * relu(phi_dot)
         out["HS_L"] = base + g["hs_speed"] * v + g["hs_yaw"] * relu(-psi_dot)
         out["HS_R"] = base + g["hs_speed"] * v + g["hs_yaw"] * relu(psi_dot)
+        if self.lane == "hs":
+            # MODELED lane cue on the horizontal-system cells: drifting right (y > 0) brings the right road edge
+            # closer, so the right eye sees stronger flow; heading right of the road (psi > 0) likewise.
+            out["HS_R"] = out["HS_R"] + g["hs_lane"] * relu(y) + g["hs_heading"] * relu(psi)
+            out["HS_L"] = out["HS_L"] + g["hs_lane"] * relu(-y) + g["hs_heading"] * relu(-psi)
         out["HALT_L"] = base + g["halt_roll"] * relu(-phi_dot) + g["halt_yaw"] * psi_dot.abs()
         out["HALT_R"] = base + g["halt_roll"] * relu(phi_dot) + g["halt_yaw"] * psi_dot.abs()
         out["JO_L"] = base + g["jo_wind"] * v + g["jo_lean"] * relu(-phi)
