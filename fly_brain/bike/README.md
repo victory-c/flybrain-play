@@ -132,6 +132,22 @@ the front hub 48.6 mm, the fork rake, ahead of the axis through the headset cap)
 their rotors and the crank arms with chainrings spin. Saddle, hoods, bottom bracket and crank angle
 are read off the model, and the rider is sized to them.
 
+## The brain map in the replay
+
+The left panel of the 3D page shows the followed rider's whole brain while it rides: the same point cloud
+(140,638 neurons with a 3D position) and the same regions as the drinks dashboard (Fly Brain Live), every
+100 ms. `--brain-out` makes `runs.ride --replay` record every rider's spikes per bin
+(`results/<name>_brain.npz`, git-ignored, ~0.5 GB uncompressed for 16 riders x 20 s); the exporter picks it
+up next to the trace and embeds the default rider neuron by neuron and every rider's region means (other
+riders are coloured by region). Region means leave out the sensory neurons the bike drives.
+
+```bash
+python -m runs.ride --replay results/ride_slow_mu.json --tau-lane-ms 300 --lane-filter results/probe.json \
+    --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 20 --seed 7 \
+    --trace results/ride_road_trace.json --brain-out results/ride_road_brain.npz
+python -m export.export_ride3d results/ride_road_trace.json results/ride_3d.html
+```
+
 Speed on one RTX A6000: 48 riders run about 20 s of wall time per second of bike time, so a 10 s
 generation takes ~3.4 min and a 15-generation search ~51 min (logs/flyride-36091, -36092); a 16-rider
 replay runs at ~13.4 s per second of bike time.

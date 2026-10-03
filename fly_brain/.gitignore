@@ -26,3 +26,4 @@ __pycache__/
 
 # third-party 3D models (copyrighted, private use only; see bike/README.md)
 assets/*.glb
+results/*_brain.npz

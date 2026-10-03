@@ -6,16 +6,23 @@ The followed rider rides a real 3D model when one is available: by default asset
 comes from and why it must not be redistributed). Its wheels, crank, fork and bars are re-parented
 onto pivots so they spin and steer. Without a model, a procedural S-Works Tarmac SL9 is drawn.
 
-usage: python -m export.export_ride3d results/ride_trace.json results/ride_3d.html [--bike PATH|none]
+The left panel shows the followed rider's whole brain as the same point cloud and regions as the drinks
+dashboard (Fly Brain Live), from a recording made with `runs.ride --brain-out` (found next to the trace as
+<name>_brain.npz, or given with --brain).
+
+usage: python -m export.export_ride3d results/ride_trace.json results/ride_3d.html [--bike PATH|none] [--brain NPZ|none]
 """
 import argparse
 import base64
 import json
+import zlib
 from pathlib import Path
+
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BIKE = ROOT / "assets" / "colnago_v4rs.glb"
-DN_SHOWN = ["DNp20_L", "DNp20_R", "DNg46_L", "DNg46_R", "DNp22_L", "DNp22_R", "b1 MN_L", "b1 MN_R"]
+DN_SHOWN = ["DNp20_L", "DNp20_R", "DNg46_L", "DNg46_R", "DNp22_L", "DNp22_R", "b1 MN_L", "b1 MN_R", "DNp15_L", "DNp15_R"]
 
 HTML = r"""<!doctype html>
 <html lang="zh"><head><meta charset="utf-8"><title>🪰 Fly rides a road bike</title>
@@ -26,7 +33,13 @@ html,body{margin:0;height:100%;background:#0b0d12;color:#eee;font:14px/1.4 syste
 #hud{top:14px;right:14px;min-width:220px}
 #hud .big{font-size:40px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}#hud .unit{font-size:14px;color:#9aa;margin-left:4px}
 #hud .row{display:flex;justify-content:space-between;gap:16px;color:#cbd;margin-top:6px;font-variant-numeric:tabular-nums}#hud .row b{color:#fff}
-#brain{top:14px;left:14px;width:230px}#brain h4{margin:0 0 6px;font-weight:600;font-size:13px;color:#9aa}
+#brain{top:14px;left:14px;width:272px;max-height:calc(100vh - 110px);overflow:auto}#brain h4{margin:0 0 6px;font-weight:600;font-size:13px;color:#9aa}
+#bmap{position:relative;height:210px;margin:0 -6px 2px;border-radius:9px;overflow:hidden;background:#0d1017}#bc{width:100%;height:100%;display:block;cursor:grab}
+#bnote{position:absolute;left:8px;right:8px;bottom:5px;font-size:10.5px;color:#8a93a6;pointer-events:none;line-height:1.3}
+.sub{font-size:11px;color:#778;margin:8px 0 3px}
+.reg{display:grid;grid-template-columns:8px 118px 1fr 30px;gap:6px;align-items:center;font-size:11.5px;margin:2px 0;color:#cbd}
+.reg s{width:8px;height:8px;border-radius:50%;display:block}.reg i{display:block;height:8px;border-radius:4px;background:linear-gradient(90deg,#ff8c1a,#ffd28a);transform-origin:left;transform:scaleX(0)}
+.reg b{font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
 .bar{display:grid;grid-template-columns:62px 1fr 1fr;gap:6px;align-items:center;font-size:12px;margin:3px 0}
 .bar i{display:block;height:9px;border-radius:5px;background:linear-gradient(90deg,#4da3ff,#8ec5ff);transform-origin:left}.bar i.r{background:linear-gradient(90deg,#ff4d4d,#ff9a9a)}
 #ctl{bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;white-space:nowrap}
@@ -41,7 +54,10 @@ input[type=range]{width:260px}
 <div class="row"><span>转向扭矩</span><b id="T">0 Nm</b></div><div class="row"><span>踩踏功率</span><b id="P">0 W</b></div>
 <div class="row"><span>踏频</span><b id="cad">0 rpm</b></div><div class="row"><span>里程</span><b id="x">0 m</b></div><div class="row"><span>离路中心</span><b id="lat">0 m</b></div>
 <div class="row"><span>这名骑手在路上</span><b id="road">—</b></div><div class="row"><span>仍在路上的骑手</span><b id="alive"></b></div></div>
-<div id="brain" class="panel"><h4>🪰 苍蝇全脑 <span id="pop"></span> spikes/s</h4><div id="bars"></div><div style="font-size:11px;color:#778;margin-top:6px">下行神经元 左(蓝) / 右(红)，Hz</div></div>
+<div id="brain" class="panel"><h4>🪰 苍蝇全脑 <span id="pop"></span> spikes/s</h4>
+<div id="bmap"><canvas id="bc"></canvas><div id="bnote"></div></div>
+<div id="regsec"><div class="sub">各脑区平均放电（不含被驱动的感觉神经元），Hz</div><div id="regs"></div></div>
+<div class="sub">下行神经元 左(蓝) / 右(红)，Hz</div><div id="bars"></div></div>
 <div id="ctl" class="panel"><button id="play">▶ 播放</button><select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
 <input id="time" type="range" min="0" value="0"><span id="clock" style="font-variant-numeric:tabular-nums;min-width:56px">0.00 s</span>
 <button id="cam0" class="on">跟拍</button><button id="cam1">侧拍</button><button id="cam2">苍蝇视角</button><button id="cam3">特写</button><button id="ghosts" class="on">其他骑手</button>
@@ -49,6 +65,7 @@ input[type=range]{width:260px}
 <div id="title" class="panel">加载车模…</div><div id="fall">倒了！</div>
 <script id="data" type="application/json">__DATA__</script>
 <script id="bikeglb" type="application/octet-stream">__BIKE__</script>
+<script id="brainbin" type="application/json">__BRAIN__</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
@@ -194,6 +211,45 @@ function pose(bk,s,done,pop){const [x,y,psi,v,phi,delta]=s,F=FIT;bk.root.positio
   setTube(A.upper,shp,elbow);setTube(A.fore,elbow,hw)}
  const g=Math.min(1,(pop||0)/150000);if(!bk.ghost)bk.glow.intensity=0.4+1.2*g;bk.halo.material.opacity=0.08+0.3*g;bk.halo.scale.setScalar(1+0.6*g)}
 function setPaint(hex){scene.traverse(o=>{if(o.isMesh&&o.material&&o.material.userData.paint){const m=o.material;if(hex==='orig'){if(m.userData.orig!==undefined)m.color.setHex(m.userData.orig);else m.color.setHex(G.paint||0xd21f2b).convertSRGBToLinear()}else m.color.setHex(hex).convertSRGBToLinear()}})}
+// ---------- brain map: the followed rider's whole brain, drawn like the drinks dashboard (Fly Brain Live)
+const BR=D.brain||null,RC={taste:[1,.55,.2],feeding:[1,.35,.25],smell:[.4,.85,.6],memory:[.85,.55,1],nav:[.4,.7,1],vision:[.35,.45,.6],touch:[.8,.8,.4],descending:[1,.8,.3],cord:[.5,.75,.75],motor:[1,.3,.5],other:[.55,.6,.7]};
+const REST=[0.05,0.065,0.11],HOT=[1,0.55,0.12],PEAK=[1,0.97,0.85];let bm=null;
+const SHORT={memory:'蘑菇体（记忆）',nav:'中央复合体（导航）',cord:'腹神经索（腿/翅）',touch:'触觉与本体感觉'};
+async function inflate(s){const bin=atob(s),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+ return new Uint8Array(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate'))).arrayBuffer())}
+async function initBrain(){const $=id=>document.getElementById(id);
+ if(!BR&&!dnNames.length){$('brain').style.display='none';return}  // PD rider: no brain in the loop
+ if(!BR||typeof DecompressionStream==='undefined'){$('bmap').style.display='none';$('regsec').style.display='none';return}
+ $('bnote').textContent='解压全脑数据…';
+ const bin=JSON.parse($('brainbin').textContent),[q,reg,act]=await Promise.all([inflate(bin.xyz),inflate(bin.reg),inflate(bin.act)]);
+ const nP=BR.points,qq=new Uint16Array(q.buffer),xyz=new Float32Array(nP*3);
+ // cloud axes: x left-right, y ventral, z from the brain down the nerve cord -> show the CNS lying along x, dorsal side up
+ const dq=a=>BR.lo[a]+qq[p3+a]/65535*(BR.hi[a]-BR.lo[a]);let p3=0;
+ for(let p=0;p<nP;p++,p3+=3){xyz[p3]=dq(2);xyz[p3+1]=-dq(1);xyz[p3+2]=dq(0)}
+ const c=$('bc'),r=new THREE.WebGLRenderer({canvas:c,antialias:false});r.setPixelRatio(Math.min(devicePixelRatio,2));
+ const sc=new THREE.Scene();sc.background=new THREE.Color(0x0d1017);const cam=new THREE.PerspectiveCamera(30,1,0.05,20);
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(xyz,3));const col=new Float32Array(nP*3);g.setAttribute('color',new THREE.BufferAttribute(col,3));
+ sc.add(new THREE.Points(g,new THREE.PointsMaterial({size:0.016,vertexColors:true,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending,depthWrite:false})));
+ const ids=BR.regions.map(x=>x.id),rows=[];const regs=$('regs');
+ BR.regions.forEach((x,j)=>{if(x.id==='taste')return;const d=document.createElement('div');d.className='reg';const cc=RC[x.id]||[.6,.6,.6];
+  d.innerHTML='<s style="background:rgb('+cc.map(v=>Math.round(v*255)).join(',')+')"></s><span>'+(SHORT[x.id]||x.label)+'</span><i></i><b></b>';regs.appendChild(d);rows.push({j,i:d.querySelector('i'),b:d.querySelector('b')})});
+ bm={r,sc,cam,g,col,act,reg,ids,rows,nP,rotY:0,rotX:0.6,drag:false,px:0,py:0,key:'',ph:0};
+ c.addEventListener('pointerdown',e=>{bm.drag=true;bm.px=e.clientX;bm.py=e.clientY;c.setPointerCapture(e.pointerId)});
+ c.addEventListener('pointermove',e=>{if(!bm.drag)return;bm.rotY+=(e.clientX-bm.px)*0.008;bm.rotX=Math.max(-1.4,Math.min(1.4,bm.rotX+(e.clientY-bm.py)*0.008));bm.px=e.clientX;bm.py=e.clientY});
+ c.addEventListener('pointerup',()=>bm.drag=false);
+ const rs=()=>{const w=c.clientWidth,h=c.clientHeight;r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()};new ResizeObserver(rs).observe(c);rs()}
+function paintBrain(t){if(!bm)return;const nB=BR.bins,f=t*1000/BR.binMs-0.5,i=Math.max(0,Math.min(nB-1,Math.floor(f))),j=Math.min(nB-1,i+1),a=Math.max(0,Math.min(1,f-i));
+ const own=rider===BR.rider,key=rider+':'+i+':'+a.toFixed(3);
+ if(key!==bm.key){bm.key=key;const col=bm.col,nP=bm.nP,act=bm.act,RH=BR.regionHz;
+  const rhz=bm.ids.map((_,r)=>RH[i][rider][r]*(1-a)+RH[j][rider][r]*a);
+  const ramp=(v,k)=>{const g=v<0.5?v*2:1,h=v<0.5?0:(v-0.5)*2;col[k]=REST[0]+(HOT[0]-REST[0])*g+(PEAK[0]-HOT[0])*h;col[k+1]=REST[1]+(HOT[1]-REST[1])*g+(PEAK[1]-HOT[1])*h;col[k+2]=REST[2]+(HOT[2]-REST[2])*g+(PEAK[2]-HOT[2])*h};
+  if(own){const o1=i*nP,o2=j*nP;for(let p=0,k=0;p<nP;p++,k+=3)ramp((act[o1+p]*(1-a)+act[o2+p]*a)/255,k)}
+  else{const rv=rhz.map(h=>Math.min(1,h/16));for(let p=0,k=0;p<nP;p++,k+=3)ramp(rv[bm.reg[p]],k)}
+  bm.g.attributes.color.needsUpdate=true;
+  for(const w of bm.rows){const v=rhz[w.j];w.i.style.transform='scaleX('+Math.min(1,v/8)+')';w.b.textContent=v.toFixed(1)}
+  document.getElementById('bnote').textContent=own?'亮点：骑手 #'+rider+' 这 '+BR.binMs+' ms 里放电的神经元 · 拖动旋转':'逐个神经元只录了骑手 #'+BR.rider+'；骑手 #'+rider+' 按脑区平均着色'}
+ if(!bm.drag)bm.ph+=0.006;const ry=bm.rotY+0.5*Math.sin(bm.ph),d=3.3;  // sway around a dorsolateral view
+ bm.cam.position.set(d*Math.sin(ry)*Math.cos(bm.rotX),d*Math.sin(bm.rotX),d*Math.cos(ry)*Math.cos(bm.rotX));bm.cam.lookAt(0,0,0);bm.r.render(bm.sc,bm.cam)}
 // ---------- playback + cameras
 let bikes=[],hero=null,shown=Math.min(B,24),rider=0,k=0,playing=false,camMode=+(Q.get('cam')||0),last=0,snap=true,showGhosts=Q.get('ghosts')!=='0';
 const slider=document.getElementById('time'),rsel=document.getElementById('rider'),psel=document.getElementById('paint');
@@ -216,7 +272,7 @@ function frame(){const row=tr[k];for(let i=0;i<shown;i++){bikes[i].root.visible=
  if(D.road_time)$('road').textContent=Math.min(row.t,D.road_time[rider]).toFixed(1)+' / '+tr[tr.length-1].t.toFixed(0)+' s';
  const fallEl=$('fall');if(row.done[rider]){fallEl.textContent='倒了！';fallEl.style.display='block'}else if(Math.abs(s[1])>RH){fallEl.textContent='出界 · 骑进草地了';fallEl.style.display='block'}else fallEl.style.display='none';$('clock').textContent=row.t.toFixed(2)+' s';slider.value=k;
  if(row.dn_hz){const d=row.dn_hz[rider];for(const p of pairs){p.el[0].style.transform='scaleX('+Math.min(1,d[p.l]/120)+')';p.el[1].style.transform='scaleX('+Math.min(1,d[p.r]/120)+')'}}
- snap=false;renderer.render(scene,camera);window.DONE=1}
+ paintBrain(row.t);snap=false;renderer.render(scene,camera);window.DONE=1}
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}addEventListener('resize',resize);resize();
 function loop(ts){if(playing){const sp=parseFloat(document.getElementById('speed').value);if(ts-last>dt*1000/sp){last=ts;k=Math.min(k+1,tr.length-1);if(k===tr.length-1){playing=false;document.getElementById('play').textContent='↺ 重播'}}}frame();requestAnimationFrame(loop)}
 function start(){G=MODEL?modelGeo():procGeo();FIT=fitFrom(G);
@@ -243,8 +299,25 @@ if(b64){const bin=atob(b64),buf=new Uint8Array(bin.length);for(let i=0;i<bin.len
  const gl=new THREE.GLTFLoader(),dl=new THREE.DRACOLoader();dl.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');gl.setDRACOLoader(dl);
  gl.parse(buf.buffer,'',g=>{MODEL=g.scene;start()},e=>{console.warn('bike model failed, using the procedural bike',e);start()})}
 else start();
+initBrain().catch(e=>{console.warn('brain map failed',e);document.getElementById('bmap').style.display='none';document.getElementById('regsec').style.display='none'});
 </script></body></html>
 """
+
+
+def brain_payload(npz, rider):
+    """(meta for the page, embedded binaries) from a runs.ride --brain-out recording: the cloud's positions (uint16),
+    each point's region, and `rider`'s per-neuron activity (uint8 per bin), zlib + base64; region means for every rider."""
+    z = np.load(npz)
+    xyz = np.fromfile(ROOT / "web_data" / "brain_xyz.bin", dtype=np.float32).reshape(-1, 3)
+    lo, hi = xyz.min(0), xyz.max(0)
+    q = np.round((xyz - lo) / (hi - lo) * 65535).astype("<u2")
+    pack = lambda arr: base64.b64encode(zlib.compress(np.ascontiguousarray(arr).tobytes(), 9)).decode()
+    act = z["act"][:, rider, :]
+    meta = {"bins": int(act.shape[0]), "binMs": float(z["bin_ms"]), "cloudHz": float(z["cloud_hz"]), "points": int(act.shape[1]),
+            "rider": int(rider), "lo": lo.round(6).tolist(), "hi": hi.round(6).tolist(),
+            "regions": [{"id": str(i), "label": str(lab)} for i, lab in zip(z["regions"], z["labels"])],
+            "regionHz": np.round(z["region_hz"], 1).tolist()}
+    return meta, json.dumps({"xyz": pack(q), "reg": pack(z["point_region"]), "act": pack(act)})
 
 
 def main():
@@ -252,6 +325,7 @@ def main():
     ap.add_argument("trace", nargs="?", default="results/ride_trace.json")
     ap.add_argument("out", nargs="?", default="results/ride_3d.html")
     ap.add_argument("--bike", default=str(DEFAULT_BIKE), help="GLB (Draco ok) to ride, or 'none' for the procedural Tarmac SL9")
+    ap.add_argument("--brain", default="auto", help="runs.ride --brain-out npz; 'auto' = <trace name>_brain.npz if it exists; 'none'")
     a = ap.parse_args()
     src, dst = ROOT / a.trace, ROOT / a.out
     data = json.loads(src.read_text())
@@ -279,7 +353,13 @@ def main():
     up = res["upright"] if res and "upright" in res else [0.0] * len(road)
     data["best_rider"] = int(max(range(len(road)), key=lambda i: (road[i], up[i])))
     bike = "" if a.bike == "none" or not Path(a.bike).exists() else base64.b64encode(Path(a.bike).read_bytes()).decode()
-    html = HTML.replace("__DATA__", json.dumps(data, separators=(",", ":")).replace("</", "<\\/")).replace("__BIKE__", bike)
+    npz = src.with_name(src.name.replace("_trace.json", "") + "_brain.npz") if a.brain == "auto" else (None if a.brain == "none" else ROOT / a.brain)
+    brain_bin = ""
+    if npz is not None and npz.exists():
+        data["brain"], brain_bin = brain_payload(npz, data["best_rider"])
+        print(f"  brain map: {npz.name}, rider #{data['best_rider']} neuron by neuron, {len(brain_bin) / 1e6:.1f} MB embedded")
+    html = (HTML.replace("__DATA__", json.dumps(data, separators=(",", ":")).replace("</", "<\\/"))
+            .replace("__BIKE__", bike).replace("__BRAIN__", brain_bin))
     dst.write_text(html)
     print(f"{dst}  ({dst.stat().st_size / 1e6:.1f} MB, {len(data['trace'])} steps, {len(data['trace'][0]['state'])} riders, "
           f"bike: {Path(a.bike).name if bike else 'procedural Tarmac SL9'})")

@@ -10,6 +10,7 @@ usage:
   python -m runs.ride --open-loop --riders 8           # brain in the loop, decoder at its prior
   python -m runs.ride --riders 32 --generations 12     # learn the decoder (results/ride.json)
   python -m runs.ride --replay results/ride.json       # ride the best decoder again, log every step
+  python -m runs.ride --replay results/ride.json --brain-out results/ride_brain.npz   # ... and record the whole brain
 """
 import argparse
 import json
@@ -29,6 +30,45 @@ from brain.loop import BrainLoop
 from brain.sim import W_SYN_MALE_CNS, Brain
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+class BrainRecorder:
+    """Every rider's whole brain during a replay, for the brain map on the 3D page. Same point cloud and regions as
+    the drinks dashboard (export/export_dashboard.py): per bin, the rate of each of the 140,638 neurons with a 3D
+    position as uint8 (255 = CLOUD_HZ), and each region's mean rate with the driven sensory neurons left out."""
+
+    def __init__(self, meta, stim_idx, bin_ms, device):
+        from export.export_dashboard import CLOUD_HZ, REGIONS, region_of
+        meta = meta.sort_values("idx")
+        reg = np.array([region_of(t, c, s) for t, c, s in zip(meta["type"], meta["class"], meta["superclass"])])
+        self.reg_ids = [r for r, _ in REGIONS]
+        self.reg_labels = [lab for _, lab in REGIONS]
+        point_idx = np.fromfile(ROOT / "web_data" / "brain_idx.bin", dtype=np.int32).astype(np.int64)
+        self.point_region = np.array([self.reg_ids.index(r) for r in reg[point_idx]], dtype=np.uint8)
+        self.point_idx = torch.as_tensor(point_idx, device=device)
+        driven = np.zeros(len(reg), bool)
+        driven[np.asarray(stim_idx)] = True
+        M = np.zeros((len(reg), len(self.reg_ids)), np.float32)
+        for j, r in enumerate(self.reg_ids):
+            m = (reg == r) & ~driven
+            if m.any():
+                M[m, j] = 1.0 / m.sum()
+        self.M = torch.as_tensor(M, device=device)
+        self.bin_ms, self.cloud_hz = bin_ms, CLOUD_HZ
+        self.act, self.reg = [], []
+
+    def add(self, counts):
+        """counts (B, N): every neuron's spikes in one bin."""
+        hz = counts.float() / (self.bin_ms / 1000.0)
+        self.act.append((hz[:, self.point_idx] * (255.0 / self.cloud_hz)).clamp(0, 255).round().to(torch.uint8).cpu())
+        self.reg.append((hz @ self.M).cpu())
+
+    def save(self, path):
+        act = torch.stack(self.act).numpy()  # (bins, B, points)
+        np.savez_compressed(path, act=act, region_hz=torch.stack(self.reg).numpy().round(2), bin_ms=self.bin_ms,
+                            cloud_hz=self.cloud_hz, regions=np.array(self.reg_ids), labels=np.array(self.reg_labels),
+                            point_region=self.point_region)
+        print(f"brain -> {path}  ({act.shape[0]} bins of {self.bin_ms:.0f} ms, {act.shape[1]} riders, {act.shape[2]:,} points)")
 
 
 def parse():
@@ -74,6 +114,8 @@ def parse():
     ap.add_argument("--open-loop", action="store_true")
     ap.add_argument("--replay", default=None, help="results json with best_theta")
     ap.add_argument("--trace", default="results/ride_trace.json")
+    ap.add_argument("--brain-out", default=None, help="replay/open loop: record every rider's whole brain to this npz (brain map)")
+    ap.add_argument("--brain-bin-ms", type=float, default=100.0, help="time bin of the brain recording")
     ap.add_argument("--quiet", action="store_true")
     return ap.parse_args()
 
@@ -90,7 +132,7 @@ class Ride:
         self.stable = (wv, cv)
         self.loop = self.senses = self.readout = self.decoder = None
         if not a.oracle:
-            meta = pd.read_parquet(ROOT / "brain_meta.parquet")
+            meta = self.meta = pd.read_parquet(ROOT / "brain_meta.parquet")
             gains = {kv.split("=")[0].strip(): float(kv.split("=")[1]) for kv in a.gains.split(",") if "=" in kv}
             self.senses = Senses(meta, goal=a.goal, device=self.dev, lane=a.lane, gains=gains, polarity=a.polarity)
             if gains:
@@ -108,9 +150,10 @@ class Ride:
                   f"w_syn {w:.4f} mV", flush=True)
 
     @torch.no_grad()
-    def episode(self, theta=None, oracle=False, seed=0, log=None, verbose=False, collect=None, beta=0.0):
+    def episode(self, theta=None, oracle=False, seed=0, log=None, verbose=False, collect=None, beta=0.0, brain=None):
         """collect: dict with lists 'X', 'y' -> appends (readout features / rate_scale, PD rider's torque) for every
-        alive rider and step (DAgger labels). beta: probability per rider and step of executing the PD rider's torque."""
+        alive rider and step (DAgger labels). beta: probability per rider and step of executing the PD rider's torque.
+        brain: a BrainRecorder, fed every neuron's spikes per bin from the end of warm-up on."""
         a, bikes, loop = self.a, self.bikes, self.loop
         B, dev = bikes.n, bikes.dev
         dt = a.ctrl_ms / 1000.0
@@ -125,6 +168,9 @@ class Ride:
             smooth = self.readout.features(counts, a.warmup_ms)
             slow = smooth.clone()
             self.decoder.set_center(smooth)
+            if brain is not None:
+                loop.take_counts()  # drop the warm-up
+                per_bin = max(1, int(round(brain.bin_ms / a.ctrl_ms)))
             if verbose:
                 f0 = smooth.mean(0).cpu().numpy()
                 print("  after warm-up, DN rates (Hz): " + ", ".join(f"{n} {v:.0f}" for n, v in zip(self.readout.names, f0)
@@ -144,6 +190,8 @@ class Ride:
                 brake = torch.zeros(B, device=dev)
             else:
                 counts, pop = loop.run(a.ctrl_ms)
+                if brain is not None and (k + 1) % per_bin == 0:
+                    brain.add(loop.take_counts())
                 f = self.readout.features(counts, a.ctrl_ms)
                 smooth += (f - smooth) * min(1.0, a.ctrl_ms / a.tau_ms)
                 slow += (f - slow) * min(1.0, a.ctrl_ms / a.tau_lane_ms)
@@ -224,8 +272,11 @@ def main():
             theta = torch.tensor(dec.prior_mean(), device=ride.dev)[None, :].repeat(a.riders, 1)
             label = "open loop (prior decoder: no steering, ~70 W)"
         log = []
-        r = ride.episode(theta, seed=a.seed, log=log, verbose=True)
+        rec = BrainRecorder(ride.meta, ride.senses.idx, a.brain_bin_ms, ride.dev) if a.brain_out else None
+        r = ride.episode(theta, seed=a.seed, log=log, verbose=True, brain=rec)
         print(f"{label}:", ride.summary(r))
+        if rec is not None:
+            rec.save(ROOT / a.brain_out)
         trace = {"mode": label, "state_names": STATE, "dn_names": ride.readout.names, "sense_names": ride.senses.names,
                  "theta": theta[0].cpu().tolist(), "theta_names": dec_names(dec), "trace": log,
                  "result": {k: (v.tolist() if isinstance(v, np.ndarray) else v) for k, v in r.items()}}

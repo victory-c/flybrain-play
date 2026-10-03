@@ -83,7 +83,9 @@ Commands run from the job's working directory (`.` = repo root, `fly_brain/` for
 | 36487 | Unknown | PENDING | 00:00:00 | 1 gpu | hands-off on the road (5.5 m/s, 5 Nm), GPU copy queued while the GPUs were busy | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 30 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=1...` (in `./fly_brain`) | `results/ride_pilot_trace.json` |
 | 36488 | 2026-10-03 02:32 | COMPLETED | 00:00:09 | 4 cpu, 8G | PD rider on the road (5.5 m/s, 5 Nm) -> results/ride_oracle_trace.json (/ride/oracle) | `srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 10 --quiet ../venv/bin/python -m runs.ride --oracle --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5...` (in `./fly_brain`) | `results/ride_oracle_trace.json` |
 | 36489 | 2026-10-03 02:33 | COMPLETED | 00:01:56 | 12 cpu, 40G |  | `srun -p ocf-hpc -w corruption -c 12 --mem=40G -t 12 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=...` (in `./fly_brain`) | `results/scratch_cpu_test.json` |
-| 36490 | 2026-10-03 02:35 | RUNNING | 00:02:46 | 12 cpu, 40G | hands-off on the road (5.5 m/s, 5 Nm), CPU -> results/ride_pilot_road_trace.json (/ride/open-loop) | `srun -p ocf-hpc -w corruption -c 12 --mem=40G -t 90 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=...` (in `./fly_brain`) | `results/ride_pilot_road_trace.json` |
+| 36490 | 2026-10-03 02:35 | RUNNING | 00:24:11 | 12 cpu, 40G | hands-off on the road (5.5 m/s, 5 Nm), CPU -> results/ride_pilot_road_trace.json (/ride/open-loop) | `srun -p ocf-hpc -w corruption -c 12 --mem=40G -t 90 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=...` (in `./fly_brain`) | `results/ride_pilot_road_trace.json` |
+| 36491 | 2026-10-03 02:42 | COMPLETED | 00:00:19 | 4 cpu, 16G |  | `srun -p ocf-hpc -w corruption -c 4 --mem=16G -t 14 --quiet ../venv-cuda/bin/python -m runs.ride --replay results/ride_slow_mu.json --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane ...` (in `./fly_brain`) | `results/scratch_t.json` |
+| 36492 | Unknown | PENDING | 00:00:00 |  |  | `srun -p ocf-hpc -w corruption -c 12 --mem=48G -t 120 --quiet ../venv-cuda/bin/python -m runs.ride --replay results/ride_slow_mu.json --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lan...` (in `./fly_brain`) | `results/ride_road_trace.json` |
 
 ## Full command lines
 
@@ -218,4 +220,16 @@ srun -p ocf-hpc -w corruption -c 12 --mem=40G -t 12 --quiet ../venv-cuda/bin/pyt
 
 ```bash
 srun -p ocf-hpc -w corruption -c 12 --mem=40G -t 90 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 20 --seed 7 --trace results/ride_pilot_road_trace.json
+```
+
+**36491** (python)
+
+```bash
+srun -p ocf-hpc -w corruption -c 4 --mem=16G -t 14 --quiet ../venv-cuda/bin/python -m runs.ride --replay results/ride_slow_mu.json --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 2 --seconds 0.5 --seed 7 --trace results/scratch_t.json --brain-out results/scratch_brain.npz
+```
+
+**36492** (python)
+
+```bash
+srun -p ocf-hpc -w corruption -c 12 --mem=48G -t 120 --quiet ../venv-cuda/bin/python -m runs.ride --replay results/ride_slow_mu.json --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 20 --seed 7 --trace results/ride_road_trace.json --brain-out results/ride_road_brain.npz
 ```
