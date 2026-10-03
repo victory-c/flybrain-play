@@ -99,6 +99,7 @@ def parse():
     ap.add_argument("--sigma-lane-filter", type=float, default=2.0, help="CEM width for the lane-filter gain")
     ap.add_argument("--center-all", action="store_true", help="read every steering feature as its deviation from the warm-up rate")
     ap.add_argument("--tau-lane-ms", type=float, default=40.0, help="smoothing of the lane channel (LANE_DNS + lane filter); roll stays at --tau-ms")
+    ap.add_argument("--center-batch", action="store_true", help="centre the lane channel on the batch-mean warm-up rate, not each rider's own (300 ms of single-neuron spikes leave a frozen per-rider steering offset)")
     ap.add_argument("--ridge", type=float, default=1.0)
     ap.add_argument("--sigma0", type=float, default=0.15, help="CEM search width around the teacher fit")
     ap.add_argument("--lane-penalty", type=float, default=0.01, help="fitness cost per m^2 of lateral offset per second")
@@ -106,6 +107,9 @@ def parse():
     ap.add_argument("--dagger-beta0", type=float, default=0.5, help="round-1 probability of executing the PD rider's action; halves each round")
     ap.add_argument("--elite", type=float, default=0.25)
     ap.add_argument("--sigma-min", type=float, default=0.05)
+    ap.add_argument("--sigma-pedal", type=float, default=None, help="CEM width for the 4 pedal/brake terms; 0 freezes them")
+    ap.add_argument("--zbar", default=None, help=".npy (D,): mean input of each decoder weight while riding (0 for bias, pedal, brake); CEM then searches steer:bias at that operating point")
+    ap.add_argument("--max-minutes", type=float, default=0.0, help="CEM: stop before a generation that would end past this wall time")
     ap.add_argument("--w-syn-scale", type=float, default=None, help="override synapse scale (default 0.45)")
     ap.add_argument("--device", default="auto")
     ap.add_argument("--seed", type=int, default=0)
@@ -167,7 +171,7 @@ class Ride:
             counts, pop = loop.run(a.warmup_ms)
             smooth = self.readout.features(counts, a.warmup_ms)
             slow = smooth.clone()
-            self.decoder.set_center(smooth)
+            self.decoder.set_center(smooth.mean(0, keepdim=True).repeat(B, 1) if a.center_batch else smooth)
             if brain is not None:
                 loop.take_counts()  # drop the warm-up
                 per_bin = max(1, int(round(brain.bin_ms / a.ctrl_ms)))
@@ -307,19 +311,39 @@ def main():
     if dec.lane_filter is not None:
         sigma[-1] = a.sigma_lane_filter
         print(f"lane-filter gain starts at {mu[-1]:.2f} with width {a.sigma_lane_filter}", flush=True)
+    if a.sigma_pedal is not None:
+        sigma[dec.F + 1:dec.F + 5] = a.sigma_pedal
+    frozen = sigma == 0
+    # CEM samples u, where u[F] = steer:bias + theta . zbar is the standing steering argument while riding: weight noise
+    # on the uncentred features (~30 Hz each) then no longer gives every candidate its own standing torque
+    zb = np.load(ROOT / a.zbar).astype(np.float32) if a.zbar else np.zeros(D, np.float32)
+    assert zb.shape == (D,) and not zb[dec.F:dec.F + 5].any(), "zbar: one entry per decoder weight, 0 for bias/pedal/brake"
+
+    def to_u(t):
+        u = t.copy(); u[..., dec.F] += t @ zb; return u
+
+    def to_theta(u):
+        t = u.copy(); t[..., dec.F] -= u @ zb; return t
+
+    mu = to_u(mu)
     n_elite = max(2, int(round(a.elite * a.riders)))
-    history, best_theta, best_fit = [], mu.copy(), -np.inf
+    history, best_theta, best_fit = [], to_theta(mu), -np.inf
     t_all = time.time()
     for gen in range(a.generations):
-        theta_np = mu[None, :] + sigma[None, :] * rng.standard_normal((a.riders, D)).astype(np.float32)
-        theta_np[0] = mu
+        if a.max_minutes and history and (time.time() - t_all + history[-1]["wall_s"]) / 60 > a.max_minutes:
+            print(f"stopping before gen {gen}: --max-minutes {a.max_minutes:g}", flush=True)
+            break
+        u_np = mu[None, :] + sigma[None, :] * rng.standard_normal((a.riders, D)).astype(np.float32)
+        u_np[0] = mu
+        theta_np = to_theta(u_np).astype(np.float32)
         theta = torch.tensor(theta_np, device=ride.dev)
         r = ride.episode(theta, seed=a.seed + 1000 * (gen + 1), verbose=(gen == 0))
         fit = r["fitness"]
         order = np.argsort(-fit)
-        elite = theta_np[order[:n_elite]]
+        elite = u_np[order[:n_elite]]
         mu = elite.mean(0)
         sigma = np.maximum(elite.std(0), a.sigma_min).astype(np.float32)
+        sigma[frozen] = 0.0
         if fit[order[0]] > best_fit:
             best_fit, best_theta = float(fit[order[0]]), theta_np[order[0]].copy()
         row = {"gen": gen, "best": float(fit.max()), "mean": float(fit.mean()), "elite_mean": float(fit[order[:n_elite]].mean()),
@@ -331,7 +355,7 @@ def main():
         (ROOT / a.out).write_text(json.dumps({
             "config": vars(a), "device": ride.dev, "stable_speeds": ride.stable, "decoder_names": dec_names(dec),
             "dn_names": ride.readout.names, "sense_names": ride.senses.names, "history": history,
-            "best_fitness": best_fit, "best_theta": best_theta.tolist(), "mu": mu.tolist(), "sigma": sigma.tolist(),
+            "best_fitness": best_fit, "best_theta": best_theta.tolist(), "mu": to_theta(mu).tolist(), "sigma": sigma.tolist(),
             "brain_seconds": ride.loop.seconds, "wall_seconds": time.time() - t_all}, indent=1))
     print(f"done: best fitness {best_fit:.2f}, results -> {a.out}  ({(time.time() - t_all) / 60:.1f} min)")
 

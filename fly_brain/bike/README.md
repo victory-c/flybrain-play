@@ -90,8 +90,8 @@ drives that eye's HS cells harder (`--lane hs`, gains `hs_lane` per m, `hs_headi
 * **Test at road speed.** At 5.5 m/s (20 km/h) the Tarmac/V4Rs is self-stable, so a 5 Nm breeze does not knock it
   over but walks it off the road in about 5 s hands-off: staying on the road is the fly's steering.
 
-Result (`ride-slow.sbatch`, then `sweep-gain.sbatch`): the same decoder with only the lane gain changed,
-48 riders x 15 s, identical gusts, leaving the road ends a run.
+Result (`ride-slow.sbatch`, then `sweep-gain.sbatch`): the same decoder (the CEM population mean at generation 12,
+`results/sweep/`) with only the lane gain changed, 48 riders x 15 s, identical gusts, leaving the road ends a run.
 
 | lane gain | mean time on road | riders on for all 15 s |
 |---|---|---|
