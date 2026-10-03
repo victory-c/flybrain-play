@@ -6,3 +6,5 @@ readout: DNp20_L 1, DNp20_R 1, DNp22_L 1, DNp22_R 1, DNg46_L 1, DNg46_R 1, DNge0
 brain: 166,700 neurons, 789 driven, 112 read out, w_syn 0.1238 mV
   after warm-up, DN rates (Hz): DNp20_L 39, DNp20_R 24, DNp22_R 1, DNg46_L 1, DNg46_R 3, DNge043_L 9, DNge043_R 16, DNb06_L 35, DNpe013_L 4, DNpe013_R 5, DNg94_R 1, DNg90_R 2, DNp33_L 27, DNp33_R 13, DNge091_L 3, DNg29_L 48, DNg29_R 29, DNg41_L 29, DNg41_R 33, DNp18_L 35, DNp18_R 50, DNp73_L 67, DNp73_R 8, b2 MN_L 12, b2 MN_R 6, hg1 MN_L 25, hg1 MN_R 15, DNa01_L 2, DNa02_L 1, DNa02_R 1, DNa03_L 1, DNa03_R 4, MDN_L 1, MDN_R 1, DNa16_L 4, DNa16_R 10, DNb03_L 6, DNb03_R 5, DNa06_L 10, DNa06_R 14, DNp15_L 5, DNp15_R 32, DNge107_L 2, DNge107_R 20, DNge086_R 3, DNge031_L 21, DNge031_R 24, DNge033_L 10, DNge033_R 18, GNG283_L 5, GNG283_R 18
   population 20,393 spikes/s per brain
+replay of results/ride_slow_mu.json: upright  8.45 s (max 15.00,  19% finish)  dist  45.2 m  |y| 2.97 m  v 5.39  bailed 0  pop 68,765 sp/s  300s
+trace -> results/lane/v59_mu_old.trace.json

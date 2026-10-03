@@ -38,3 +38,8 @@ done: best fitness 13.18, results -> results/lane/cem.json  (135.2 min)
 == 13:50:27 v59_cem: results/lane/cem_mu.json seed 59 --center-batch --gains hs_heading=150,hs_lane=50
 replay of results/lane/cem_mu.json: upright 11.32 s (max 15.00,  44% finish)  dist  60.5 m  |y| 2.19 m  v 5.35  bailed 0  pop 70,174 sp/s  300s
 == 13:55:34 v59_mu_old: results/ride_slow_mu.json seed 59 --gains hs_heading=150,hs_lane=50
+replay of results/ride_slow_mu.json: upright  8.45 s (max 15.00,  19% finish)  dist  45.2 m  |y| 2.97 m  v 5.39  bailed 0  pop 68,765 sp/s  300s
+== 14:00:40 v59_init: results/lane/init.json seed 59 --center-batch --gains hs_heading=150,hs_lane=50
+replay of results/lane/init.json: upright  9.95 s (max 15.00,  25% finish)  dist  53.1 m  |y| 3.01 m  v 5.39  bailed 0  pop 66,465 sp/s  303s
+== seed 59 on the road: CEM 11.32 s, ride_slow_mu old protocol 8.45 s, ride_slow_mu new protocol 9.95 s
+== done Sat Oct  3 02:05:49 PM PDT 2026

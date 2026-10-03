@@ -115,6 +115,39 @@ python -m runs.ride --replay results/ride_slow_mu.json --tau-lane-ms 300 --lane-
 python -m export.export_ride3d results/ride_slow_mu_trace.json results/ride_3d.html
 ```
 
+## Lane keeping, round 2 (`lane-next.sbatch`)
+
+A trace analysis (control, learning and sensory-encoding views) found two things that hid the lane signal:
+
+* **A frozen offset per rider.** The lane channel was centred on each rider's own 300 ms warm-up rate. A few
+  spikes per neuron make that zero point noisy, which acts like a standing steering torque (SD about 0.8 Nm)
+  that the lane loop can only cancel by riding about 1.5 m off-centre. `--center-batch` centres on the batch-mean
+  warm-up rate instead.
+* **CEM fitness was mostly bias noise.** Weight noise on the uncentred features (~30 Hz each) gave every candidate
+  its own standing torque (about 1.3 Nm). `--zbar` makes CEM search the bias at the riding operating point, and
+  `--sigma-pedal 0` freezes pedalling and braking.
+
+A 10 m look-ahead (`hs_lane=15`), a 3x heading drive (`hs_heading=450`) and a smaller lane gain did not beat the
+current cue in paired replays (seed 31: 8.46 / 8.88 / 7.35 s vs 8.69 s). CEM from `ride_slow_mu` with the fixes,
+96 riders x 12 s, 22 generations (135 min) -> `results/lane/cem_mu.json` (lane gain -0.34).
+
+Held-out test on gusts never used in training (seed 59), 48 riders x 15 s, paired by rider:
+
+| decoder | centring | mean time on road | on the road all 15 s | left the road / fell |
+|---|---|---|---|---|
+| ride_slow_mu | per rider | 8.45 s | 9/48 | 37 / 2 |
+| ride_slow_mu | batch | 9.95 s | 12/48 | 35 / 1 |
+| **cem_mu (round 2)** | batch | **11.32 s** | **21/48** | 15 / 12 |
+
+That is +2.87 s over the old decoder (paired SE 0.76): centring alone gives +1.5 s, training +1.4 s. The new
+decoder leaves the road far less often but falls more (12 vs 2 of 48); training on 12 s episodes pays for staying
+on the road with balance margin.
+
+```bash
+sbatch lane-next.sbatch                                       # the whole round, ~3 GPU h, -> results/lane/
+sbatch ride-page.sbatch results/lane/cem_mu.json              # 16 x 20 s replays for the /ride/ pages, brain recorded
+```
+
 ## The 3D bike in the replay
 
 The followed rider rides `assets/colnago_v4rs.glb`: the Colnago V4Rs (size 510, Campagnolo Super
@@ -141,12 +174,12 @@ The left panel of the 3D page shows the followed rider's whole brain while it ri
 up next to the trace and embeds the default rider neuron by neuron and every rider's region means (other
 riders are coloured by region). Region means leave out the sensory neurons the bike drives.
 
-The page's run (recorded on CPU while the GPUs were busy, so its noise differs from the GPU replay above) gives
-8.1 s on the road on average and 1 of 16 riders on it for all 20 s; hands-off under the same conditions and seed,
-5.2 s and none (`results/ride_pilot_road_trace.json`, the open-loop page).
+The page's run is the round-2 decoder (`ride-page.sbatch results/lane/cem_mu.json`): 11.6 s on the road on
+average and 4 of 16 riders on it for all 20 s; the same brains hands-off, 4.9 s and none
+(`results/ride_pilot_road_trace.json`, the open-loop page, which has its own brain map).
 
 ```bash
-python -m runs.ride --replay results/ride_slow_mu.json --tau-lane-ms 300 --lane-filter results/probe.json \
+python -m runs.ride --replay results/lane/cem_mu.json --center-batch --tau-lane-ms 300 --lane-filter results/probe.json \
     --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 20 --seed 7 \
     --trace results/ride_road_trace.json --brain-out results/ride_road_brain.npz
 python -m export.export_ride3d results/ride_road_trace.json results/ride_3d.html

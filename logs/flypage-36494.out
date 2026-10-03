@@ -1,0 +1,7 @@
+== 14:07:30 replay results/lane/cem_mu.json
+replay of results/lane/cem_mu.json: upright 18.07 s (max 20.00,  81% finish)  dist  94.9 m  |y| 3.81 m  v 5.22  bailed 0  pop 70,969 sp/s  271s
+brain -> /home/s/st/stevejobs/flybrain/fly_brain/results/ride_road_brain.npz  (200 bins of 100 ms, 16 riders, 140,638 points)
+== 14:12:11 hands-off
+open loop (prior decoder: no steering, ~70 W): upright 12.31 s (max 20.00,  25% finish)  dist  43.2 m  |y| 21.86 m  v 4.20  bailed 0  pop 69,631 sp/s  268s
+brain -> /home/s/st/stevejobs/flybrain/fly_brain/results/ride_pilot_road_brain.npz  (200 bins of 100 ms, 16 riders, 140,638 points)
+== done Sat Oct  3 02:16:50 PM PDT 2026
