@@ -124,8 +124,9 @@ and embedded in the HTML. No free, downloadable model of a Tarmac SL9, Cervelo S
 exists (a sweep of Sketchfab, Objaverse, GitHub, print sites, marketplaces, game-asset libraries and
 brand configurators found only paid ones, $20-95 on CGTrader, TurboSquid and 3DModels.org).
 
-It is Colnago's copyrighted marketing asset: fine to look at in a private replay, not to publish or
-redistribute, which is why `assets/*.glb` is git-ignored. The page re-parents the model's parts onto
+It is Colnago's copyrighted marketing asset. The GLB itself is kept out of git (`assets/*.glb` is
+ignored), but the 3D replay pages embed it, and those pages are public on flybrain-play.vercel.app; if
+that has to stop, rebuild them with `--bike none` (procedural bike). The page re-parents the model's parts onto
 pivots: fork, integrated bar/stem and front wheel steer about the head-tube axis (72 deg, which puts
 the front hub 48.6 mm, the fork rake, ahead of the axis through the headset cap); both wheels with
 their rotors and the crank arms with chainrings spin. Saddle, hoods, bottom bracket and crank angle

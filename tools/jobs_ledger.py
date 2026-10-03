@@ -50,6 +50,9 @@ NOTES = {
     "36101": "cancelled: is a weak odour goal stable?",
     "36102": "cancelled: HS lane cue check",
     "36103": "lane keeping: screen with HS lane cue -> CEM -> replay",
+    "36487": "hands-off on the road (5.5 m/s, 5 Nm), GPU copy queued while the GPUs were busy",
+    "36488": "PD rider on the road (5.5 m/s, 5 Nm) -> results/ride_oracle_trace.json (/ride/oracle)",
+    "36490": "hands-off on the road (5.5 m/s, 5 Nm), CPU -> results/ride_pilot_road_trace.json (/ride/open-loop)",
 }
 
 

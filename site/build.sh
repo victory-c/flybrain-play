@@ -4,7 +4,7 @@
 #   /bar/        Fly Bar web app (fly_brain/app, built with vite)
 #   /classic     Fly Bar single-page version (fly_brain/ui/fly_bar.html)
 #   /dashboard/  Fly Brain Live (fly_brain/dashboard)
-#   /ride/       the fly rides a Tarmac SL9 (fly_brain/results/ride_*.html)
+#   /ride/       the fly rides a Colnago V4Rs (fly_brain/results/ride_*.html)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 OUT=site/dist

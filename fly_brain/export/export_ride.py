@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 HTML = r"""<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><title>🪰 Fly rides a Tarmac SL9</title>
+<html lang="zh"><head><meta charset="utf-8"><title>🪰 Fly rides a Colnago V4Rs</title>
 <style>
 :root{--bg:#0f1115;--fg:#e8e8e8;--dim:#8a8f98;--acc:#ff4d4d;--acc2:#4da3ff;--ok:#5bd66b}
 body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.4 system-ui,sans-serif}
@@ -23,7 +23,7 @@ canvas{background:#141821;border-radius:10px;width:100%;display:block}
 .stat span{font-size:18px;font-variant-numeric:tabular-nums}
 #charts canvas{margin-bottom:8px}
 </style></head><body>
-<header><b>🪰🚴 Fly brain × S-Works Tarmac SL9</b><span class="mode" id="mode"></span>
+<header><b>🪰🚴 Fly brain × Colnago V4Rs</b><span class="mode" id="mode"></span>
 <button id="play">▶ 播放</button>
 <label>速度 <select id="speed"><option>0.25</option><option>0.5</option><option selected>1</option><option>2</option></select>×</label>
 <label>骑手 <select id="rider"></select></label>
@@ -75,11 +75,11 @@ function drawRear(row){const W=420,H=420;rc.clearRect(0,0,W,H);const s=row.state
 // ---- top view
 const tc=document.getElementById('top').getContext('2d');
 function drawTop(kk){const W=900,H=260;tc.clearRect(0,0,W,H);const xmax=Math.max(20,...tr.map(r=>Math.max(...r.state.map(s=>s[0]))));const sx=(W-40)/xmax,sy=(H-20)/8;
- tc.strokeStyle='#2a3040';tc.setLineDash([6,6]);for(const y of[-1.5,1.5]){tc.beginPath();tc.moveTo(20,H/2+y*sy);tc.lineTo(W-20,H/2+y*sy);tc.stroke()}tc.setLineDash([]);
+ tc.strokeStyle='#2a3040';tc.setLineDash([6,6]);for(const y of[-3.5,3.5]){tc.beginPath();tc.moveTo(20,H/2+y*sy);tc.lineTo(W-20,H/2+y*sy);tc.stroke()}tc.setLineDash([]);
  for(let b=0;b<B;b++){tc.strokeStyle=b===rider?'#ff4d4d':'rgba(120,140,170,0.35)';tc.lineWidth=b===rider?2.5:1;tc.beginPath();
   for(let i=0;i<=kk;i++){const s=tr[i].state[b];const px=20+s[0]*sx,py=H/2+s[1]*sy;i?tc.lineTo(px,py):tc.moveTo(px,py)}tc.stroke();
   const s=tr[kk].state[b];tc.fillStyle=tr[kk].done[b]?'#666':(b===rider?'#ff4d4d':'#4da3ff');tc.beginPath();tc.arc(20+s[0]*sx,H/2+s[1]*sy,b===rider?5:3,0,Math.PI*2);tc.fill()}
- tc.fillStyle='#8a8f98';tc.font='12px system-ui';tc.fillText('top view · x 0…'+xmax.toFixed(0)+' m, lane ±1.5 m',10,14);}
+ tc.fillStyle='#8a8f98';tc.font='12px system-ui';tc.fillText('top view · x 0…'+xmax.toFixed(0)+' m, road edges ±3.5 m',10,14);}
 // ---- strip charts
 const series=[{name:'倾角 lean (°)',f:(r,b)=>deg(r.state[b][4]),c:'#ff4d4d',lim:[-30,30]},
  {name:'转向扭矩 steer torque (Nm)',f:(r,b)=>r.steer[b],c:'#4da3ff',lim:[-6.5,6.5]},
@@ -112,9 +112,14 @@ def main():
     src = ROOT / (sys.argv[1] if len(sys.argv) > 1 else "results/ride_trace.json")
     dst = ROOT / (sys.argv[2] if len(sys.argv) > 2 else "results/ride_view.html")
     data = json.loads(src.read_text())
-    # keep the file small: drop the per-step sensory rates, keep DN rates
+    # keep the file small: drop the per-step sensory rates, keep DN rates (whole Hz) and the state (4 decimals)
+    def rnd(x, nd):
+        return [rnd(v, nd) for v in x] if isinstance(x, list) else (round(x, nd) if isinstance(x, float) else x)
     for row in data["trace"]:
         row.pop("sense_hz", None)
+        for k, nd in (("dn_hz", 0), ("state", 4), ("steer", 3), ("power", 1), ("brake", 3), ("pop_hz", 0)):
+            if k in row:
+                row[k] = rnd(row[k], nd)
     dst.write_text(HTML.replace("__DATA__", json.dumps(data).replace("</", "<\\/")))
     print(f"{dst}  ({dst.stat().st_size / 1e6:.1f} MB, {len(data['trace'])} steps, {len(data['trace'][0]['state'])} riders)")
 

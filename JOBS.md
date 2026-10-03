@@ -80,6 +80,10 @@ Commands run from the job's working directory (`.` = repo root, `fly_brain/` for
 | 36145 | 2026-09-28 14:55 | COMPLETED | 00:00:39 | 8 cpu, 48G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m tests.test_graph` (in `./fly_brain`) |  |
 | 36146 | 2026-09-28 14:56 | COMPLETED | 00:06:15 | 8 cpu, 48G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bench_gpu --graph --devi...` (in `./fly_brain`) | `results/bench_graph4.json` |
 | 36147 | 2026-09-28 15:02 | COMPLETED | 00:02:10 | 8 cpu, 48G, 1 gpu |  | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bar --device cuda --grap...` (in `./fly_brain`) |  |
+| 36487 | Unknown | PENDING | 00:00:00 | 1 gpu | hands-off on the road (5.5 m/s, 5 Nm), GPU copy queued while the GPUs were busy | `srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 30 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=1...` (in `./fly_brain`) | `results/ride_pilot_trace.json` |
+| 36488 | 2026-10-03 02:32 | COMPLETED | 00:00:09 | 4 cpu, 8G | PD rider on the road (5.5 m/s, 5 Nm) -> results/ride_oracle_trace.json (/ride/oracle) | `srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 10 --quiet ../venv/bin/python -m runs.ride --oracle --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5...` (in `./fly_brain`) | `results/ride_oracle_trace.json` |
+| 36489 | 2026-10-03 02:33 | COMPLETED | 00:01:56 | 12 cpu, 40G |  | `srun -p ocf-hpc -w corruption -c 12 --mem=40G -t 12 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=...` (in `./fly_brain`) | `results/scratch_cpu_test.json` |
+| 36490 | 2026-10-03 02:35 | RUNNING | 00:02:46 | 12 cpu, 40G | hands-off on the road (5.5 m/s, 5 Nm), CPU -> results/ride_pilot_road_trace.json (/ride/open-loop) | `srun -p ocf-hpc -w corruption -c 12 --mem=40G -t 90 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=...` (in `./fly_brain`) | `results/ride_pilot_road_trace.json` |
 
 ## Full command lines
 
@@ -190,4 +194,28 @@ srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/
 
 ```bash
 srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=48G -t 40 --chdir=/home/s/st/stevejobs/flybrain/fly_brain env OMP_NUM_THREADS=8 /home/s/st/stevejobs/flybrain/venv-cuda/bin/python -m runs.bar --device cuda --graph --tag _gpu
+```
+
+**36487** (python)
+
+```bash
+srun -p ocf-hpc -w corruption --gres=gpu:1 -c 8 --mem=40G -t 30 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 20 --seed 7 --trace results/ride_pilot_trace.json
+```
+
+**36488** (python)
+
+```bash
+srun -p ocf-hpc -w corruption -c 4 --mem=8G -t 10 --quiet ../venv/bin/python -m runs.ride --oracle --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 20 --seed 7 --trace results/ride_oracle_trace.json
+```
+
+**36489** (python)
+
+```bash
+srun -p ocf-hpc -w corruption -c 12 --mem=40G -t 12 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 1 --seed 7 --trace results/scratch_cpu_test.json
+```
+
+**36490** (python)
+
+```bash
+srun -p ocf-hpc -w corruption -c 12 --mem=40G -t 90 --quiet ../venv-cuda/bin/python -m runs.ride --open-loop --device cpu --tau-lane-ms 300 --lane-filter results/probe.json --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 20 --seed 7 --trace results/ride_pilot_road_trace.json
 ```
