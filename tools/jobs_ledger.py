@@ -53,6 +53,7 @@ NOTES = {
     "36487": "hands-off on the road (5.5 m/s, 5 Nm), GPU copy queued while the GPUs were busy",
     "36488": "PD rider on the road (5.5 m/s, 5 Nm) -> results/ride_oracle_trace.json (/ride/oracle)",
     "36490": "hands-off on the road (5.5 m/s, 5 Nm), CPU -> results/ride_pilot_road_trace.json (/ride/open-loop)",
+    "36492": "replay on the road with the whole brain recorded, CPU -> results/ride_road_trace.json + ride_road_brain.npz (/ride/)",
 }
 
 

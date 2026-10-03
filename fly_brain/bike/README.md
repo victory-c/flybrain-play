@@ -141,6 +141,10 @@ The left panel of the 3D page shows the followed rider's whole brain while it ri
 up next to the trace and embeds the default rider neuron by neuron and every rider's region means (other
 riders are coloured by region). Region means leave out the sensory neurons the bike drives.
 
+The page's run (recorded on CPU while the GPUs were busy, so its noise differs from the GPU replay above) gives
+8.1 s on the road on average and 1 of 16 riders on it for all 20 s; hands-off under the same conditions and seed,
+5.2 s and none (`results/ride_pilot_road_trace.json`, the open-loop page).
+
 ```bash
 python -m runs.ride --replay results/ride_slow_mu.json --tau-lane-ms 300 --lane-filter results/probe.json \
     --readout lane --lane hs --gains hs_heading=150,hs_lane=50 --v0 5.5 --gust 5 --riders 16 --seconds 20 --seed 7 \

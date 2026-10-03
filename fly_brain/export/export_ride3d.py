@@ -213,7 +213,7 @@ function pose(bk,s,done,pop){const [x,y,psi,v,phi,delta]=s,F=FIT;bk.root.positio
 function setPaint(hex){scene.traverse(o=>{if(o.isMesh&&o.material&&o.material.userData.paint){const m=o.material;if(hex==='orig'){if(m.userData.orig!==undefined)m.color.setHex(m.userData.orig);else m.color.setHex(G.paint||0xd21f2b).convertSRGBToLinear()}else m.color.setHex(hex).convertSRGBToLinear()}})}
 // ---------- brain map: the followed rider's whole brain, drawn like the drinks dashboard (Fly Brain Live)
 const BR=D.brain||null,RC={taste:[1,.55,.2],feeding:[1,.35,.25],smell:[.4,.85,.6],memory:[.85,.55,1],nav:[.4,.7,1],vision:[.35,.45,.6],touch:[.8,.8,.4],descending:[1,.8,.3],cord:[.5,.75,.75],motor:[1,.3,.5],other:[.55,.6,.7]};
-const REST=[0.05,0.065,0.11],HOT=[1,0.55,0.12],PEAK=[1,0.97,0.85];let bm=null;
+const REST=[0.016,0.021,0.038],HOT=[1,0.55,0.12],PEAK=[1,0.97,0.85];let bm=null;  // dim rest: the small panel stacks many points per pixel
 const SHORT={memory:'蘑菇体（记忆）',nav:'中央复合体（导航）',cord:'腹神经索（腿/翅）',touch:'触觉与本体感觉'};
 async function inflate(s){const bin=atob(s),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
  return new Uint8Array(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate'))).arrayBuffer())}
@@ -244,7 +244,7 @@ function paintBrain(t){if(!bm)return;const nB=BR.bins,f=t*1000/BR.binMs-0.5,i=Ma
   const rhz=bm.ids.map((_,r)=>RH[i][rider][r]*(1-a)+RH[j][rider][r]*a);
   const ramp=(v,k)=>{const g=v<0.5?v*2:1,h=v<0.5?0:(v-0.5)*2;col[k]=REST[0]+(HOT[0]-REST[0])*g+(PEAK[0]-HOT[0])*h;col[k+1]=REST[1]+(HOT[1]-REST[1])*g+(PEAK[1]-HOT[1])*h;col[k+2]=REST[2]+(HOT[2]-REST[2])*g+(PEAK[2]-HOT[2])*h};
   if(own){const o1=i*nP,o2=j*nP;for(let p=0,k=0;p<nP;p++,k+=3)ramp((act[o1+p]*(1-a)+act[o2+p]*a)/255,k)}
-  else{const rv=rhz.map(h=>Math.min(1,h/16));for(let p=0,k=0;p<nP;p++,k+=3)ramp(rv[bm.reg[p]],k)}
+  else{const rv=rhz.map(h=>Math.min(1,h/BR.cloudHz));for(let p=0,k=0;p<nP;p++,k+=3)ramp(rv[bm.reg[p]],k)}
   bm.g.attributes.color.needsUpdate=true;
   for(const w of bm.rows){const v=rhz[w.j];w.i.style.transform='scaleX('+Math.min(1,v/8)+')';w.b.textContent=v.toFixed(1)}
   document.getElementById('bnote').textContent=own?'亮点：骑手 #'+rider+' 这 '+BR.binMs+' ms 里放电的神经元 · 拖动旋转':'逐个神经元只录了骑手 #'+BR.rider+'；骑手 #'+rider+' 按脑区平均着色'}
