@@ -1,0 +1,8 @@
+zbar: 17950 on-road samples, |z| uncentred 4.16, lane signal +0.778
+== 11:13:55 c31_cb: results/sweep/gain_-0.29.json seed 31 --center-batch --gains hs_heading=150,hs_lane=50
+replay of results/sweep/gain_-0.29.json: upright  8.69 s (max 15.00,  19% finish)  dist  48.2 m  |y| 2.97 m  v 5.72  bailed 0  pop 67,148 sp/s  302s
+== 11:19:28 c31_L10: results/sweep/gain_-0.29.json seed 31 --center-batch --gains hs_heading=150,hs_lane=15
+replay of results/sweep/gain_-0.29.json: upright  8.46 s (max 15.00,  19% finish)  dist  47.1 m  |y| 3.02 m  v 5.71  bailed 0  pop 66,057 sp/s  303s
+== 11:24:54 c31_h450: results/lane/s12_g-0.15.json seed 31 --center-batch --gains hs_heading=450,hs_lane=50
+replay of results/lane/s12_g-0.15.json: upright  8.88 s (max 15.00,  12% finish)  dist  49.6 m  |y| 3.29 m  v 5.75  bailed 0  pop 63,370 sp/s  303s
+== 11:30:03 c31_g15: results/lane/s12_g-0.15.json seed 31 --center-batch --gains hs_heading=150,hs_lane=50
