@@ -26,3 +26,9 @@ gen 14  fit best  13.12 mean  10.17  upright  9.57 s (max 12.00,  50% finish)  d
 gen 15  fit best  13.09 mean  10.06  upright  9.51 s (max 12.00,  45% finish)  dist  50.8 m  |y| 2.43 m  v 5.38  bailed 0  pop 69,309 sp/s  369s
 gen 16  fit best  13.05 mean   9.78  upright  9.22 s (max 12.00,  46% finish)  dist  49.3 m  |y| 2.43 m  v 5.39  bailed 0  pop 69,204 sp/s  369s
 gen 17  fit best  13.08 mean   9.38  upright  8.89 s (max 12.00,  38% finish)  dist  47.8 m  |y| 2.49 m  v 5.42  bailed 0  pop 70,547 sp/s  369s
+gen 18  fit best  13.14 mean   8.99  upright  8.48 s (max 12.00,  38% finish)  dist  45.3 m  |y| 2.59 m  v 5.41  bailed 0  pop 69,520 sp/s  369s
+gen 19  fit best  13.13 mean  10.03  upright  9.49 s (max 12.00,  47% finish)  dist  50.7 m  |y| 2.49 m  v 5.37  bailed 0  pop 68,462 sp/s  370s
+gen 20  fit best  13.10 mean  10.00  upright  9.43 s (max 12.00,  45% finish)  dist  50.6 m  |y| 2.38 m  v 5.40  bailed 0  pop 69,151 sp/s  369s
+gen 21  fit best  13.18 mean  10.39  upright  9.82 s (max 12.00,  46% finish)  dist  52.7 m  |y| 2.34 m  v 5.39  bailed 0  pop 68,980 sp/s  368s
+stopping before gen 22: --max-minutes 140
+done: best fitness 13.18, results -> results/lane/cem.json  (135.2 min)

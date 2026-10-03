@@ -20,4 +20,21 @@ gen  5  fit best  13.16 mean   8.41  upright  7.97 s (max 12.00,  29% finish)  d
 gen  6  fit best  13.10 mean   9.29  upright  8.81 s (max 12.00,  40% finish)  dist  47.0 m  |y| 2.63 m  v 5.41  bailed 0  pop 69,736 sp/s  369s
 gen  7  fit best  13.17 mean   9.19  upright  8.70 s (max 12.00,  38% finish)  dist  46.4 m  |y| 2.60 m  v 5.40  bailed 0  pop 70,000 sp/s  369s
 gen  8  fit best  13.13 mean   9.25  upright  8.73 s (max 12.00,  35% finish)  dist  46.8 m  |y| 2.60 m  v 5.41  bailed 0  pop 69,499 sp/s  369s
-gen  9  fit best  13.09 mean   9.26  upright  8.78 s (max 12.00,  40% finish)  d
+gen  9  fit best  13.09 mean   9.26  upright  8.78 s (max 12.00,  40% finish)  dist  46.8 m  |y| 2.48 m  v 5.39  bailed 0  pop 69,664 sp/s  369s
+gen 10  fit best  13.17 mean   8.77  upright  8.31 s (max 12.00,  35% finish)  dist  44.3 m  |y| 2.53 m  v 5.39  bailed 0  pop 69,900 sp/s  369s
+gen 11  fit best  13.10 mean  10.15  upright  9.59 s (max 12.00,  51% finish)  dist  51.3 m  |y| 2.36 m  v 5.40  bailed 0  pop 68,992 sp/s  369s
+gen 12  fit best  13.12 mean   9.51  upright  8.97 s (max 12.00,  43% finish)  dist  47.8 m  |y| 2.33 m  v 5.37  bailed 0  pop 70,248 sp/s  370s
+gen 13  fit best  13.15 mean   9.60  upright  9.08 s (max 12.00,  45% finish)  dist  48.5 m  |y| 2.28 m  v 5.38  bailed 0  pop 70,088 sp/s  368s
+gen 14  fit best  13.12 mean  10.17  upright  9.57 s (max 12.00,  50% finish)  dist  51.3 m  |y| 2.37 m  v 5.39  bailed 0  pop 68,761 sp/s  369s
+gen 15  fit best  13.09 mean  10.06  upright  9.51 s (max 12.00,  45% finish)  dist  50.8 m  |y| 2.43 m  v 5.38  bailed 0  pop 69,309 sp/s  369s
+gen 16  fit best  13.05 mean   9.78  upright  9.22 s (max 12.00,  46% finish)  dist  49.3 m  |y| 2.43 m  v 5.39  bailed 0  pop 69,204 sp/s  369s
+gen 17  fit best  13.08 mean   9.38  upright  8.89 s (max 12.00,  38% finish)  dist  47.8 m  |y| 2.49 m  v 5.42  bailed 0  pop 70,547 sp/s  369s
+gen 18  fit best  13.14 mean   8.99  upright  8.48 s (max 12.00,  38% finish)  dist  45.3 m  |y| 2.59 m  v 5.41  bailed 0  pop 69,520 sp/s  369s
+gen 19  fit best  13.13 mean  10.03  upright  9.49 s (max 12.00,  47% finish)  dist  50.7 m  |y| 2.49 m  v 5.37  bailed 0  pop 68,462 sp/s  370s
+gen 20  fit best  13.10 mean  10.00  upright  9.43 s (max 12.00,  45% finish)  dist  50.6 m  |y| 2.38 m  v 5.40  bailed 0  pop 69,151 sp/s  369s
+gen 21  fit best  13.18 mean  10.39  upright  9.82 s (max 12.00,  46% finish)  dist  52.7 m  |y| 2.34 m  v 5.39  bailed 0  pop 68,980 sp/s  368s
+stopping before gen 22: --max-minutes 140
+done: best fitness 13.18, results -> results/lane/cem.json  (135.2 min)
+== 13:50:27 v59_cem: results/lane/cem_mu.json seed 59 --center-batch --gains hs_heading=150,hs_lane=50
+replay of results/lane/cem_mu.json: upright 11.32 s (max 15.00,  44% finish)  dist  60.5 m  |y| 2.19 m  v 5.35  bailed 0  pop 70,174 sp/s  300s
+== 13:55:34 v59_mu_old: results/ride_slow_mu.json seed 59 --gains hs_heading=150,hs_lane=50
