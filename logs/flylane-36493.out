@@ -6,3 +6,6 @@ replay of results/sweep/gain_-0.29.json: upright  8.46 s (max 15.00,  19% finish
 == 11:24:54 c31_h450: results/lane/s12_g-0.15.json seed 31 --center-batch --gains hs_heading=450,hs_lane=50
 replay of results/lane/s12_g-0.15.json: upright  8.88 s (max 15.00,  12% finish)  dist  49.6 m  |y| 3.29 m  v 5.75  bailed 0  pop 63,370 sp/s  303s
 == 11:30:03 c31_g15: results/lane/s12_g-0.15.json seed 31 --center-batch --gains hs_heading=150,hs_lane=50
+replay of results/lane/s12_g-0.15.json: upright  7.35 s (max 15.00,   4% finish)  dist  40.8 m  |y| 3.32 m  v 5.71  bailed 0  pop 66,448 sp/s  302s
+-> seed 31: cur 8.69, L10 8.46, h450 8.88, g15 7.35 s; pick cur: --gains hs_heading=150,hs_lane=50, lane gain keep, '--center-batch'
+== 11:35:11 CEM, 96 riders, up to 140 min
