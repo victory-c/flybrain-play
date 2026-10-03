@@ -6,3 +6,5 @@ readout: DNp20_L 1, DNp20_R 1, DNp22_L 1, DNp22_R 1, DNg46_L 1, DNg46_R 1, DNge0
 brain: 166,700 neurons, 789 driven, 112 read out, w_syn 0.1238 mV
   after warm-up, DN rates (Hz): DNp20_L 43, DNp20_R 23, DNp22_R 2, DNg46_L 2, DNg46_R 3, DNge043_L 10, DNge043_R 16, DNb06_L 37, DNpe013_L 4, DNpe013_R 6, DNg94_R 1, DNg90_R 2, DNp33_L 28, DNp33_R 13, DNge091_L 3, DNg29_L 47, DNg29_R 30, DNg41_L 30, DNg41_R 32, DNp18_L 35, DNp18_R 50, DNp73_L 64, DNp73_R 9, b2 MN_L 11, b2 MN_R 4, hg1 MN_L 24, hg1 MN_R 14, DNa01_L 2, DNa02_L 1, DNa03_L 1, DNa03_R 4, MDN_L 1, DNa16_L 5, DNa16_R 11, DNb03_L 6, DNb03_R 7, DNa06_L 11, DNa06_R 13, DNp15_L 6, DNp15_R 33, DNge107_L 2, DNge107_R 20, DNge086_R 4, DNge031_L 21, DNge031_R 25, DNge033_L 10, DNge033_R 17, GNG283_L 4, GNG283_R 19
   population 20,706 spikes/s per brain
+open loop (prior decoder: no steering, ~70 W): upright 11.66 s (max 20.00,  19% finish)  dist  32.1 m  |y| 16.71 m  v 4.35  bailed 0  pop 69,030 sp/s  2082s
+trace -> results/ride_pilot_road_trace.json
